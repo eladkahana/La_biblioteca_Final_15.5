@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import comMain.client.InformationGUI;
+import comMain.SwingClient.InformationGUI;
 import comMain.entities.ReserveEntity;
 
 

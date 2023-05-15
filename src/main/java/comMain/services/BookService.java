@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -52,5 +53,32 @@ public class BookService {
 
     public List<BookEntity> getAllBooks() {
         return bookRepository.findAll();
+    }
+
+    @Transactional
+    public List<Object[]> addCompleteBook(
+            String NISBN,
+            String title,
+            String edition,
+            String shelfmark,
+            int numberOfPages,
+            int publishYear,
+            byte[] coverImage,
+            String language,
+            String publisher,
+            String note
+    ) {
+        return bookRepository.AddCompleteBook(
+                NISBN,
+                title,
+                edition,
+                shelfmark,
+                numberOfPages,
+                publishYear,
+                coverImage,
+                language,
+                publisher,
+                note
+        );
     }
 }

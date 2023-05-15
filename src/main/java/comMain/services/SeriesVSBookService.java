@@ -5,6 +5,7 @@ import comMain.repositories.SeriesVSBookRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
@@ -46,5 +47,10 @@ public class SeriesVSBookService {
     private SeriesVsBookEntity requireOne(Integer id) {
         return seriesVSBookRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Resource not found: " + id));
+    }
+
+    @Transactional()
+    public void setBookToSeries(String BookSeries , String ISBN, int BookIndexInSeries) {
+        seriesVSBookRepository.setBookToSeries(BookSeries,ISBN,BookIndexInSeries);
     }
 }

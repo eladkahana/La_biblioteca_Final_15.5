@@ -38,5 +38,10 @@ public class BookVSCategoryController {
         return bookVSCategoryService.getById(id);
     }
 
+    @GetMapping("/setCategoryToBook")
+    void setCategoryToBook(String Category, String ISBN){
+        bookVSCategoryService.setCategoryToBook(Category,ISBN);
+    };
+
 
 }

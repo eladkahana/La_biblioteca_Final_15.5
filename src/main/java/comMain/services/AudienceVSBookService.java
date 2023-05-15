@@ -2,10 +2,14 @@ package comMain.services;
 
 import comMain.entities.AudienceVsBookEntity;
 import comMain.repositories.AudienceVSBookRepository;
+import org.eclipse.persistence.jpa.jpql.tools.utility.iterator.CloneIterator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -47,4 +51,10 @@ public class AudienceVSBookService {
         return audienceVSBookRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Resource not found: " + id));
     }
+
+    @Transactional()
+    public void setAudienceToBook(String team , String ISBN) {
+        audienceVSBookRepository.setAudienceToBook(team,ISBN);
+    }
+
 }

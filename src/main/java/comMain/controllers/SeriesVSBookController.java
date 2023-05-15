@@ -39,4 +39,9 @@ public class SeriesVSBookController {
     }
 
 
+    @GetMapping("/setBookToSeries")
+    void setBookToSeries(String BookSeries, String ISBN, int BookIndexInSeries){
+        seriesVSBookService.setBookToSeries(BookSeries,ISBN,BookIndexInSeries);
+    };
+
 }

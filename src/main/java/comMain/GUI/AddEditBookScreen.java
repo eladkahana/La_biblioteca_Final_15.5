@@ -6,7 +6,7 @@
 
 package comMain.GUI;
 
-import comMain.client.InformationGUI;
+import comMain.SwingClient.InformationGUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,11 +14,14 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 
 public class AddEditBookScreen extends JPanel {
@@ -211,6 +214,10 @@ public class AddEditBookScreen extends JPanel {
 
 
         // Create the image panel
+
+        byte[] chosenImage = new byte[0];
+        chosenImage = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         uploadButton = new JButton("Upload Image");
         uploadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -219,6 +226,12 @@ public class AddEditBookScreen extends JPanel {
                 File selectedFile = fileChooser.getSelectedFile();
                 try {
                     BufferedImage image = ImageIO.read(selectedFile);
+
+                    // Convert BufferedImage to byte[]
+
+                    ImageIO.write(image, "png", baos);
+
+
                     ImageIcon icon = new ImageIcon(image);
                     imageLabel.setIcon(icon);
                 } catch (IOException ex) {
@@ -227,6 +240,7 @@ public class AddEditBookScreen extends JPanel {
             }
         });
 
+        chosenImage = baos.toByteArray();
 
 
 
@@ -257,7 +271,7 @@ public class AddEditBookScreen extends JPanel {
         });
 
 // Set initial state
-        //seriesComboBox.setEnabled(enableSeriesCheckbox.isSelected());
+        seriesComboBox.setEnabled(enableSeriesCheckbox.isSelected());
         bookNumberTextField.setEnabled(enableSeriesCheckbox.isSelected());
 
 
@@ -283,16 +297,28 @@ public class AddEditBookScreen extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH);
 
 
+        byte[] finalChosenImage = chosenImage;
         saveButton.addActionListener(e -> {
+            Integer newID = InformationGUI.addCompleteBook(isbnField.getText(),titleField.getText(),
+                    editionField.getText(),shelfmarkField.getText(),Integer.parseInt(pagesField.getText()),Integer.parseInt(yearField.getText()),
+                    finalChosenImage,languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText());
+
+            InformationGUI.setBookToSeries(seriesComboBox.getItemAt(seriesComboBox.getSelectedIndex()),isbnField.getText(),Integer.parseInt(bookNumberTextField.getText()));
+            InformationGUI.setCategoryToBook(categoryListChose,isbnField.getText());
+            InformationGUI.setAuthorToBook(authorListChose,isbnField.getText());
+            InformationGUI.setAudienceToBook(audienceListChose,isbnField.getText());
+
             // Create a new dialog
             JDialog dialog = new JDialog();
             dialog.setTitle("Confirmation Message");
+            JLabel Barcode = new JLabel(new ImageIcon(Arrays.toString(InformationGUI.getBarcode(newID.toString()))));
+            dialog.getContentPane().add(Barcode);
 
             // Create a panel for the message and the image
             JPanel messagePanel = new JPanel(new BorderLayout(10, 10));
-            JLabel messageLabel = new JLabel("Are you sure you want to save this book?");
+            JLabel messageLabel = new JLabel("Great, the book has been successfully saved in the system!\n" +
+                    "This is his code:");
             messagePanel.add(messageLabel, BorderLayout.NORTH);
-            messagePanel.add(imageLabel, BorderLayout.CENTER);
 
             // Create a panel for the print button
             JPanel printPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));

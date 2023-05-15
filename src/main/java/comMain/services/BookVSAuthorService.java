@@ -5,6 +5,7 @@ import comMain.repositories.BookVSAuthorRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
@@ -46,5 +47,10 @@ public class BookVSAuthorService {
     private BookVsAuthorEntity requireOne(Integer id) {
         return bookVSAuthorRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Resource not found: " + id));
+    }
+
+    @Transactional()
+    public void setAuthorToBook(String AuthorFN, String AuthorLN , String ISBN) {
+        bookVSAuthorRepository.setAuthorToBook(AuthorFN, AuthorLN,ISBN);
     }
 }
