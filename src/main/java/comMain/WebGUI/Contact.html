@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Contact Us</title>
+
+  <style>
+    /* Contact page styles */
+
+    header {
+      background-color: #37474f;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2em;
+    }
+
+    main {
+      margin: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1.2em;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      font-size: 1.2em;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      background-color: #f2f2f2;
+    }
+
+    textarea {
+      height: 150px;
+    }
+
+    button[type="submit"] {
+      background-color: #37474f;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #28383d;
+    }
+
+    footer {
+      background-color: #37474f;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>Contact Us</h1>
+</header>
+
+<main>
+  <form>
+    <label for="topic">Topic:</label>
+    <input type="text" id="topic" name="topic" required>
+
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" required></textarea>
+
+    <button type="submit">Send</button>
+  </form>
+</main>
+
+
+</body>
+</html>
