@@ -79,7 +79,7 @@ public class ReservationManagementScreen extends JPanel {
                 DefaultListModel<ReserveEntity> filteredListModel = new DefaultListModel<ReserveEntity>();
                 for (int i = 0; i < reserveListModel.getSize(); i++) {
                     ReserveEntity reserve = reserveListModel.getElementAt(i);
-                    if (reserve.toString().contains(query)) {
+                    if (InformationGUI.reservationTitle(reserve).contains(query)) {
                         filteredListModel.addElement(reserve);
                     }
                 }
@@ -96,7 +96,7 @@ public class ReservationManagementScreen extends JPanel {
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 ReserveEntity reserve = (ReserveEntity) value;
-                renderer.setText(reserve.toString());
+                renderer.setText(InformationGUI.reservationTitle(reserve));
                 renderer.setHorizontalAlignment(SwingConstants.RIGHT);
                 return renderer;
             }

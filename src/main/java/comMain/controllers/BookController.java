@@ -62,4 +62,10 @@ public class BookController {
         return result;
     }
 
+
+    @GetMapping("/MostReservedBook")
+    public List<Object[]> MostReservedBook(){
+        return bookService.MostReservedBook();
+    }
+
 }

@@ -328,4 +328,29 @@ public abstract class InformationGUI {
         return newID;
     }
 
+
+    public static String reservationTitle(ReserveEntity reserve){
+
+        String url = "http://localhost:8080/readers/" + reserve.getReaderId();
+        URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
+
+        ReadersEntity reader = restTemplate.getForObject(uri, ReadersEntity.class);
+
+        url = "http://localhost:8080/copies/" + reserve.getCopyID();
+        uri = UriComponentsBuilder.fromUriString(url).build().toUri();
+
+        CopiesEntity copy = restTemplate.getForObject(uri, CopiesEntity.class);
+
+        url = "http://localhost:8080/book/" + copy.getOriginalId();
+        uri = UriComponentsBuilder.fromUriString(url).build().toUri();
+
+        BookEntity book = restTemplate.getForObject(uri, BookEntity.class);
+
+
+
+        LastNameEntity lastName = restTemplate.getForObject(uri, LastNameEntity.class);
+        return ("Book:     " + book.getTitle() + "     |     Reader:     " + getName(reader.getFirstName(),reader.getLastName()) +
+                "     |     from:     " + reserve.getReserveDate() + "     -     to:     " + reserve.getDueDate());
+    }
+
 }

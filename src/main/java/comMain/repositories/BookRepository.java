@@ -24,4 +24,9 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
              @Param("publisher") String publisher,
              @Param("note") String note);
 
+    @Procedure(name = "MostReservedBook")
+    List<Object[]> MostReservedBook();
+
+
+
 }

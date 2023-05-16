@@ -5,6 +5,8 @@
  readers management, settings, reservation management, reservation actions, and mailbox.
  */
 package comMain.GUI;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -18,7 +20,7 @@ public class HomeScreen{
      * the tabbed pane with the different screens.
      * @param args The command-line arguments.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JsonProcessingException {
         // Create the JFrame
         JFrame frame = new JFrame("Library Management System");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

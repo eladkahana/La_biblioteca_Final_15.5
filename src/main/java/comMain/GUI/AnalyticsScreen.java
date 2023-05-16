@@ -6,6 +6,8 @@
 
 package comMain.GUI;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import comMain.SwingClient.AnalysticClient;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -18,6 +20,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnalyticsScreen extends JPanel {
 
@@ -26,7 +30,7 @@ public class AnalyticsScreen extends JPanel {
      * Constructs the analytics screen with two bar charts of borrowed books by hour and by day, and information
      * about the most borrowed book, monthly loans, and daily loans.
      */
-    public AnalyticsScreen() {
+    public AnalyticsScreen() throws JsonProcessingException {
 
         setLayout(new BorderLayout());
 
@@ -107,62 +111,88 @@ public class AnalyticsScreen extends JPanel {
 
 
 
-// Create panel for most borrowed book, monthly loans, and daily loans
-        JPanel infoPanel = new JPanel(new GridLayout(3, 1));
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 // Create label for most borrowed book
-        JLabel mostBorrowedLabel = new JLabel("Most Borrowed Book: ");
-        mostBorrowedLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        infoPanel.add(mostBorrowedLabel);
+        infoPanel.add(Box.createVerticalStrut(100));
+        JLabel mostBorrowedTitleLabel = new JLabel("Most Borrowed Book:");
+        mostBorrowedTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        infoPanel.add(mostBorrowedTitleLabel);
+
+        JLabel mostBorrowedValueLabel = new JLabel(AnalysticClient.MostReservedBook());
+        mostBorrowedValueLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        infoPanel.add(mostBorrowedValueLabel);
+        infoPanel.add(Box.createVerticalStrut(100)); // Add spacing
 
 // Create label for monthly loans
-        JLabel monthlyLoansLabel = new JLabel("Monthly Loans: ");
-        monthlyLoansLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        infoPanel.add(monthlyLoansLabel);
+        JLabel monthlyLoansTitleLabel = new JLabel("Monthly Loans:");
+        monthlyLoansTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        infoPanel.add(monthlyLoansTitleLabel);
+
+        JLabel monthlyLoansValueLabel = new JLabel(AnalysticClient.MonthlyResrvesAmount());
+        monthlyLoansValueLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        infoPanel.add(monthlyLoansValueLabel);
+        infoPanel.add(Box.createVerticalStrut(100)); // Add spacing
 
 // Create label for daily loans
-        JLabel dailyLoansLabel = new JLabel("Daily Loans: ");
-        dailyLoansLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        infoPanel.add(dailyLoansLabel);
+        JLabel dailyLoansTitleLabel = new JLabel("Daily Loans:");
+        dailyLoansTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        infoPanel.add(dailyLoansTitleLabel);
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panel, infoPanel);
+        JLabel dailyLoansValueLabel = new JLabel(AnalysticClient.todayResrvesAmount());
+        dailyLoansValueLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        infoPanel.add(dailyLoansValueLabel);
 
-// Add info panel to right side of panel
-        add(splitPane);
+// Create a new JPanel to hold the panel and infoPanel
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
-// Set background color of panel
-        panel.setBackground(Color.WHITE);
+// Set the background color of the main panel
+        mainPanel.setBackground(Color.WHITE);
+
+// Add some padding around the panel
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+// Add the panel and infoPanel to the main panel
+        mainPanel.add(panel, BorderLayout.CENTER);
+        mainPanel.add(infoPanel, BorderLayout.EAST);
+
+// Add the main panel to the content pane of the frame or container
+        add(mainPanel);
+
+
+
 
     }
 
 
         // Create sample data for borrowed books graph by hour
-    private CategoryDataset createBorrowedBooksByHourData() {
+    private CategoryDataset createBorrowedBooksByHourData() throws JsonProcessingException {
+
+        List<Object[]> data = AnalysticClient.displayReservesByHours();
+
+
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(150, "Books", "9");
-        dataset.addValue(200, "Books", "10");
-        dataset.addValue(400, "Books", "11");
-        dataset.addValue(300, "Books", "12");
-        dataset.addValue(200, "Books", "13");
-        dataset.addValue(150, "Books", "14");
-        dataset.addValue(100, "Books", "15");
-        dataset.addValue(50, "Books", "16");
-        dataset.addValue(20, "Books", "17");
-        dataset.addValue(5, "Books", "18");
+        for (Object[] rowData : data) {
+            Integer value = (Integer) rowData[1];
+            String hour = (rowData[0].toString() + " : 00");
+            dataset.addValue(value, "Reserves", hour);
+        }
         return dataset;
     }
 
     // Create sample data for borrowed books graph by day
-    private CategoryDataset createBorrowedBooksByDayData() {
+    private CategoryDataset createBorrowedBooksByDayData() throws JsonProcessingException {
+        List<Object[]> data = AnalysticClient.displayReservesByDays();
+
+
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(500, "Books", "Monday");
-        dataset.addValue(600, "Books", "Tuesday");
-        dataset.addValue(700, "Books", "Wednesday");
-        dataset.addValue(800, "Books", "Thursday");
-        dataset.addValue(900, "Books", "Friday");
-        dataset.addValue(700, "Books", "Saturday");
-        dataset.addValue(400, "Books", "Sunday");
+        for (Object[] rowData : data) {
+            Integer value = (Integer) rowData[1];
+            String day = rowData[0].toString();
+            dataset.addValue(value, "Reserves", day);
+        }
         return dataset;
     }
 

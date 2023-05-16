@@ -61,4 +61,23 @@ public class ReserveService {
         return reserveRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public List<Object[]> MonthlyResrvesAmount() {
+        return reserveRepository.MonthlyResrvesAmount();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Object[]> todayResrvesAmount() {
+        return reserveRepository.todayResrvesAmount();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Object[]> displayReservesByDays() {
+        return reserveRepository.displayReservesByDays();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Object[]> displayReservesByHours() {
+        return reserveRepository.displayReservesByHours();
+    }
 }

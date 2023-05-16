@@ -49,4 +49,25 @@ public class ReserveController {
     public List<ReserveEntity> getAllReserves(){
         return reserveService.getAllReserves();
     }
+
+    @GetMapping("/MonthlyResrvesAmount")
+    public List<Object[]> MonthlyResrvesAmount(){
+        return reserveService.MonthlyResrvesAmount();
+    }
+
+
+    @GetMapping("/todayResrvesAmount")
+    public List<Object[]> todayResrvesAmount(){
+        return reserveService.todayResrvesAmount();
+    }
+
+    @GetMapping("/displayReservesByDays")
+    public List<Object[]> displayReservesByDays(){
+        return reserveService.displayReservesByDays();
+    }
+
+    @GetMapping("/displayReservesByHours")
+    public List<Object[]> displayReservesByHours(){
+        return reserveService.displayReservesByHours();
+    }
 }

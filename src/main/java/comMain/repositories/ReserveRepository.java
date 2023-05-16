@@ -14,4 +14,17 @@ public interface ReserveRepository extends JpaRepository<ReserveEntity, Integer>
             (@Param("arrStr") String arrStr);
 
 
+    @Procedure(name = "MonthlyResrvesAmount")
+    List<Object[]> MonthlyResrvesAmount();
+
+
+    @Procedure(name = "todayResrvesAmount")
+    List<Object[]> todayResrvesAmount();
+
+    @Procedure(name = "displayReservesByDays")
+    List<Object[]> displayReservesByDays();
+
+    @Procedure(name = "displayReservesByHours")
+    List<Object[]> displayReservesByHours();
+
 }

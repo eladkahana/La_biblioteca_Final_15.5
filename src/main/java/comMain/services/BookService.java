@@ -81,4 +81,9 @@ public class BookService {
                 note
         );
     }
+
+    @Transactional(readOnly = true)
+    public List<Object[]> MostReservedBook(){
+        return bookRepository.MostReservedBook();
+    }
 }
