@@ -94,7 +94,7 @@ public class ReadersManagementScreen extends JPanel {
                 DefaultListModel<ReadersEntity> filteredListModel = new DefaultListModel<ReadersEntity>();
                 for (int i = 0; i < readerListModel.getSize(); i++) {
                     ReadersEntity reader = readerListModel.getElementAt(i);
-                    if (reader.getIDno().contains(query)) {
+                    if (InformationGUI.getName(reader.getFirstName(),reader.getLastName()).contains(query)) {
                         filteredListModel.addElement(reader);
                     }
                 }
@@ -111,7 +111,7 @@ public class ReadersManagementScreen extends JPanel {
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 ReadersEntity reader = (ReadersEntity) value;
-                renderer.setText(reader.getIDno());
+                renderer.setText(InformationGUI.getName(reader.getFirstName(),reader.getLastName()));
                 renderer.setHorizontalAlignment(SwingConstants.RIGHT);
                 return renderer;
             }

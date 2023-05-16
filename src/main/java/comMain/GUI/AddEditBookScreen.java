@@ -7,6 +7,7 @@
 package comMain.GUI;
 
 import comMain.SwingClient.InformationGUI;
+import comMain.entities.BookEntity;
 
 import javax.swing.*;
 import java.awt.*;
@@ -298,21 +299,24 @@ public class AddEditBookScreen extends JPanel {
         buttonPanel.add(cancelButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
+        cancelButton.addActionListener(e -> {
+            closePanel();
+        });
 
         byte[] finalChosenImage = chosenImage;
         saveButton.addActionListener(e -> {
-//            Integer newID = InformationGUI.addCompleteBook(isbnField.getText(),titleField.getText(),
-//                    editionField.getText(),shelfmarkField.getText(),Integer.parseInt(pagesField.getText()),Integer.parseInt(yearField.getText()),
-//                    finalChosenImage,languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText());
-//
-//            if(enableSeriesCheckbox.isSelected()) {
-//                Component editor = seriesComboBox.getEditor().getEditorComponent();
-//                String selectedText = ((JTextComponent) editor).getText();
-//                InformationGUI.setBookToSeries(selectedText, isbnField.getText(), Integer.parseInt(bookNumberTextField.getText()));
-//            }
-//            InformationGUI.setCategoryToBook(categoryListChose,isbnField.getText());
-//            InformationGUI.setAuthorToBook(authorListChose,isbnField.getText());
-//            InformationGUI.setAudienceToBook(audienceListChose,isbnField.getText());
+            Integer newID = InformationGUI.addCompleteBook(isbnField.getText(),titleField.getText(),
+                    editionField.getText(),shelfmarkField.getText(),Integer.parseInt(pagesField.getText()),Integer.parseInt(yearField.getText()),
+                    finalChosenImage,languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText());
+
+            if(enableSeriesCheckbox.isSelected()) {
+                Component editor = seriesComboBox.getEditor().getEditorComponent();
+                String selectedText = ((JTextComponent) editor).getText();
+                InformationGUI.setBookToSeries(selectedText, isbnField.getText(), Integer.parseInt(bookNumberTextField.getText()));
+            }
+            InformationGUI.setCategoryToBook(categoryListChose,isbnField.getText());
+            InformationGUI.setAuthorToBook(authorListChose,isbnField.getText());
+            InformationGUI.setAudienceToBook(audienceListChose,isbnField.getText());
 
             int newId = 100;
 // Create a new dialog
@@ -435,7 +439,20 @@ public class AddEditBookScreen extends JPanel {
         };
     }
 
+    public void Edit(BookEntity book){
+        this.isbnField.setText(book.getIsbn());
+        this.titleField.setText(book.getTitle());
+        this.editionField.setText(book.getEdition());
+        this.pagesField.setText(Integer.toString(book.getNumberOfPages()));
+        this.yearField.setText(Integer.toString(book.getPublishYear()));
+        this.noteArea.setText(book.getNote());
 
+
+    }
+
+    private void closePanel() {
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }
 
 }
 

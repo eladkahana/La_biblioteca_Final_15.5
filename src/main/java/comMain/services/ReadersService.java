@@ -4,8 +4,11 @@ import comMain.entities.ReadersEntity;
 import comMain.repositories.ReadersRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -51,7 +54,33 @@ public class ReadersService {
     }
 
 
-    public List<ReadersEntity> getAllReaders(){
+    public List<ReadersEntity> getAllReaders() {
         return readersRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Object[]> addReader(
+            String ID,
+            String adress,
+            String phoneNo,
+            String firstName,
+            String lastName,
+            String birthDate,
+            String gender,
+            String Email
+    ) {
+
+        java.sql.Date sqlDate = java.sql.Date.valueOf(birthDate);
+
+        return readersRepository.addReader(
+                ID,
+                adress,
+                phoneNo,
+                firstName,
+                lastName,
+                sqlDate,
+                gender,
+                Email
+        );
     }
 }

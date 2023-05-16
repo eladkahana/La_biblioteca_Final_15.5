@@ -9,7 +9,10 @@ import java.awt.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Date;
+
 import com.toedter.calendar.JDateChooser;
+import comMain.SwingClient.InformationGUI;
 
 public class AddEditUserScreen extends JPanel {
     private JLabel titleLabel;
@@ -86,8 +89,32 @@ public class AddEditUserScreen extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         saveButton = new JButton("Save");
         cancelButton = new JButton("Cancel");
+        saveButton.addActionListener(e -> {
+
+
+            // Convert java.util.Date to java.sql.Date
+            long milliseconds = birthDateChooser.getDate().getTime();
+            java.sql.Date sqlDate = new java.sql.Date(milliseconds);
+            System.out.println(sqlDate);
+
+            InformationGUI.addReader(idTextField.getText(),addressTextField.getText(),phoneNoTextField.getText(),
+                    firstNameTextField.getText(), lastNameTextField.getText()
+                    , sqlDate,genderComboBox.getItemAt(genderComboBox.getSelectedIndex()),emailTextField.getText());
+
+            closePanel();
+        });
+        cancelButton.addActionListener(e -> {
+            closePanel();
+        });
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
         add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Closes the panel by removing it from its parent container.
+     */
+    private void closePanel() {
+        SwingUtilities.getWindowAncestor(this).dispose();
     }
 }
