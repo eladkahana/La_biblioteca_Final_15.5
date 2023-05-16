@@ -49,7 +49,7 @@ public class SeriesVSBookService {
                 .orElseThrow(() -> new NoSuchElementException("Resource not found: " + id));
     }
 
-    @Transactional()
+    @Transactional(readOnly = true)
     public void setBookToSeries(String BookSeries , String ISBN, int BookIndexInSeries) {
         seriesVSBookRepository.setBookToSeries(BookSeries,ISBN,BookIndexInSeries);
     }

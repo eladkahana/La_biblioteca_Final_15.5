@@ -52,7 +52,7 @@ public class AudienceVSBookService {
                 .orElseThrow(() -> new NoSuchElementException("Resource not found: " + id));
     }
 
-    @Transactional()
+    @Transactional(readOnly = true)
     public void setAudienceToBook(String team , String ISBN) {
         audienceVSBookRepository.setAudienceToBook(team,ISBN);
     }

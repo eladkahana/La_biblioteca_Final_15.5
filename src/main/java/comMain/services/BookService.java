@@ -5,8 +5,8 @@ import comMain.repositories.BookRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -55,9 +55,9 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Object[]> addCompleteBook(
-            String NISBN,
+            String ISBN,
             String title,
             String edition,
             String shelfmark,
@@ -68,8 +68,8 @@ public class BookService {
             String publisher,
             String note
     ) {
-        return bookRepository.AddCompleteBook(
-                NISBN,
+        return bookRepository.addCompleteBook(
+                ISBN,
                 title,
                 edition,
                 shelfmark,

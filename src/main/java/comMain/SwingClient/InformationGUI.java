@@ -3,6 +3,8 @@ package comMain.SwingClient;
 import comMain.entities.*;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -146,9 +148,8 @@ public abstract class InformationGUI {
 
     public static Byte[] getBarcode(String ID){
          restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/barcode";
+        String url = "http://localhost:8080/barcode/" + ID;
         URI uri = UriComponentsBuilder.fromUriString(url)
-                .queryParam("input", ID)
                 .build().toUri();
         ParameterizedTypeReference<Byte[]> responseType = new ParameterizedTypeReference<Byte[]>() {};
         Byte[] response = restTemplate.exchange(uri, HttpMethod.GET, null, responseType).getBody();
@@ -158,7 +159,7 @@ public abstract class InformationGUI {
 
 
 
-    public static int addCompleteBook(String NISBN,
+    public static int addCompleteBook(String ISBN,
                                       String title,
                                       String edition,
                                       String shelfmark,
@@ -171,79 +172,108 @@ public abstract class InformationGUI {
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8080/book/addCompleteBook";
 
+        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+        parameters.add("ISBN", ISBN);
+        parameters.add("title", title);
+        parameters.add("edition", edition);
+        parameters.add("shelfmark", shelfmark);
+        parameters.add("numberOfPages", numberOfPages);
+        parameters.add("publishYear", publishYear);
+        parameters.add("coverImage", coverImage);
+        parameters.add("language", language);
+        parameters.add("publisher", publisher);
+        parameters.add("note", note);
+
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("NISBN", NISBN);
-        requestBody.put("title", title);
-        requestBody.put("edition", edition);
-        requestBody.put("shelfmark", shelfmark);
-        requestBody.put("numberOfPages", numberOfPages);
-        requestBody.put("publishYear", publishYear);
-        requestBody.put("coverImage", coverImage);
-        requestBody.put("language", language);
-        requestBody.put("publisher", publisher);
-        requestBody.put("note", note);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
 
-        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
-
-        URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
-
-        ResponseEntity<List<Object[]>> responseEntity = restTemplate.exchange(uri, HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});
+        ResponseEntity<List<Object[]>> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});
         List<Object[]> response = responseEntity.getBody();
 
-        int ID = (int) response.get(1)[0];
+        int ID = (int) response.get(0)[0];
 
         return ID;
     }
 
 
 
+
     public static void setBookToSeries(String bookSeries, String ISBN, int bookIndexInSeries) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/setBookToSeries";
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                .queryParam("BookSeries", bookSeries)
-                .queryParam("ISBN", ISBN)
-                .queryParam("BookIndexInSeries", bookIndexInSeries);
-        restTemplate.exchange(builder.toUriString(), HttpMethod.PUT, null, String.class);
-    }
+        String url = "http://localhost:8080/seriesVSBook/setBookToSeries";
+        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+        parameters.add("BookSeries", bookSeries);
+        parameters.add("ISBN", ISBN);
+        parameters.add("BookIndexInSeries", bookIndexInSeries);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+
+        restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});    }
 
     public static void setCategoryToBook(JComboBox<String> categoriesList, String ISBN) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/setCategoryToBook";
+        String url = "http://localhost:8080/bookVSCategory/setCategoryToBook";
+
         for (int i = 0; i < categoriesList.getItemCount(); i++) {
             String category = categoriesList.getItemAt(i);
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("Category", category)
-                    .queryParam("ISBN", ISBN);
-            restTemplate.exchange(builder.toUriString(), HttpMethod.PUT, null, String.class);
+
+            MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+            parameters.add("Category", category);
+            parameters.add("ISBN", ISBN);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+
+            restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});
         }
     }
 
+
     public static void setAuthorToBook(JComboBox<String> authorsList, String ISBN) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/setAuthorToBook";
+        String url = "http://localhost:8080/bookVSAuthor/setAuthorToBook";
+
+
         for (int i = 0; i < authorsList.getItemCount(); i++) {
             String author = authorsList.getItemAt(i);
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("AuthorFN", author.substring(0, author.indexOf(',')))
-                    .queryParam("AuthorLN", author.substring(author.indexOf(',')))
-                    .queryParam("ISBN", ISBN);
-            restTemplate.exchange(builder.toUriString(), HttpMethod.PUT, null, String.class);
+            MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+            parameters.add("AuthorFN", author.substring(0, author.indexOf(',')));
+            parameters.add("AuthorLN", author.substring(author.indexOf(',')+2));
+            parameters.add("ISBN", ISBN);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+
+            restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});
         }
     }
 
     public static void setAudienceToBook(JComboBox<String> audienceList, String ISBN) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/setAudienceToBook";
+        String url = "http://localhost:8080/audienceVSBook/setAudienceToBook";
+
+
         for (int i = 0; i < audienceList.getItemCount(); i++) {
             String audience = audienceList.getItemAt(i);
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("team", audience)
-                    .queryParam("ISBN", ISBN);
-            restTemplate.exchange(builder.toUriString(), HttpMethod.PUT, null, String.class);
+            MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+            parameters.add("team", audience);
+            parameters.add("ISBN", ISBN);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+
+            restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});
         }
     }
 

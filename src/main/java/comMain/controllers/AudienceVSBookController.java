@@ -4,6 +4,7 @@ import comMain.entities.AudienceVsBookEntity;
 import comMain.services.AudienceVSBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,8 +41,9 @@ public class AudienceVSBookController {
     }
 
 
-    @GetMapping("/setAudienceToBook")
-    void setAudienceToBook(String team, String ISBN){
+
+    @PutMapping("/setAudienceToBook")
+    void setAudienceToBook(@RequestParam String team, @RequestParam String ISBN){
         audienceVSBookService.setAudienceToBook(team,ISBN);
     };
 

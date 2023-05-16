@@ -46,7 +46,7 @@ public class BookController {
 
 
     @PostMapping("/addCompleteBook")
-    public List<Object[]> addCompleteBook(@RequestParam String NISBN,
+    public List<Object[]> addCompleteBook(@RequestParam String ISBN,
                                           @RequestParam String title,
                                           @RequestParam String edition,
                                           @RequestParam String shelfmark,
@@ -57,7 +57,7 @@ public class BookController {
                                           @RequestParam String publisher,
                                           @RequestParam String note) {
         List<Object[]> result = bookService.addCompleteBook(
-            NISBN,title,edition,shelfmark,numberOfPages,publishYear,coverImage,language,publisher,note
+            ISBN,title,edition,shelfmark,numberOfPages,publishYear,coverImage,language,publisher,note
         );
         return result;
     }

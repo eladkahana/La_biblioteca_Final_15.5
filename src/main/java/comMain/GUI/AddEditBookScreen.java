@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.text.JTextComponent;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.Arrays;
@@ -215,8 +216,8 @@ public class AddEditBookScreen extends JPanel {
 
         // Create the image panel
 
-        byte[] chosenImage = new byte[0];
-        chosenImage = null;
+        byte[] chosenImage = new byte[1];
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         uploadButton = new JButton("Upload Image");
         uploadButton.addActionListener(e -> {
@@ -303,7 +304,11 @@ public class AddEditBookScreen extends JPanel {
                     editionField.getText(),shelfmarkField.getText(),Integer.parseInt(pagesField.getText()),Integer.parseInt(yearField.getText()),
                     finalChosenImage,languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText());
 
-            InformationGUI.setBookToSeries(seriesComboBox.getItemAt(seriesComboBox.getSelectedIndex()),isbnField.getText(),Integer.parseInt(bookNumberTextField.getText()));
+            if(enableSeriesCheckbox.isSelected()) {
+                Component editor = seriesComboBox.getEditor().getEditorComponent();
+                String selectedText = ((JTextComponent) editor).getText();
+                InformationGUI.setBookToSeries(selectedText, isbnField.getText(), Integer.parseInt(bookNumberTextField.getText()));
+            }
             InformationGUI.setCategoryToBook(categoryListChose,isbnField.getText());
             InformationGUI.setAuthorToBook(authorListChose,isbnField.getText());
             InformationGUI.setAudienceToBook(audienceListChose,isbnField.getText());

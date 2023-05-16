@@ -39,8 +39,8 @@ public class BookVSAuthorController {
     }
 
 
-    @GetMapping("/setAuthorToBook")
-    void setAuthorToBook(String AuthorFN,String AuthorLN, String ISBN){
+    @PutMapping("/setAuthorToBook")
+    void setAuthorToBook(@RequestParam String AuthorFN,@RequestParam String AuthorLN, @RequestParam String ISBN){
         bookVSAuthorService.setAuthorToBook(AuthorFN,AuthorLN,ISBN);
     };
 

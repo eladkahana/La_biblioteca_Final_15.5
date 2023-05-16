@@ -49,7 +49,7 @@ public class BookVSCategoryService {
                 .orElseThrow(() -> new NoSuchElementException("Resource not found: " + id));
     }
 
-    @Transactional()
+    @Transactional(readOnly = true)
     public void setCategoryToBook(String Category , String ISBN) {
         bookVSCategoryRepository.setCategoryToBook(Category,ISBN);
     }

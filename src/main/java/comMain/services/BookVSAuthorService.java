@@ -49,7 +49,7 @@ public class BookVSAuthorService {
                 .orElseThrow(() -> new NoSuchElementException("Resource not found: " + id));
     }
 
-    @Transactional()
+    @Transactional(readOnly = true)
     public void setAuthorToBook(String AuthorFN, String AuthorLN , String ISBN) {
         bookVSAuthorRepository.setAuthorToBook(AuthorFN, AuthorLN,ISBN);
     }
