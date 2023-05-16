@@ -36,7 +36,7 @@ public class Email {
     /**
      * this function insert the entire properties to the email, and send it
      */
-    public void SendEmail() {
+    public void sendEmail() {
         Properties p = new Properties();
         p.put("mail.smtp.auth", "true");
         p.put("mail.smtp.starttls.enable", "true");

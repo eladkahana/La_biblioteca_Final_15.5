@@ -1,5 +1,8 @@
 package comMain.SwingClient;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import comMain.entities.*;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -352,5 +355,85 @@ public abstract class InformationGUI {
         return ("Book:     " + book.getTitle() + "     |     Reader:     " + getName(reader.getFirstName(),reader.getLastName()) +
                 "     |     from:     " + reserve.getReserveDate() + "     -     to:     " + reserve.getDueDate());
     }
+
+
+    public static List<RequestsEntity> getUnCheckedRequests() throws JsonProcessingException {
+        restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/requests/getUnCheckedRequests";
+        URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
+
+        String response = restTemplate.getForObject(uri, String.class);
+
+// Use Jackson library to deserialize the JSON string into a list of MyTable objects
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<RequestsEntity> myTableList = objectMapper.readValue(response, new TypeReference<List<RequestsEntity>>(){});
+
+
+        return myTableList;
+    }
+
+    public static List<RequestsEntity> getCheckedRequests() throws JsonProcessingException {
+        restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/requests/getCheckedRequests";
+        URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
+
+        String response = restTemplate.getForObject(uri, String.class);
+
+// Use Jackson library to deserialize the JSON string into a list of MyTable objects
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<RequestsEntity> myTableList = objectMapper.readValue(response, new TypeReference<List<RequestsEntity>>(){});
+
+
+        return myTableList;
+    }
+
+    public static String getMailDetails(RequestsEntity request){
+
+        String url = "http://localhost:8080/readers/" + request.getReaderId();
+        URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
+
+        ReadersEntity reader = restTemplate.getForObject(uri, ReadersEntity.class);
+
+
+        return ("Name: " + getName(reader.getFirstName(),reader.getLastName()) + ", send date: " + request.getSendDate() + ", topic: " + request.getTopic());
+
+    }
+
+
+    public static void requestChecked(int RequestID) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/requests/requestChecked";
+
+
+        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+        parameters.add("requestID", RequestID);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+
+        restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {
+        });
+    }
+
+    public static void responseEmail(RequestsEntity request, String answer){
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/emails/reaction";
+
+
+        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+        parameters.add("requestID", request.getId());
+        parameters.add("answer", answer);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+
+        restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});
+
+    }
+
 
 }

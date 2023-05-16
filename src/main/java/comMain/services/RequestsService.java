@@ -4,8 +4,11 @@ import comMain.entities.RequestsEntity;
 import comMain.repositories.RequestsRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -46,5 +49,20 @@ public class RequestsService {
     private RequestsEntity requireOne(Integer id) {
         return requestsRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Resource not found: " + id));
+    }
+
+    @Transactional(readOnly = true)
+    public List<RequestsEntity> getCheckedRequests(){
+        return requestsRepository.getCheckedRequests();
+    }
+
+    @Transactional(readOnly = true)
+    public List<RequestsEntity> getUnCheckedRequests(){
+        return requestsRepository.getUnCheckedRequests();
+    }
+
+    @Transactional(readOnly = true)
+    public void requestChecked(int requestID){
+         requestsRepository.requestChecked(requestID);
     }
 }

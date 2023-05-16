@@ -5,10 +5,15 @@
 
 package comMain.GUI;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import comMain.SwingClient.InformationGUI;
+import comMain.entities.RequestsEntity;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -23,7 +28,7 @@ public class MailBoxScreen extends JPanel {
     /**
      * Constructs a MailBoxScreen object.
      */
-    public MailBoxScreen() {
+    public MailBoxScreen() throws JsonProcessingException {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(800, 600));
 
@@ -32,24 +37,26 @@ public class MailBoxScreen extends JPanel {
         topPanel.add(titleLabel);
         add(topPanel, BorderLayout.NORTH);
 
-// Create sample inbox messages and content
-        ArrayList<String> inboxMessages = new ArrayList<String>();
-        inboxMessages.add("Content of Message 1");
-        inboxMessages.add("Content of Message 2");
-        inboxMessages.add("Content of Message 3");
-        inboxMessages.add("Content of Message 4");
-        inboxMessages.add("Content of Message 5");
-        inboxMessages.add("Content of Message 6");
-        inboxMessages.add("Content of Message 7");
-        inboxMessages.add("Content of Message 8");
-        inboxMessages.add("Content of Message 9");
-        inboxMessages.add("Content of Message 10");
+
+        ArrayList<String> inboxMessages = new ArrayList<>();
+        ArrayList<String> inboxArray = new ArrayList<>();
+        List<RequestsEntity> unCheckedList = InformationGUI.getUnCheckedRequests();
+
+        for (RequestsEntity request : unCheckedList) {
+            // Create sample inbox messages and content
+            inboxMessages.add(request.getContactContent());
+            inboxArray.add(InformationGUI.getMailDetails(request));
+        }
 
 // Create list of inbox messages
-        String[] inboxArray = {"Message 1", "Message 2", "Message 3", "Message 4", "Message 5",
-                "Message 6", "Message 7", "Message 8", "Message 9", "Message 10"};
+        DefaultListModel<String> inboxListModel = new DefaultListModel<>();
+        for (String message : inboxArray) {
+            inboxListModel.addElement(message);
+        }
 
-        inboxList = new JList<String>(inboxArray);
+        JList<String> inboxList = new JList<>(inboxListModel);
+
+
         inboxList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         inboxList.setFixedCellHeight(50); // Increase height of each cell in the list
         JScrollPane inboxScrollPane = new JScrollPane(inboxList);
@@ -62,14 +69,27 @@ public class MailBoxScreen extends JPanel {
         add(inboxPanel, BorderLayout.WEST);
 
 
-        ArrayList<String> readMessages = new ArrayList<String>(); // Fixed initialization
-        readMessages.add("Content of Message 1");
-        readMessages.add("Content of Message 2");
-        readMessages.add("Content of Message 3");
 
-// Create list of read messages
-        String[] readArray = {"Read Message 1", "Read Message 2", "Read Message 3"};
-        readList = new JList<String>(readArray);
+
+        ArrayList<String> readMessages = new ArrayList<>();
+        ArrayList<String> readArray = new ArrayList<>();
+        List<RequestsEntity> CheckedList = InformationGUI.getCheckedRequests();
+
+        for (RequestsEntity request : CheckedList) {
+            // Create sample inbox messages and content
+            readMessages.add(request.getContactContent());
+            readArray.add(InformationGUI.getMailDetails(request));
+        }
+
+// Create list of inbox messages
+        DefaultListModel<String> readListModel = new DefaultListModel<>();
+        for (String message : readArray) {
+            readListModel.addElement(message);
+        }
+
+        JList<String> readList = new JList<>(readListModel);
+
+
         readList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         readList.setFixedCellHeight(50); // Increase height of each cell in the list
         JScrollPane readScrollPane = new JScrollPane(readList);
@@ -92,8 +112,15 @@ public class MailBoxScreen extends JPanel {
         respondButton.setEnabled(false);
         respondButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                RequestsEntity request;
                 // Create response window
-                RespondingWindow respondWindow = new RespondingWindow();
+                if(inboxList.getSelectedIndex() > readList.getSelectedIndex()){
+                    request = unCheckedList.get(inboxList.getSelectedIndex());
+                }
+                else{
+                    request = CheckedList.get(readList.getSelectedIndex());
+                }
+                RespondingWindow respondWindow = new RespondingWindow(request);
                 respondWindow.setVisible(true);
             }
         });
@@ -113,6 +140,7 @@ public class MailBoxScreen extends JPanel {
             public void valueChanged(ListSelectionEvent e) {
                 int index = inboxList.getSelectedIndex();
                 if (index >= 0) {
+                    InformationGUI.requestChecked(unCheckedList.get(index).getId());
                     messageArea.setText(inboxMessages.get(index));
                     messageArea.setFont(new Font("Serif", Font.PLAIN, 24)); // Increase font size of message area
                     respondButton.setVisible(true); // Show respond button

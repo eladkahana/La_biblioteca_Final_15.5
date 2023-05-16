@@ -49,8 +49,8 @@ public class ResponseService {
                 .orElseThrow(() -> new NoSuchElementException("Resource not found: " + id));
     }
 
-    @Transactional
-    public String addResponse(int requestID, String content) {
+    @Transactional(readOnly  = true)
+    public String addResponse(Integer requestID, String content) {
         return responesRepository.addResponse(requestID, content);
     }
 

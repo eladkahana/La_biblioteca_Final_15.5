@@ -3,11 +3,13 @@ package comMain.controllers;
 import comMain.entities.RequestsEntity;
 import comMain.services.RequestsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Validated
 @RestController
@@ -38,5 +40,19 @@ public class RequestsController {
         return requestsService.getById(id);
     }
 
+    @GetMapping("/getCheckedRequests")
+    public List<RequestsEntity> getCheckedRequests(){
+        return requestsService.getCheckedRequests();
+    }
+
+    @GetMapping("/getUnCheckedRequests")
+    public List<RequestsEntity> getUnCheckedRequests(){
+        return requestsService.getUnCheckedRequests();
+    }
+
+    @PutMapping("/requestChecked")
+    public void requestChecked(@RequestParam int requestID){
+        requestsService.requestChecked(requestID);
+    }
 
 }

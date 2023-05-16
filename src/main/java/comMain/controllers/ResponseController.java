@@ -41,8 +41,8 @@ public class ResponseController {
     }
 
 
-    @PostMapping("/addResponse")
-    public String addResponse(@RequestParam("requestID") int requestID, @RequestParam("content") String content) {
+    @PutMapping("/addResponse")
+    public String addResponse(@RequestParam("requestID") Integer requestID, @RequestParam("content") String content) {
         return responesService.addResponse(requestID, content);
     }
 
