@@ -146,13 +146,13 @@ public abstract class InformationGUI {
         return authorsList;
     }
 
-    public static Byte[] getBarcode(String ID){
+    public static byte[] getBarcode(String ID){
          restTemplate = new RestTemplate();
         String url = "http://localhost:8080/barcode/" + ID;
         URI uri = UriComponentsBuilder.fromUriString(url)
                 .build().toUri();
-        ParameterizedTypeReference<Byte[]> responseType = new ParameterizedTypeReference<Byte[]>() {};
-        Byte[] response = restTemplate.exchange(uri, HttpMethod.GET, null, responseType).getBody();
+        ParameterizedTypeReference<byte[]> responseType = new ParameterizedTypeReference<byte[]>() {};
+        byte[] response = restTemplate.exchange(uri, HttpMethod.GET, null, responseType).getBody();
 
         return response;
     }

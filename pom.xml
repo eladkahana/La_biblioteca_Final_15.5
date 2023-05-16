@@ -67,6 +67,13 @@
             <version>1.5-beta1</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.sf.barcode4j</groupId>
+            <artifactId>barcode4j</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+
 
 
 

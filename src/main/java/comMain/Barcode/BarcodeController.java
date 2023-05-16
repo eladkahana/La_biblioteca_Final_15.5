@@ -24,10 +24,6 @@ class BarcodeController {
         } catch (IOException e) {
             // Handle exception if barcode generation fails
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (OutputException e) {
-            throw new RuntimeException(e);
-        } catch (BarcodeException e) {
-            throw new RuntimeException(e);
         }
     }
 }
