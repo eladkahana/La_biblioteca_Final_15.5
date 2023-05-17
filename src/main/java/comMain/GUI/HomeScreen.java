@@ -30,6 +30,7 @@ public class HomeScreen{
         AnalyticsScreen analyticsScreen = new AnalyticsScreen();
         tabbedPane.addTab("Analytics", analyticsScreen);
 
+
         // Create an instance of the BooksManagementScreen and add it to the tabbed pane
         BooksManagementScreen bookManagementScreen = new BooksManagementScreen();
         tabbedPane.addTab("Books Management", bookManagementScreen);

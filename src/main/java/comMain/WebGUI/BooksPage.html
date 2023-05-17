@@ -71,7 +71,7 @@
       margin-top: 2rem;
       margin-bottom: 2rem;
       color: whitesmoke;
-      background-color: rgba(178, 222, 206, 0.79);
+      background-color: #37474f;
     }
 
     th, td {
@@ -81,7 +81,7 @@
     }
 
     tr:hover {
-      background-color: #a3e9ef;
+      background-color: rgba(72, 93, 103, 0.61);
     }
 
     .book-image {
@@ -112,90 +112,15 @@
     <th>ISBN</th>
     <th>Availability</th>
   </tr>
-  <tr>
-    <td><img class="book-image" src="https://via.placeholder.com/100x150.png?text=No+Image"></td>
-    <td>The Great Gatsby</td>
-    <td>F. Scott Fitzgerald</td>
-    <td>9780743273565</td>
-    <td>Available</td>
-  </tr>
-  <tr>
-    <td><img class="book-image" src="https://via.placeholder.com/100x150.png?text=No+Image"></td>
-    <td>To Kill a Mockingbird</td>
-    <td>Harper Lee</td>
-    <td>9780446310789</td>
-    <td>Not available</td>
-  </tr>
-  <tr>
-    <td><img class="book-image" src="https://via.placeholder.com/100x150.png?text=No+Image"></td>
-    <td>1984</td>
-    <td>George Orwell</td>
-    <td>9780451524935</td>
-    <td>Available</td>
-  </tr>
   <!-- Add more books here... -->
 </table>
-</body>
-</html>
 
+<!--<img class="book-image" src="https://via.placeholder.com/100x150.png?text=No+Image">-->
 
 <script>
   // Get the form and table elements
   const form = document.querySelector('form');
-  const table = document.querySelector('table');
-
   const table = document.querySelector('#book-table');
-
-  // Fetch the book data from the provided URL
-  fetch('http://localhost:8080/book')
-          .then(response => response.json())
-          .then(data => {
-            // Loop through each book object and append a new row to the table
-            data.forEach(book => {
-              const row = table.insertRow(-1);
-              const imageCell = row.insertCell(0);
-              const titleCell = row.insertCell(1);
-              const authorCell = row.insertCell(2);
-              const isbnCell = row.insertCell(3);
-              const availabilityCell = row.insertCell(4);
-
-              // Set the cell values to the corresponding book information
-              imageCell.innerHTML = `<img class="book-image" src="${book.CoverIamge}" onerror="this.onerror=null; this.src='https://via.placeholder.com/100x150.png?text=No+Image';">`;
-              titleCell.textContent = book.title;
-              authorCell.textContent = book.author;
-              isbnCell.textContent = book.isbn;
-              availabilityCell.textContent = book.available ? 'Available' : 'Not available';
-            });
-          })
-          .catch(error => console.error(error));
-
-
-
-  // Define the book data as an array of objects
-  const books = [
-    {
-      image: "https://via.placeholder.com/100x150.png?text=No+Image",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      isbn: "9780743273565",
-      available: true
-    },
-    {
-      image: "https://via.placeholder.com/100x150.png?text=No+Image",
-      title: "To Kill a Mockingbird",
-      author: "Harper Lee",
-      isbn: "9780446310789",
-      available: false
-    },
-    {
-      image: "https://via.placeholder.com/100x150.png?text=No+Image",
-      title: "1984",
-      author: "George Orwell",
-      isbn: "9780451524935",
-      available: true
-    }
-    // Add more books here...
-  ];
 
   // Define a function to search for books
   function searchBooks(event) {
@@ -213,24 +138,42 @@
   function displayBooks(books) {
     let rows = '';
     books.forEach(book => {
-      const availability = book.available ? 'Available' : 'Not available';
+      const availability = book.availability;
       rows += `<tr>
-                        <td><img class="book-image" src="${book.image}" alt="${book.title}"></td>
-                        <td>${book.title}</td>
-                        <td>${book.author}</td>
-                        <td>${book.isbn}</td>
-                        <td>${availability}</td>
-                    </tr>`;
+                  <td><img class="book-image" src="${book.image}" alt="${book.title}"></td>
+                  <td>${book.title}</td>
+                  <td>${book.author}</td>
+                  <td>${book.isbn}</td>
+                  <td>${availability}</td>
+                </tr>`;
     });
-    table.innerHTML = `<tr>
-                                <th>Image</th>
-                                <th>Title</th>
-                                <th>Author</th>
-                                <th>ISBN</th>
-                                <th>Availability</th>
-                            </tr>${rows}`;
+    table.innerHTML += rows;
   }
 
   // Attach the searchBooks function to the form's submit event
   form.addEventListener('submit', searchBooks);
+
+  // Define the initial book data as an array of objects
+  const books = [
+    {
+      image: "data:image/jpeg;base64,/9j/4AAQSkZ...",
+      title: "Book 1",
+      author: "Author 1",
+      isbn: "1234567890",
+      availability: "Available"
+    },
+    {
+      image: "data:image/jpeg;base64,/9j/4AAQSkZ...",
+      title: "Book 2",
+      author: "Author 2",
+      isbn: "9876543210",
+      availability: "Not available"
+    },
+    // Add more book objects here...
+  ];
+
+  // Display the initial book data in the table
+  displayBooks(books);
 </script>
+</body>
+</html>

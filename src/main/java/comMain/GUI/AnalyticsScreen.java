@@ -25,12 +25,17 @@ import java.util.List;
 
 public class AnalyticsScreen extends JPanel {
 
+    private JPanel panel;
+    private JPanel infoPanel;
+
 
     /**
      * Constructs the analytics screen with two bar charts of borrowed books by hour and by day, and information
      * about the most borrowed book, monthly loans, and daily loans.
      */
     public AnalyticsScreen() throws JsonProcessingException {
+
+
 
         setLayout(new BorderLayout());
 
@@ -90,7 +95,7 @@ public class AnalyticsScreen extends JPanel {
 
 
         //Create panel for analytics screen
-        JPanel panel = new JPanel(new GridLayout(1, 2));
+        panel = new JPanel(new GridLayout(1, 2));
 
 // Add borrowed books graph panel to left side of panel
 
@@ -111,7 +116,7 @@ public class AnalyticsScreen extends JPanel {
 
 
 
-        JPanel infoPanel = new JPanel();
+        infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -164,6 +169,8 @@ public class AnalyticsScreen extends JPanel {
 
 
 
+
+
     }
 
 
@@ -176,7 +183,7 @@ public class AnalyticsScreen extends JPanel {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (Object[] rowData : data) {
             Integer value = (Integer) rowData[1];
-            String hour = (rowData[0].toString() + " : 00");
+            String hour = (rowData[0].toString() + ":00");
             dataset.addValue(value, "Reserves", hour);
         }
         return dataset;
@@ -195,6 +202,10 @@ public class AnalyticsScreen extends JPanel {
         }
         return dataset;
     }
+
+
+
+
 
 
 }
