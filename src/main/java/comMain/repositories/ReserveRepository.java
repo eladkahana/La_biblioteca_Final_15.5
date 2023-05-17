@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface ReserveRepository extends JpaRepository<ReserveEntity, Integer>  {
@@ -27,4 +28,14 @@ public interface ReserveRepository extends JpaRepository<ReserveEntity, Integer>
     @Procedure(name = "displayReservesByHours")
     List<Object[]> displayReservesByHours();
 
+
+    @Procedure(name = "AddReserve")
+    void AddReserve(@Param("readerIDno") String readerIDno, @Param("BookID") Integer BookID, @Param("dueTo") Date dueTo);
+
+
+    @Procedure(name = "AddRank")
+    void AddRank(@Param("IDno") String IDno, @Param("copyID") Integer copyID, @Param("rank") Integer rank);
+
+    @Procedure(name = "AddReturnBook")
+    void AddReturnBook(@Param("copyID") Integer copyID, @Param("readerIDno") String readerIDno);
 }

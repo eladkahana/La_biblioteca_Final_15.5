@@ -162,7 +162,9 @@ public class MailBoxScreen extends JPanel {
                 int index = readList.getSelectedIndex();
                 if (index >= 0) {
                     messageArea.setText(readMessages.get(index));
-                    messageArea.setFont(new Font("Serif", Font.PLAIN, 24)); // Increase font size of message area
+                    messageArea.setFont(new Font("Serif", Font.PLAIN, 24));
+                    messageArea.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
                     respondButton.setVisible(true); // Show respond button
                     respondButton.setEnabled(true);
                 } else {

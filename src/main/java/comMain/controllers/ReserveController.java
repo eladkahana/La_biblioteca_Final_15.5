@@ -3,6 +3,8 @@ package comMain.controllers;
 import comMain.entities.ReserveEntity;
 import comMain.services.ReserveService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,5 +71,20 @@ public class ReserveController {
     @GetMapping("/displayReservesByHours")
     public List<Object[]> displayReservesByHours(){
         return reserveService.displayReservesByHours();
+    }
+
+    @PutMapping("/AddReserve")
+    public void AddReserve(@RequestParam String readerIDno,@RequestParam Integer BookID,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String dueTo){
+        reserveService.AddReserve(readerIDno,BookID,dueTo);
+    }
+
+    @PutMapping("/AddRank")
+    public void AddRank(@RequestParam  String IDno, @RequestParam  Integer copyID, @RequestParam  Integer rank){
+        reserveService.AddRank(IDno,copyID,rank);
+    }
+
+    @PutMapping("/AddReturnBook")
+    public void AddReturnBook(@RequestParam Integer copyID, @RequestParam String readerIDno){
+        reserveService.AddReturnBook(copyID,readerIDno);
     }
 }

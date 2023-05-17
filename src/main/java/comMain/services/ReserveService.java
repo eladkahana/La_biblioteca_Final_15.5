@@ -5,9 +5,12 @@ import comMain.entities.ReserveEntity;
 import comMain.repositories.ReserveRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -57,7 +60,7 @@ public class ReserveService {
     }
 
 
-    public List<ReserveEntity> getAllReserves(){
+    public List<ReserveEntity> getAllReserves() {
         return reserveRepository.findAll();
     }
 
@@ -80,4 +83,23 @@ public class ReserveService {
     public List<Object[]> displayReservesByHours() {
         return reserveRepository.displayReservesByHours();
     }
+
+    @Transactional(readOnly = true)
+    public void AddReserve(String readerIDno, Integer BookID, String dueTo) {
+        java.sql.Date sqlDate = java.sql.Date.valueOf(dueTo);
+
+        reserveRepository.AddReserve(readerIDno, BookID, sqlDate);
+    }
+
+
+    @Transactional(readOnly = true)
+    public void AddRank(@Param("IDno") String IDno, @Param("copyID") Integer copyID, @Param("rank") Integer rank) {
+        reserveRepository.AddRank(IDno, copyID, rank);
+    }
+
+    @Transactional(readOnly = true)
+    public void AddReturnBook(@Param("copyID") Integer copyID, @Param("readerIDno") String readerIDno) {
+        reserveRepository.AddReturnBook(copyID, readerIDno);
+    }
 }
+

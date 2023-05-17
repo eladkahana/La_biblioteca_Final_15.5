@@ -24,33 +24,9 @@ public class LaBibliotecaFinalApplication {
 
 
 
-    public static void main(String[] args) throws SQLException, JsonProcessingException {
+    public static void main(String[] args){
 
         SpringApplication.run(LaBibliotecaFinalApplication.class, args);
-        MailTypes mt = new MailTypes();
-
-//        String url = "http://localhost:8080/book";
-//        RestTemplate restTemplate = new RestTemplate();
-//        URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
-//        ParameterizedTypeReference<List<BookEntity>> responseType = new ParameterizedTypeReference<List<BookEntity>>() {};
-//        List<BookEntity> response = restTemplate.exchange(uri, HttpMethod.GET, null, responseType).getBody();
-//        for (BookEntity book : response) {
-//            bookListModel.addElement(book);
-//        }
-//
-//
-//
-//        List ls = new ArrayList();
-//        ls.add(-67);
-//        mt.changeDays(ls);
-////
-//        mt.reminder();
-
-
-
-
-        //mt.reaction(2,"תודה רבה! נשמח שתדרג אותנו בערוצים המובילים בטלגרם בניהם WEBUTNET, בנוסף ");
-        //mt.reaction(2,"thanks");
     }
 
 }

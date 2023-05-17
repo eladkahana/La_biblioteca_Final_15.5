@@ -50,8 +50,8 @@ public class ResponseService {
     }
 
     @Transactional(readOnly  = true)
-    public String addResponse(Integer requestID, String content) {
-        return responesRepository.addResponse(requestID, content);
+    public void addResponse(Integer requestID, String content) {
+        responesRepository.addResponse(requestID, content);
     }
 
 

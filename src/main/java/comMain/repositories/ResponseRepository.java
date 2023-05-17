@@ -9,7 +9,7 @@ public interface ResponseRepository extends JpaRepository<ResponesEntity, Intege
 
 
     @Procedure(name = "addResponse")
-    String addResponse(@Param("requestID") Integer requestID, @Param("content") String content);
+    void addResponse(@Param("requestID") Integer requestID, @Param("content") String content);
 
 
 

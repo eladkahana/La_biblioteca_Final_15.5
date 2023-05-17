@@ -95,7 +95,6 @@ public class AddEditUserScreen extends JPanel {
             // Convert java.util.Date to java.sql.Date
             long milliseconds = birthDateChooser.getDate().getTime();
             java.sql.Date sqlDate = new java.sql.Date(milliseconds);
-            System.out.println(sqlDate);
 
             InformationGUI.addReader(idTextField.getText(),addressTextField.getText(),phoneNoTextField.getText(),
                     firstNameTextField.getText(), lastNameTextField.getText()

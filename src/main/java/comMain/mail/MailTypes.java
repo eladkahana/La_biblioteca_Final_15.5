@@ -144,9 +144,12 @@ public class MailTypes {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
 
-        restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});
-
         Email email = new Email(reader.getEmail(), "מענה לפנייתך - מערכת ספרייה", answer);
-        email.sendEmail();
+        if(email.sendEmail()) {
+
+            restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {
+            });
+        }
+
     }
 }

@@ -6,8 +6,10 @@
 package comMain.GUI;
 
 import com.toedter.calendar.JDateChooser;
+import comMain.SwingClient.ReservationClient;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,6 +23,7 @@ public class ReservesActionsScreen extends JPanel {
     private JDateChooser dueToChooser;
     private JButton confirmButton;
     private JComboBox<String> reservationTypeComboBox;
+    private int rank;
 
     /**
      * Constructs a ReservesActionsScreen object with default settings.
@@ -47,9 +50,24 @@ public class ReservesActionsScreen extends JPanel {
         ratingPanel.setBorder(BorderFactory.createTitledBorder("Rating"));
         JToggleButton[] stars = new JToggleButton[5];
 
+        ButtonGroup buttonGroup = new ButtonGroup();
+
+
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new JToggleButton(Integer.toString(i+1));
             stars[i].setPreferredSize(new Dimension(40, 40)); // Set preferred size for better visibility
+
+            stars[i].setFocusPainted(false);
+
+
+            Border emptyBorder = BorderFactory.createEmptyBorder();
+            stars[i].setBorder(emptyBorder);
+
+            buttonGroup.add(stars[i]);
+
+
+            Font beginning = new Font(Font.SERIF, Font.PLAIN, 16);
+            stars[i].setFont(beginning);
             ratingPanel.add(stars[i]);
         }
         ratingPanel.setVisible(false);
@@ -80,7 +98,6 @@ public class ReservesActionsScreen extends JPanel {
 
 
 
-
         // Add action listeners
         reservationTypeComboBox.addActionListener(new ActionListener() {
             /**
@@ -103,6 +120,10 @@ public class ReservesActionsScreen extends JPanel {
             }
         });
 
+        long milliseconds = dueToChooser.getDate().getTime();
+        java.sql.Date sqlDate = new java.sql.Date(milliseconds);
+
+
         // Add action listeners
         confirmButton.addActionListener(new ActionListener() {
             /**
@@ -115,6 +136,14 @@ public class ReservesActionsScreen extends JPanel {
                 Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.DATE, 14);
                 dueToChooser.setDate(cal.getTime());
+
+                String selectedType = (String) reservationTypeComboBox.getSelectedItem();
+                if (selectedType.equals("Return")) {
+                    ReservationClient.addReturnBook(Integer.parseInt(bookIDField.getText()),readerIDField.getText());
+                    ReservationClient.addRank(readerIDField.getText(),Integer.parseInt(bookIDField.getText()),rank);
+                } else {
+                    ReservationClient.addReserve(readerIDField.getText(),Integer.parseInt(bookIDField.getText()),sqlDate);
+                }
             }
         });
 
@@ -123,14 +152,23 @@ public class ReservesActionsScreen extends JPanel {
 // Add action listener to star buttons
         for (int i = 0; i < stars.length; i++) {
             final int index = i;
+            int finalI = i;
             stars[i].addActionListener(new ActionListener() {
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    rank = finalI + 1;
                     for (int j = 0; j <= index; j++) {
                         stars[j].setBackground(Color.yellow);
+                        Font originalFont = stars[j].getFont();
+                        Font boldFont = new Font(originalFont.getName(), Font.BOLD, 24);
+                        stars[j].setFont(boldFont);
                     }
                     for (int j = index + 1; j < stars.length; j++) {
-                        stars[j].setBackground(null);
+                        stars[j].setBackground(Color.WHITE);
+                        Font originalFont = stars[j].getFont();
+                        Font plainFont = new Font(originalFont.getName(), Font.PLAIN, 18);
+                        stars[j].setFont(plainFont);
                     }
                 }
             });

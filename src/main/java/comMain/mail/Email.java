@@ -14,6 +14,8 @@ public class Email {
     private final String content;
     private byte[] image;
 
+    private boolean status;
+
 
     /**
      * @param to      - email adress of the resder you send the mail to
@@ -36,7 +38,9 @@ public class Email {
     /**
      * this function insert the entire properties to the email, and send it
      */
-    public void sendEmail() {
+    public boolean sendEmail() {
+        status = false;
+
         Properties p = new Properties();
         p.put("mail.smtp.auth", "true");
         p.put("mail.smtp.starttls.enable", "true");
@@ -46,7 +50,7 @@ public class Email {
         Session s = Session.getDefaultInstance(p, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("labiblioteca23@gmail.com", "cwbgakzcmcugonkd");
+                return new PasswordAuthentication("labibilioteca1@gmail.com", "liuyyvpzcvsfmxfh");
             }
         });
         try {
@@ -76,9 +80,12 @@ public class Email {
             Transport.send(m);
 
             System.out.println("Success...");
+            status = true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+        return status;
     }
 
 
