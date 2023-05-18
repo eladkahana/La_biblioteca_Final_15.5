@@ -1,14 +1,22 @@
 package comMain.controllers;
 
+
 import comMain.entities.BookEntity;
 import comMain.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.enterprise.inject.Produces;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Validated
 @RestController
@@ -68,4 +76,11 @@ public class BookController {
         return bookService.MostReservedBook();
     }
 
+    @GetMapping(value = "/getBooksForWeb", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Object[]>> getBooksForWeb() {
+        List<Object[]> books = bookService.getBooksForWeb();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
+        return ResponseEntity.ok().headers(headers).body(books);
+    }
 }

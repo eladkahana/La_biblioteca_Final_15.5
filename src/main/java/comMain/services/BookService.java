@@ -86,4 +86,10 @@ public class BookService {
     public List<Object[]> MostReservedBook(){
         return bookRepository.MostReservedBook();
     }
+
+
+    @Transactional(readOnly = true)
+    public List<Object[]> getBooksForWeb(){
+        return bookRepository.getBooksForWeb();
+    }
 }

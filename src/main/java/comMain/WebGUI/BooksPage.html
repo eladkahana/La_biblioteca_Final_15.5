@@ -72,7 +72,11 @@
       margin-bottom: 2rem;
       color: whitesmoke;
       background-color: #37474f;
+      margin-left: auto;
+      margin-right: auto;
     }
+
+
 
     th, td {
       text-align: left;
@@ -99,7 +103,7 @@
   </style>
 </head>
 <body>
-<h1>search for a book</h1>
+<h1>Search for a Book</h1>
 <form>
   <input type="text" id="search" placeholder="Search for books...">
   <input type="submit" value="Search">
@@ -109,13 +113,9 @@
     <th>Image</th>
     <th>Title</th>
     <th>Author</th>
-    <th>ISBN</th>
     <th>Availability</th>
   </tr>
-  <!-- Add more books here... -->
 </table>
-
-<!--<img class="book-image" src="https://via.placeholder.com/100x150.png?text=No+Image">-->
 
 <script>
   // Get the form and table elements
@@ -127,9 +127,9 @@
     event.preventDefault();
     const searchValue = document.querySelector('#search').value.trim().toLowerCase();
     const filteredBooks = books.filter(book =>
-            book.title.toLowerCase().includes(searchValue) ||
-            book.author.toLowerCase().includes(searchValue) ||
-            book.isbn.toLowerCase().includes(searchValue)
+            book[0] && book[0].toLowerCase().includes(searchValue) ||
+            book[2] && book[2].toLowerCase().includes(searchValue) ||
+            book[3] && book[3].toLowerCase().includes(searchValue)
     );
     displayBooks(filteredBooks);
   }
@@ -138,42 +138,55 @@
   function displayBooks(books) {
     let rows = '';
     books.forEach(book => {
-      const availability = book.availability;
-      rows += `<tr>
-                  <td><img class="book-image" src="${book.image}" alt="${book.title}"></td>
-                  <td>${book.title}</td>
-                  <td>${book.author}</td>
-                  <td>${book.isbn}</td>
+      const [title, image, author, availability] = book;
+      if (title || author || availability) {
+        if (image) {
+          var imgElement = document.createElement('img');
+          imgElement.src = "data:image/png;base64," + image;
+          rows += `<tr>
+                  <td><img class="book-image" src="${imgElement.src}" alt="${title}"></td>
+                  <td>${title}</td>
+                  <td>${author}</td>
                   <td>${availability}</td>
                 </tr>`;
+        } else {
+          rows += `<tr>
+                  <td><img class="book-image" src="${getBookImageUrl(title)}" alt="${title}"></td>
+                  <td>${title}</td>
+                  <td>${author}</td>
+                  <td>${availability}</td>
+                </tr>`;
+        }
+      }
     });
     table.innerHTML += rows;
   }
 
+
+
+
   // Attach the searchBooks function to the form's submit event
   form.addEventListener('submit', searchBooks);
 
-  // Define the initial book data as an array of objects
-  const books = [
-    {
-      image: "data:image/jpeg;base64,/9j/4AAQSkZ...",
-      title: "Book 1",
-      author: "Author 1",
-      isbn: "1234567890",
-      availability: "Available"
-    },
-    {
-      image: "data:image/jpeg;base64,/9j/4AAQSkZ...",
-      title: "Book 2",
-      author: "Author 2",
-      isbn: "9876543210",
-      availability: "Not available"
-    },
-    // Add more book objects here...
-  ];
+  // Fetch the book data from the server
 
-  // Display the initial book data in the table
-  displayBooks(books);
+  fetch('http://localhost:8080/book/getBooksForWeb')
+          .then(response => response.json())
+          .then(data => {
+            const books = data; // Assuming the response is a List<Object[]>
+            displayBooks(books);
+          })
+          .catch(error => {
+            console.error('Error fetching book data:', error);
+          });
+
+  // Function to get the book image URL based on the title
+  function getBookImageUrl(title) {
+    // Replace this function with the logic to generate the actual image URL for each book
+    // For now, I'll return a placeholder URL
+    return `https://via.placeholder.com/100x150.png?text=${encodeURIComponent(title)}`;
+  }
 </script>
+
 </body>
 </html>

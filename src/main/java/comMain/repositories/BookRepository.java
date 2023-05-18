@@ -28,5 +28,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     List<Object[]> MostReservedBook();
 
 
+    @Procedure(name = "getBooksForWeb")
+    List<Object[]> getBooksForWeb();
 
 }
