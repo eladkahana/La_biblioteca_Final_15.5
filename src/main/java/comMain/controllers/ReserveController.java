@@ -5,6 +5,9 @@ import comMain.services.ReserveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,5 +89,14 @@ public class ReserveController {
     @PutMapping("/AddReturnBook")
     public void AddReturnBook(@RequestParam Integer copyID, @RequestParam String readerIDno){
         reserveService.AddReturnBook(copyID,readerIDno);
+    }
+
+
+    @GetMapping(value = "/getHistoryOfReader", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Object[]>> getHistoryOfReader(@RequestParam Integer readerID) {
+        List<Object[]> reserves = reserveService.getHistoryOfReader(readerID);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
+        return ResponseEntity.ok().headers(headers).body(reserves);
     }
 }

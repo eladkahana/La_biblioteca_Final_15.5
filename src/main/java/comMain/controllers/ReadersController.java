@@ -3,14 +3,19 @@ package comMain.controllers;
 import comMain.entities.ReadersEntity;
 import comMain.services.ReadersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 @Validated
@@ -58,7 +63,6 @@ public class ReadersController {
                                     @RequestParam String Email) {
 
 
-
         List<Object[]> result = readersService.addReader(
                 ID,
                 adress,
@@ -71,4 +75,32 @@ public class ReadersController {
         );
         return result;
     }
+
+
+    @PostMapping("/LogIn/TryToConnect")
+    public ResponseEntity<Integer> TryToConnect(@RequestParam String IP,
+                                                @RequestParam String UserName,
+                                                @RequestParam String Password) {
+
+        try {
+            InetAddress ipAddress = InetAddress.getLocalHost();
+            NetworkInterface networkInterface = NetworkInterface.getByInetAddress(ipAddress);
+            byte[] macAddressBytes = networkInterface.getHardwareAddress();
+
+            StringBuilder macAddress = new StringBuilder();
+            for (int i = 0; i < macAddressBytes.length; i++) {
+                macAddress.append(String.format("%02X%s", macAddressBytes[i], (i < macAddressBytes.length - 1) ? "-" : ""));
+            }
+
+            Integer userID = readersService.TryToConnect(IP, String.valueOf(macAddress), UserName, Password);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
+            return ResponseEntity.ok().headers(headers).body(userID);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

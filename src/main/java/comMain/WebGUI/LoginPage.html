@@ -67,11 +67,80 @@
 <body>
 <div class="container">
     <h1>Login to Your Account</h1>
-    <form>
-        <input type="text" placeholder="Username">
-        <input type="password" placeholder="Password">
-        <input type="submit" value="Login">
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <input type="submit" value="Login" onclick="handleFormSubmit()">
     </form>
 </div>
+
+<script>
+    // Function to retrieve the IP address
+    const getIpAddress = async () => {
+        // Fetch the IP address using a remote API
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        const ip = data.ip;
+
+        // Return the IP address
+        return ip;
+    };
+
+    // Function to handle form submission
+    function handleFormSubmit(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        // Get the form data
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // Call the function to get the IP address
+        getIpAddress()
+            .then((ip) => {
+                // Create an object with the form data and retrieved IP address
+                const data = new URLSearchParams();
+                data.append('IP', ip);
+                data.append('UserName', username);
+                data.append('Password', password);
+
+                // Make the POST request
+                fetch('http://localhost:8080/readers/LogIn/TryToConnect', {
+                    method: 'POST',
+
+
+
+                    body: data,
+                })
+                    .then((response) => response.json())
+                    .then((responseData) => {
+                        // Check the response data to determine if login was successful
+                        if (responseData.success) {
+                            // Redirect to the next page
+                            window.location.href = 'HomeScreen.html';
+                        } else {
+                            // Display an error message or perform other actions if login failed
+                            alert('Login failed. Please try again.');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+
+
+
+    // Add an event listener to the form for the submit event
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', handleFormSubmit);
+
+
+</script>
+
 </body>
+
 </html>

@@ -38,4 +38,10 @@ public interface ReserveRepository extends JpaRepository<ReserveEntity, Integer>
 
     @Procedure(name = "AddReturnBook")
     void AddReturnBook(@Param("copyID") Integer copyID, @Param("readerIDno") String readerIDno);
+
+
+    @Procedure(name = "getHistoryOfReader")
+    List<Object[]> getHistoryOfReader(@Param("readerID") Integer readerID);
+
+
 }

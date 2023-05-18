@@ -19,4 +19,12 @@ public interface ReadersRepository extends JpaRepository<ReadersEntity, Integer>
              @Param("birthDate") java.sql.Date birthDate,
              @Param("gender") String gender,
              @Param("Email") String Email);
+
+
+    @Procedure(procedureName = "LogIn.TryToConnect")
+    Integer TryToConnect(@Param("IP") String IP,
+                         @Param("Mac") String Mac,
+                         @Param("UserName") String UserName,
+                         @Param("Password") String Password);
+
 }

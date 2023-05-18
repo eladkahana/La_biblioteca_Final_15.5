@@ -25,7 +25,7 @@
       padding: 2rem;
       font-family: "Poppins", sans-serif;
       color: var(--color);
-      background: var(--bgColor);
+      background: lightcyan;
     }
 
     h1 {
@@ -204,33 +204,62 @@
   </style>
 </head>
 <body>
-<h1>UL timeline cards</h1>
-<ul>
-  <li style="--accent-color:#41516C">
-    <div class="date">2002</div>
-    <div class="title">Title 1</div>
-    <div class="descr">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quas itaque hic quibusdam fugiat est numquam harum, accusamus suscipit consequatur laboriosam!</div>
-  </li>
-  <li style="--accent-color:#FBCA3E">
-    <div class="date">2007</div>
-    <div class="title">Title 2</div>
-    <div class="descr">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quos adipisci nobis nostrum vero nihil veniam.</div>
-  </li>
-  <li style="--accent-color:#E24A68">
-    <div class="date">2012</div>
-    <div class="title">Title 3</div>
-    <div class="descr">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga minima consequuntur soluta placeat iure totam commodi repellendus ea delectus, libero fugit quod reprehenderit, sequi quo, et dolorum saepe nulla hic.</div>
-  </li>
-  <li style="--accent-color:#1B5F8C">
-    <div class="date">2017</div>
-    <div class="title">Title 4</div>
-    <div class="descr">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Impedit, cumque.</div>
-  </li>
-  <li style="--accent-color:#4CADAD">
-    <div class="date">2022</div>
-    <div class="title">Title 5</div>
-    <div class="descr">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odit, non.</div>
-  </li>
-</ul>
+<h1 dir="rtl">היסטוריית הקריאה שלך:</h1>
+<ul id="timeline"></ul>
+
+<script>
+  const readerID = 5;
+
+  const timeline = document.getElementById('timeline');
+  timeline.innerHTML = ''; // Clear the timeline before displaying new results
+
+
+  // Array of predefined colors
+  const colors = [
+    '#FF3D00', '#4CAF50', '#2196F3', 'rgba(131,187,160,0.79)', '#FF9800',
+    '#E91E63', '#00BCD4', '#8BC34A', '#3F51B5', '#FF5722',
+    'rgba(29,178,122,0.79)', '#7e0bf5', '#03A9F4', '#b0a020', '#795548',
+    '#9E9E9E', '#607D8B', '#F44336', '#FFC107', '#009688'
+  ];
+  // Function to get a random color from the colors array
+  function getRandomColor() {
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
+  }
+
+
+
+  // Fetch data from the URL
+  fetch(`http://localhost:8080/reserve/getHistoryOfReader?readerID=${readerID}`)
+          .then(response => response.json())
+          .then(data => {
+            let rows = '';
+
+            // Generate timeline items dynamically
+            data.forEach(item => {
+              const [reserveDate, booktitle, returnDate, rank] = item;
+
+              let rankText = rank || 'לא דורג'; // Use rank if it exists, otherwise set a default value
+
+
+              const randomColor = getRandomColor(); // Generate a random color
+
+
+
+              rows += `<li style="--accent-color:${randomColor}">
+            <div class="date">${booktitle}</div>
+            <div class="title">From: ${reserveDate}</br>To: ${returnDate}</div>
+            <div class="descr">Your rank: ${rankText}</div>
+          </li>`;
+            });
+
+            timeline.innerHTML = rows; // Add the generated timeline items to the timeline
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+</script>
 </body>
+
+
 </html>

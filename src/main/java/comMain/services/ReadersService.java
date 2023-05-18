@@ -83,4 +83,9 @@ public class ReadersService {
                 Email
         );
     }
+
+    @Transactional(readOnly = true)
+    public Integer TryToConnect(String IP, String Mac,  String UserName, String Password){
+        return readersRepository.TryToConnect(IP,Mac,UserName,Password);
+    }
 }

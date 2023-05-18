@@ -44,6 +44,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>axios</artifactId>
+            <version>0.21.1</version>
+        </dependency>
+
+
+
 
 
 

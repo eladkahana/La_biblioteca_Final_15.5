@@ -101,5 +101,11 @@ public class ReserveService {
     public void AddReturnBook(@Param("copyID") Integer copyID, @Param("readerIDno") String readerIDno) {
         reserveRepository.AddReturnBook(copyID, readerIDno);
     }
+
+    @Transactional(readOnly = true)
+    public List<Object[]> getHistoryOfReader(Integer readerID) {
+        return reserveRepository.getHistoryOfReader(readerID);
+    }
+
 }
 
