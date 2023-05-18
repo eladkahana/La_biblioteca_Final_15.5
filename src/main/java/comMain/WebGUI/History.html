@@ -193,6 +193,23 @@
       }
     }
 
+    .home-link {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #2196F3;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .home-link:hover {
+      background-color: #0d8bf5;
+    }
+
     .credits {
       margin-top: 1rem;
       text-align: right;
@@ -204,11 +221,26 @@
   </style>
 </head>
 <body>
+<a class="home-link" href="HomeScreen.html">Home</a>
+
 <h1 dir="rtl">היסטוריית הקריאה שלך:</h1>
 <ul id="timeline"></ul>
 
 <script>
-  const readerID = 5;
+
+  const queryString = window.location.search;
+
+  // Create a URLSearchParams object from the query string
+  const params = new URLSearchParams(queryString);
+
+  // Get the value of the userID parameter
+  const userID = params.get('userID');
+
+  if (userID === null) {
+    window.location.href = 'LoginPage.html';
+  }
+
+
 
   const timeline = document.getElementById('timeline');
   timeline.innerHTML = ''; // Clear the timeline before displaying new results
@@ -230,7 +262,7 @@
 
 
   // Fetch data from the URL
-  fetch(`http://localhost:8080/reserve/getHistoryOfReader?readerID=${readerID}`)
+  fetch(`http://localhost:8080/reserve/getHistoryOfReader?readerID=${userID}`)
           .then(response => response.json())
           .then(data => {
             let rows = '';
@@ -258,6 +290,14 @@
           .catch(error => {
             console.error('Error:', error);
           });
+
+  if(userID !== null && !isNaN(userID)){
+    const navigationLinks = document.querySelectorAll('a');
+    navigationLinks.forEach(link => {
+      link.href += '?userID=' + userID;
+    });
+  }
+
 </script>
 </body>
 

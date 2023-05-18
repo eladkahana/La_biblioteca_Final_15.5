@@ -85,7 +85,7 @@ public class ReadersService {
     }
 
     @Transactional(readOnly = true)
-    public Integer TryToConnect(String IP, String Mac,  String UserName, String Password){
+    public List<Object[]> TryToConnect(String IP, String Mac,  String UserName, String Password){
         return readersRepository.TryToConnect(IP,Mac,UserName,Password);
     }
 }

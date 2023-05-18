@@ -3,6 +3,9 @@ package comMain.controllers;
 import comMain.entities.RequestsEntity;
 import comMain.services.RequestsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -54,5 +57,15 @@ public class RequestsController {
     public void requestChecked(@RequestParam int requestID){
         requestsService.requestChecked(requestID);
     }
+
+
+    @PostMapping("/AddRequest")
+    public ResponseEntity<?> addRequest(@RequestParam int readerID, @RequestParam String content, @RequestParam String topic) {
+        requestsService.AddRequest(readerID, content, topic);
+        return ResponseEntity.ok().build();
+    }
+
+
+
 
 }

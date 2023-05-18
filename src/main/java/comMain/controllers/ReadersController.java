@@ -78,9 +78,9 @@ public class ReadersController {
 
 
     @PostMapping("/LogIn/TryToConnect")
-    public ResponseEntity<Integer> TryToConnect(@RequestParam String IP,
-                                                @RequestParam String UserName,
-                                                @RequestParam String Password) {
+    public ResponseEntity<List<Object[]>> TryToConnect(@RequestParam("IP") String IP,
+                                                @RequestParam("UserName") String UserName,
+                                                @RequestParam("Password") String Password) {
 
         try {
             InetAddress ipAddress = InetAddress.getLocalHost();
@@ -92,7 +92,7 @@ public class ReadersController {
                 macAddress.append(String.format("%02X%s", macAddressBytes[i], (i < macAddressBytes.length - 1) ? "-" : ""));
             }
 
-            Integer userID = readersService.TryToConnect(IP, String.valueOf(macAddress), UserName, Password);
+            List<Object[]> userID = readersService.TryToConnect(IP, macAddress.toString(), UserName, Password);
             HttpHeaders headers = new HttpHeaders();
             headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
             return ResponseEntity.ok().headers(headers).body(userID);

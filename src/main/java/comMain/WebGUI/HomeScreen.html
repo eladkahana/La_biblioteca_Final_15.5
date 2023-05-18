@@ -111,19 +111,23 @@
       padding: 20px;
       text-align: center;
     }
+
+
+
   </style>
 </head>
 
 <body>
 <header>
+
   <h1>Library Home Page</h1>
 </header>
 
 <nav>
   <ul>
-    <li><a href="BooksPage.html">Search Books</a></li>
-    <li><a href="History.html">Borrowing History</a></li>
-    <li><a href="Contact.html">Contact Us</a></li>
+    <li><a href="BooksPage.html?userID=">Search Books</a></li>
+    <li><a href="History.html?userID=">Borrowing History</a></li>
+    <li><a href="Contact.html?userID=">Contact Us</a></li>
   </ul>
 </nav>
 
@@ -133,27 +137,55 @@
     <h1>La-biblioteca</h1>
   </div>
 
-  <section class="updates">
-    <h2>Latest Updates & News</h2>
+  <section class="updates" dir="rtl">
+    <h2>שעות פתיחה:</h2>
     <ul>
       <li>
-        <h3>New Books Added to Collection</h3>
-        <p>We have just added 50 new books to our collection, so be sure to check them out on your next visit!</p>
+        <h3>ימים א' - ה'</h3>
+        <p>12:00 - 19:00.</p>
       </li>
       <li>
-        <h3>Upcoming Events</h3>
-        <p>Join us for our upcoming book club meeting on May 15th at 7pm, where we will be discussing "The Great Gatsby".</p>
+        <h3>ימי שישי וערבי חג</h3>
+        <p>10:00 - 15:00.</p>
       </li>
-      <li>
-        <h3>Extended Hours</h3>
-        <p>We will now be open until 9pm on Tuesdays and Thursdays, so you have more time to browse our collection.</p>
-      </li>
+
     </ul>
   </section>
 </main>
 
 <footer>
-  <p>Library &copy; 2023. All rights reserved.</p>
+  <p>La biblioteca &copy; 2023. All rights reserved.</p>
 </footer>
+
+<script>
+  // Redirect to login page if userID is null
+
+
+
+  // Get the query string from the URL
+  const queryString = window.location.search;
+
+  // Create a URLSearchParams object from the query string
+  const params = new URLSearchParams(queryString);
+
+  // Get the value of the userID parameter
+  const userID = params.get('userID');
+
+  if (userID === null) {
+    window.location.href = 'LoginPage.html';
+  }
+
+
+
+  // Update the href attribute of all navigation links with the userID parameter
+  const navigationLinks = document.querySelectorAll('nav a');
+  navigationLinks.forEach(link => {
+    link.href = link.href + userID;
+  });
+
+
+  // Use the parameter value
+  console.log(userID); // Output: the value of the userID parameter
+</script>
 </body>
 </html>

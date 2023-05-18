@@ -65,4 +65,9 @@ public class RequestsService {
     public void requestChecked(int requestID){
          requestsRepository.requestChecked(requestID);
     }
+
+    @Transactional(readOnly = true)
+    public void AddRequest(int requestID, String content, String topic){
+        requestsRepository.AddRequest(requestID,content,topic);
+    }
 }

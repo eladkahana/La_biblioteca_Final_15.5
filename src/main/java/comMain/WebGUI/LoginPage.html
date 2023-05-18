@@ -94,6 +94,17 @@
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
+        // Validate the form data
+        if (username === '') {
+            alert('Please enter a username.');
+            return;
+        }
+
+        if (password === '') {
+            alert('Please enter a password.');
+            return;
+        }
+
         // Call the function to get the IP address
         getIpAddress()
             .then((ip) => {
@@ -106,17 +117,17 @@
                 // Make the POST request
                 fetch('http://localhost:8080/readers/LogIn/TryToConnect', {
                     method: 'POST',
-
-
-
                     body: data,
                 })
                     .then((response) => response.json())
                     .then((responseData) => {
+                        const [[userID]] = responseData
+
                         // Check the response data to determine if login was successful
-                        if (responseData.success) {
-                            // Redirect to the next page
-                            window.location.href = 'HomeScreen.html';
+                        if (userID !== null && !isNaN(userID)) {
+                            // Redirect to the next page and pass the number
+                            const nextPageUrl = 'HomeScreen.html?userID=' + responseData;
+                            window.location.href = nextPageUrl;
                         } else {
                             // Display an error message or perform other actions if login failed
                             alert('Login failed. Please try again.');
@@ -131,15 +142,11 @@
             });
     }
 
-
-
-
     // Add an event listener to the form for the submit event
     const form = document.getElementById('loginForm');
     form.addEventListener('submit', handleFormSubmit);
-
-
 </script>
+
 
 </body>
 

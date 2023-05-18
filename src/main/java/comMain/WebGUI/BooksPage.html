@@ -100,9 +100,29 @@
       background-color: #f5f5f5;
     }
 
+
+    .home-link {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #2196F3;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .home-link:hover {
+      background-color: #0d8bf5;
+    }
+
   </style>
 </head>
 <body>
+<a class="home-link" href="HomeScreen.html">Home</a>
+
 <h1>Search for a Book</h1>
 <form>
   <input type="text" id="search" placeholder="Search for books...">
@@ -119,6 +139,22 @@
 
 
 <script>
+
+  const queryString = window.location.search;
+
+  // Create a URLSearchParams object from the query string
+  const params = new URLSearchParams(queryString);
+
+  // Get the value of the userID parameter
+  const userID = params.get('userID');
+
+  if (userID === null) {
+    window.location.href = 'LoginPage.html';
+  }
+
+
+
+
   // Get the form and table elements
   const form = document.querySelector('form');
   const table = document.querySelector('#book-table');
@@ -197,6 +233,14 @@
     // For now, I'll return a placeholder URL
     return `https://via.placeholder.com/100x150.png?text=${encodeURIComponent(title)}`;
   }
+
+  if(userID !== null && !isNaN(userID)){
+    const navigationLinks = document.querySelectorAll('a');
+    navigationLinks.forEach(link => {
+      link.href += '?userID=' + userID;
+    });
+  }
+
 
 </script>
 

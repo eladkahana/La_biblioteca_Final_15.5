@@ -22,7 +22,7 @@ public interface ReadersRepository extends JpaRepository<ReadersEntity, Integer>
 
 
     @Procedure(procedureName = "LogIn.TryToConnect")
-    Integer TryToConnect(@Param("IP") String IP,
+    List<Object[]> TryToConnect(@Param("IP") String IP,
                          @Param("Mac") String Mac,
                          @Param("UserName") String UserName,
                          @Param("Password") String Password);

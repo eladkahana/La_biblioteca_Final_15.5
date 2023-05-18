@@ -17,4 +17,11 @@ public interface RequestsRepository extends JpaRepository<RequestsEntity, Intege
 
     @Procedure(name = "requestChecked")
     void requestChecked(@Param("requestID") int requestID);
+
+
+    @Procedure(name = "AddRequest")
+    void AddRequest(@Param("readerID") int readerID,
+                    @Param("content") String content,
+                    @Param("topic") String topic);
+
 }

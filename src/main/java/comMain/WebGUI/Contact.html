@@ -70,16 +70,35 @@
       padding: 20px;
       text-align: center;
     }
+
+    .home-link {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #2196F3;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .home-link:hover {
+      background-color: #0d8bf5;
+    }
+
   </style>
 </head>
 
 <body>
 <header>
+  <a class="home-link" href="HomeScreen.html">Home</a>
   <h1>Contact Us</h1>
 </header>
 
 <main>
-  <form>
+  <form id="contact-form">
     <label for="topic">Topic:</label>
     <input type="text" id="topic" name="topic" required>
 
@@ -90,6 +109,59 @@
   </form>
 </main>
 
+<script>
+  const queryString = window.location.search;
+  const params = new URLSearchParams(queryString);
+  const userID = params.get('userID');
 
+  if (userID === null) {
+    window.location.href = 'LoginPage.html';
+  }
+
+  if (userID !== null && !isNaN(userID)) {
+    const navigationLinks = document.querySelectorAll('a');
+    navigationLinks.forEach(link => {
+      link.href += '?userID=' + userID;
+    });
+  }
+
+  const contactForm = document.getElementById('contact-form');
+
+  contactForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent the form from submitting normally
+
+    const topic = document.getElementById('topic').value;
+    const message = document.getElementById('message').value;
+
+    const url = 'http://localhost:8080/requests/AddRequest';
+
+    fetch(url, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        "readerID": userID,
+        "content": message,
+        "topic": topic
+
+      }),
+    })
+
+            .then(response => {
+              if (response.ok) {
+                // Handle successful response
+                console.log('Message sent successfully!');
+                // You can redirect to a success page or display a success message here
+              } else {
+                // Handle error response
+                console.error('Error sending message:', response.status, response.statusText);
+                // You can display an error message to the user here
+              }
+            })
+            .catch(error => {
+              console.error('Error sending message:', error);
+              // You can display an error message to the user here
+            });
+  });
+</script>
 </body>
 </html>
