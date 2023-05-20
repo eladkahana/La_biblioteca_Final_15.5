@@ -67,7 +67,7 @@ public class RequestsService {
     }
 
     @Transactional(readOnly = true)
-    public void AddRequest(int requestID, String content, String topic){
-        requestsRepository.AddRequest(requestID,content,topic);
+    public List<Object[]> AddRequest(int requestID, String content, String topic){
+        return requestsRepository.AddRequest(requestID,content,topic);
     }
 }

@@ -350,8 +350,6 @@ public abstract class InformationGUI {
         BookEntity book = restTemplate.getForObject(uri, BookEntity.class);
 
 
-
-        LastNameEntity lastName = restTemplate.getForObject(uri, LastNameEntity.class);
         return ("Book:     " + book.getTitle() + "     |     Reader:     " + getName(reader.getFirstName(),reader.getLastName()) +
                 "     |     from:     " + reserve.getReserveDate() + "     -     to:     " + reserve.getDueDate());
     }

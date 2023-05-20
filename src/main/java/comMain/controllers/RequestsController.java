@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,11 +58,15 @@ public class RequestsController {
     }
 
 
-    @PostMapping("/AddRequest")
+    @PostMapping(value = "/AddRequest", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addRequest(@RequestParam int readerID, @RequestParam String content, @RequestParam String topic) {
-        requestsService.AddRequest(readerID, content, topic);
-        return ResponseEntity.ok().build();
+
+        List<Object[]> request = requestsService.AddRequest(readerID, content, topic);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
+        return ResponseEntity.ok().headers(headers).body(request);
     }
+
 
 
 

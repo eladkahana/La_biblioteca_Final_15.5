@@ -127,41 +127,35 @@
 
   const contactForm = document.getElementById('contact-form');
 
-  contactForm.addEventListener('submit', function (event) {
+  contactForm.addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the form from submitting normally
 
-    const topic = document.getElementById('topic').value;
+    // Get the form data
     const message = document.getElementById('message').value;
+    const topic = document.getElementById('topic').value;
 
-    const url = 'http://localhost:8080/requests/AddRequest';
-
-    fetch(url, {
+    // Create an object with the form data
+    // Make the POST request
+    fetch('http://localhost:8080/requests/AddRequest', {
       method: 'POST',
 
-      body: JSON.stringify({
-        "readerID": userID,
-        "content": message,
-        "topic": topic
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
 
-      }),
+      body: `readerID=${encodeURIComponent(userID)}&content=${encodeURIComponent(message)}&topic=${encodeURIComponent(topic)}`
     })
-
             .then(response => {
               if (response.ok) {
-                // Handle successful response
-                console.log('Message sent successfully!');
-                // You can redirect to a success page or display a success message here
+                console.log("POST request successful");
               } else {
-                // Handle error response
-                console.error('Error sending message:', response.status, response.statusText);
-                // You can display an error message to the user here
+                console.log("POST request failed");
               }
             })
             .catch(error => {
-              console.error('Error sending message:', error);
-              // You can display an error message to the user here
+              console.error("Error:", error);
             });
-  });
+  })
 </script>
 </body>
 </html>

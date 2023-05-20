@@ -9,6 +9,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 public class HomeScreen{
 
@@ -20,7 +22,7 @@ public class HomeScreen{
      * the tabbed pane with the different screens.
      * @param args The command-line arguments.
      */
-    public static void main(String[] args) throws JsonProcessingException {
+    public static void main(String[] args) throws JsonProcessingException, NoSuchAlgorithmException, KeyManagementException {
         // Create the JFrame
         JFrame frame = new JFrame("Library Management System");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
