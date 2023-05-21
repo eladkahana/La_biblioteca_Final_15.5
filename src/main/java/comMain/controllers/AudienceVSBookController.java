@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Validated
 @RestController
@@ -43,8 +44,20 @@ public class AudienceVSBookController {
 
 
     @PutMapping("/setAudienceToBook")
-    void setAudienceToBook(@RequestParam String team, @RequestParam String ISBN){
+    public void setAudienceToBook(@RequestParam String team, @RequestParam String ISBN){
         audienceVSBookService.setAudienceToBook(team,ISBN);
     };
+
+    @DeleteMapping("/deleteAudienceFromBook")
+    public void deleteAudienceFromBook(@RequestParam int bookID){
+        audienceVSBookService.deleteAudienceFromBook(bookID);
+    };
+
+
+    @GetMapping("/getAllAudiencesByBook")
+    public List<AudienceVsBookEntity> getAllAudiencesByBook(@RequestParam int bookID){
+        return audienceVSBookService.getAllAudiencesByBook(bookID);
+    };
+
 
 }

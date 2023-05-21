@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -53,4 +54,17 @@ public class BookVSCategoryService {
     public void setCategoryToBook(String Category , String ISBN) {
         bookVSCategoryRepository.setCategoryToBook(Category,ISBN);
     }
+
+
+    @Transactional(readOnly = true)
+    public void deleteCategoryFromBook(int bookID) {
+        bookVSCategoryRepository.deleteCategoryFromBook(bookID);
+    }
+    @Transactional(readOnly = true)
+    public List<BookVsCategoryEntity> getAllCategoriesByBook(int bookID) {
+        return bookVSCategoryRepository.getAllCategoriesByBook(bookID);
+    }
+
+
+
 }

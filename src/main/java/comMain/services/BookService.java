@@ -92,4 +92,36 @@ public class BookService {
     public List<Object[]> getBooksForWeb(){
         return bookRepository.getBooksForWeb();
     }
+
+
+    @Transactional(readOnly = true)
+    public void EditBook(
+            String ISBN,
+            String title,
+            String edition,
+            String shelfmark,
+            int numberOfPages,
+            int publishYear,
+            byte[] coverImage,
+            String language,
+            String publisher,
+            String note,
+            int ID
+    ) {
+        bookRepository.EditBook(
+                ISBN,
+                title,
+                edition,
+                shelfmark,
+                numberOfPages,
+                publishYear,
+                coverImage,
+                language,
+                publisher,
+                note,
+                ID
+        );
+    }
+
+
 }

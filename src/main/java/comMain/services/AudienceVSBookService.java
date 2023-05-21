@@ -57,4 +57,18 @@ public class AudienceVSBookService {
         audienceVSBookRepository.setAudienceToBook(team,ISBN);
     }
 
+
+    @Transactional(readOnly = true)
+    public void deleteAudienceFromBook(int bookID) {
+        audienceVSBookRepository.deleteAudienceFromBook(bookID);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<AudienceVsBookEntity> getAllAudiencesByBook(int bookID) {
+        return audienceVSBookRepository.getAllAudiencesByBook(bookID);
+    }
+
+
+
 }

@@ -14,4 +14,15 @@ public interface AudienceVSBookRepository extends JpaRepository<AudienceVsBookEn
     void setAudienceToBook
             (@Param("team") String team, @Param("ISBN") String ISBN);
 
+
+    @Procedure(name = "deleteAudienceFromBook")
+    void deleteAudienceFromBook
+            (@Param("bookID") int bookID);
+
+
+
+    @Procedure(name = "getAllAudiencesByBook")
+    List<AudienceVsBookEntity> getAllAudiencesByBook
+            (@Param("bookID") int bookID);
+
 }

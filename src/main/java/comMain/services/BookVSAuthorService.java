@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -52,5 +53,16 @@ public class BookVSAuthorService {
     @Transactional(readOnly = true)
     public void setAuthorToBook(String AuthorFN, String AuthorLN , String ISBN) {
         bookVSAuthorRepository.setAuthorToBook(AuthorFN, AuthorLN,ISBN);
+    }
+
+    @Transactional(readOnly = true)
+    public void deleteAuthorFromBook(int bookID) {
+        bookVSAuthorRepository.deleteAuthorFromBook(bookID);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<BookVsAuthorEntity> getAllAuthorsByBook(int bookID) {
+        return bookVSAuthorRepository.getAllAuthorsByBook(bookID);
     }
 }

@@ -6,6 +6,7 @@
 
 package comMain.GUI;
 
+import comMain.SwingClient.EditBookClient;
 import comMain.SwingClient.InformationGUI;
 import comMain.entities.BookEntity;
 
@@ -21,6 +22,7 @@ import javax.imageio.ImageIO;
 import javax.swing.text.JTextComponent;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
@@ -31,6 +33,12 @@ public class AddEditBookScreen extends JPanel {
 
     private final JButton saveButton;
     private final JButton cancelButton;
+    private final JCheckBox enableSeriesCheckbox;
+    private final JPanel buttonPanel;
+    private  JTextField bookNumberTextField;
+    private  JComboBox<String> categoryListChose;
+    private  JComboBox<String> authorListChose;
+    private  JComboBox<String> audienceListChose;
 
     private JTextField isbnField;
     private JTextField titleField;
@@ -48,6 +56,7 @@ public class AddEditBookScreen extends JPanel {
     private JButton uploadButton;
     private JLabel imageLabel;
 
+    private BookEntity book;
 
     /**
      * Constructor for the AddEditBookScreen class. It sets the layout for the panel
@@ -99,18 +108,18 @@ public class AddEditBookScreen extends JPanel {
         JPanel categoriesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         categoriesPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        JLabel categoriesLabel = new JLabel("add categories:");
+        JLabel categoriesLabel = new JLabel("Add categories:");
         categoriesPanel.add(categoriesLabel);
 
-        JComboBox<String> categoryListOptions =InformationGUI.getAllCategories();
+        JComboBox<String> categoryListOptions = InformationGUI.getAllCategories();
         categoryListOptions.setEditable(true);
         categoriesPanel.add(categoryListOptions);
 
-        JComboBox<String> categoryListChose = new JComboBox<>();
+         categoryListChose = new JComboBox<>();
         categoryListChose.setPrototypeDisplayValue("XXXXXXXXXXXXXX");
         categoriesPanel.add(categoryListChose);
 
-        JButton addCategoryButton = new JButton("add category");
+        JButton addCategoryButton = new JButton("+");
         addCategoryButton.addActionListener(e -> {
             String selectedCategory = (String) categoryListOptions.getSelectedItem();
             if (selectedCategory != null && !selectedCategory.isEmpty()) {
@@ -121,10 +130,16 @@ public class AddEditBookScreen extends JPanel {
         });
         categoriesPanel.add(addCategoryButton);
 
+        JButton removeCategoryButton = new JButton("-");
+        removeCategoryButton.addActionListener(e -> {
+            String chosenCategory = (String) categoryListChose.getSelectedItem();
+            if (chosenCategory != null && !chosenCategory.isEmpty()) {
+                categoryListChose.removeItem(chosenCategory);
+            }
+        });
+        categoriesPanel.add(removeCategoryButton);
+
         fieldsPanel.add(categoriesPanel);
-
-
-
 
 
 
@@ -140,7 +155,7 @@ public class AddEditBookScreen extends JPanel {
         authorListOptions.setEditable(true);
         authorPanel.add(authorListOptions);
 
-        JComboBox<String> authorListChose = new JComboBox<>();
+         authorListChose = new JComboBox<>();
         authorListChose.setPrototypeDisplayValue("XXXXXXXXXXXXXX"); // set a larger width for the combo box
         authorListChose.setRenderer(new DefaultListCellRenderer() {
             @Override
@@ -154,7 +169,7 @@ public class AddEditBookScreen extends JPanel {
         });
         authorPanel.add(authorListChose);
 
-        JButton addAuthorButton = new JButton("add author");
+        JButton addAuthorButton = new JButton("+");
         addAuthorButton.addActionListener(e -> {
             String selectedAuthor = (String) authorListOptions.getSelectedItem();
             if (selectedAuthor != null && !selectedAuthor.isEmpty()) {
@@ -163,7 +178,18 @@ public class AddEditBookScreen extends JPanel {
                 }
             }
         });
+
         authorPanel.add(addAuthorButton);
+
+
+        JButton removeAuthorButton = new JButton("-");
+        removeAuthorButton.addActionListener(e -> {
+            String chosenAuthors = (String) authorListChose.getSelectedItem();
+            if (chosenAuthors != null && !chosenAuthors.isEmpty()) {
+                authorListChose.removeItem(chosenAuthors);
+            }
+        });
+        authorPanel.add(removeAuthorButton);
 
         fieldsPanel.add(authorPanel);
 
@@ -182,7 +208,7 @@ public class AddEditBookScreen extends JPanel {
         audienceListOptions.setEditable(true);
         audiencePanel.add(audienceListOptions);
 
-        JComboBox<String> audienceListChose = new JComboBox<>();
+         audienceListChose = new JComboBox<>();
         audienceListChose.setPrototypeDisplayValue("XXXXXXXXXXXXXX"); // set a larger width for the combo box
         audienceListChose.setRenderer(new DefaultListCellRenderer() {
             @Override
@@ -196,7 +222,7 @@ public class AddEditBookScreen extends JPanel {
         });
         audiencePanel.add(audienceListChose);
 
-        JButton addAudienceButton = new JButton("add audience");
+        JButton addAudienceButton = new JButton("+");
         addAudienceButton.addActionListener(e -> {
             String selectedAudience = (String) audienceListOptions.getSelectedItem();
             if (selectedAudience != null && !selectedAudience.isEmpty()) {
@@ -206,8 +232,18 @@ public class AddEditBookScreen extends JPanel {
             }
         });
         audiencePanel.add(addAudienceButton);
+        JButton removeAudiencesButton = new JButton("-");
+        removeAudiencesButton.addActionListener(e -> {
+            String chosenAudiences = (String) audienceListChose.getSelectedItem();
+            if (chosenAudiences != null && !chosenAudiences.isEmpty()) {
+                audienceListChose.removeItem(chosenAudiences);
+            }
+        });
+        audiencePanel.add(removeAudiencesButton);
 
         fieldsPanel.add(audiencePanel);
+
+
 
         fieldsPanel.add(new JLabel("Note:"));
         noteArea = new JTextArea();
@@ -259,10 +295,10 @@ public class AddEditBookScreen extends JPanel {
 
 
         seriesPanel.add(new JLabel("Book Number:"));
-        JTextField bookNumberTextField = new JTextField(10);
+         bookNumberTextField = new JTextField(10);
         seriesPanel.add(bookNumberTextField);
 
-        JCheckBox enableSeriesCheckbox = new JCheckBox("Enable Series");
+         enableSeriesCheckbox = new JCheckBox("Enable Series");
         seriesPanel.add(enableSeriesCheckbox);
         fieldsPanel.add(seriesPanel, BorderLayout.CENTER);
 
@@ -292,7 +328,7 @@ public class AddEditBookScreen extends JPanel {
         add(imagePanel, BorderLayout.EAST);
 
         // Create the buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         saveButton = new JButton("Save");
         cancelButton = new JButton("Cancel");
         buttonPanel.add(saveButton);
@@ -440,13 +476,73 @@ public class AddEditBookScreen extends JPanel {
     }
 
     public void Edit(BookEntity book){
+        this.book = book;
         this.isbnField.setText(book.getIsbn());
         this.titleField.setText(book.getTitle());
         this.editionField.setText(book.getEdition());
         this.pagesField.setText(Integer.toString(book.getNumberOfPages()));
         this.yearField.setText(Integer.toString(book.getPublishYear()));
         this.noteArea.setText(book.getNote());
+        this.publisherField.setText(EditBookClient.getPublisherByBookID(book));
+        this.shelfmarkField.setText(EditBookClient.getShelfByBookID(book));
 
+
+
+        ArrayList<String> authors = EditBookClient.getAuthorsByBookID(book.getId());
+        for(String author: authors){
+            this.authorListChose.addItem(author);
+        }
+
+        ArrayList<String> audiences = EditBookClient.getAudiencesByBookID(book.getId());
+        for(String audience: audiences){
+            this.audienceListChose.addItem(audience);
+        }
+
+        ArrayList<String> categories = EditBookClient.getCategoriesByBookID(book.getId());
+        for(String category: categories){
+            this.categoryListChose.addItem(category);
+        }
+
+
+
+        Object[] series = EditBookClient.getSeriesByBookID(book.getId());
+        if(series != null) {
+            enableSeriesCheckbox.setSelected(true);
+            seriesComboBox.setEnabled(true);
+            bookNumberTextField.setEnabled(true);
+            bookNumberTextField.setText(series[1].toString());
+            seriesComboBox.setSelectedItem((String) series[0]);
+
+
+        }
+
+
+        saveButton.setVisible(false);
+        JButton updatebutton = new JButton("update");
+        buttonPanel.add(updatebutton);
+        updatebutton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EditBookClient.EditBook(isbnField.getText(),titleField.getText(),
+                        editionField.getText(),shelfmarkField.getText(),Integer.parseInt(pagesField.getText()),Integer.parseInt(yearField.getText()),
+                        book.getCoverImage(),languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText(),book.getId());
+
+                if(enableSeriesCheckbox.isSelected()) {
+                    Component editor = seriesComboBox.getEditor().getEditorComponent();
+                    String selectedText = ((JTextComponent) editor).getText();
+                    EditBookClient.deleteSeriesfromBook(book.getId());
+                    InformationGUI.setBookToSeries(selectedText, isbnField.getText(), Integer.parseInt(bookNumberTextField.getText()));
+                }
+
+                EditBookClient.deleteCategoriesfromBook(book.getId());
+                EditBookClient.deleteAudiencesfromBook(book.getId());
+                EditBookClient.deleteAuthorsFromBook(book.getId());
+
+                InformationGUI.setCategoryToBook(categoryListChose,isbnField.getText());
+                InformationGUI.setAuthorToBook(authorListChose,isbnField.getText());
+                InformationGUI.setAudienceToBook(audienceListChose,isbnField.getText());
+            }
+        });
 
     }
 

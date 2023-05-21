@@ -83,4 +83,23 @@ public class BookController {
         headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
         return ResponseEntity.ok().headers(headers).body(books);
     }
+
+
+    @PutMapping("/EditBook")
+    public void EditBook(@RequestParam String ISBN,
+                                          @RequestParam String title,
+                                          @RequestParam String edition,
+                                          @RequestParam String shelfmark,
+                                          @RequestParam int numberOfPages,
+                                          @RequestParam int publishYear,
+                                          @RequestParam byte[] coverImage,
+                                          @RequestParam String language,
+                                          @RequestParam String publisher,
+                                          @RequestParam String note,
+                                   @RequestParam int ID) {
+         bookService.EditBook(
+                ISBN,title,edition,shelfmark,numberOfPages,publishYear,coverImage,language,publisher,note,ID
+        );
+    }
+
 }

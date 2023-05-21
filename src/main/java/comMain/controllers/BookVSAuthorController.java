@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Validated
 @RestController
@@ -40,8 +41,19 @@ public class BookVSAuthorController {
 
 
     @PutMapping("/setAuthorToBook")
-    void setAuthorToBook(@RequestParam String AuthorFN,@RequestParam String AuthorLN, @RequestParam String ISBN){
+    public void setAuthorToBook(@RequestParam String AuthorFN,@RequestParam String AuthorLN, @RequestParam String ISBN){
         bookVSAuthorService.setAuthorToBook(AuthorFN,AuthorLN,ISBN);
+    };
+
+    @DeleteMapping("/deleteAuthorFromBook")
+    public void deleteAuthorFromBook(@RequestParam int bookID){
+        bookVSAuthorService.deleteAuthorFromBook(bookID);
+    };
+
+
+    @GetMapping("/getAllAuthorsByBook")
+    public List<BookVsAuthorEntity> getAllAuthorsByBook(@RequestParam int bookID){
+        return bookVSAuthorService.getAllAuthorsByBook(bookID);
     };
 
 }

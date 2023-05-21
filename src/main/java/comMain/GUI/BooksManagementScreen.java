@@ -89,6 +89,31 @@ public class BooksManagementScreen extends JPanel {
             }
         });
 
+
+        editBookButton.addActionListener(new ActionListener() {
+            /**
+             * Called when the Edit button is clicked. Opens the AddEditBookScreen.
+             * @param e the action event
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open the AddEditBookScreen when the Edit button is clicked
+                AddEditBookScreen addEditBookScreen = new AddEditBookScreen();
+                addEditBookScreen.setPreferredSize(new Dimension(1200, 600));
+                addEditBookScreen.Edit(bookListModel.getElementAt(bookList.getSelectedIndex()));
+                JFrame newFrame = new JFrame();
+                newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                newFrame.setContentPane(addEditBookScreen);
+                newFrame.pack();
+                newFrame.setVisible(true);
+
+
+
+
+            }
+        });
+
+
         searchButton.addActionListener(new ActionListener() {
             /**
              * Called when the Search button is clicked. Filters the book list by title.

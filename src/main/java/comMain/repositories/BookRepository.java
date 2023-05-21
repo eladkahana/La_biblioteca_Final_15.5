@@ -31,4 +31,21 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     @Procedure(name = "getBooksForWeb")
     List<Object[]> getBooksForWeb();
 
+
+
+    @Procedure(name = "EditBook")
+    void EditBook
+            (@Param("ISBN") String ISBN,
+             @Param("title") String title,
+             @Param("edition") String edition,
+             @Param("shelfmark") String shelfmark,
+             @Param("numberOfPages") int numberOfPages,
+             @Param("publishYear") int publishYear,
+             @Param("coverImage") byte[] coverImage,
+             @Param("language") String language,
+             @Param("publisher") String publisher,
+             @Param("note") String note,
+             @Param("ID") int ID);
+
+
 }

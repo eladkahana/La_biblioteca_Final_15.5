@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Validated
 @RestController
@@ -40,8 +41,21 @@ public class SeriesVSBookController {
 
 
     @PutMapping("/setBookToSeries")
-    void setBookToSeries(@RequestParam String BookSeries, @RequestParam String ISBN,@RequestParam int BookIndexInSeries){
+    public void setBookToSeries(@RequestParam String BookSeries, @RequestParam String ISBN,@RequestParam int BookIndexInSeries){
         seriesVSBookService.setBookToSeries(BookSeries,ISBN,BookIndexInSeries);
     };
+
+
+
+    @DeleteMapping ("/deleteBookFromSeries")
+    public void deleteBookFromSeries(@RequestParam int bookID){
+        seriesVSBookService.deleteBookFromSeries(bookID);
+    };
+
+    @GetMapping("/getSeriesByBook")
+    public List<Object[]> getSeriesByBook(@RequestParam int bookID){
+        return seriesVSBookService.getSeriesByBook(bookID);
+    };
+
 
 }
