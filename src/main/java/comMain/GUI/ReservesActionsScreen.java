@@ -140,6 +140,7 @@ public class ReservesActionsScreen extends JPanel {
                 String selectedType = (String) reservationTypeComboBox.getSelectedItem();
                 if (selectedType.equals("Return")) {
                     ReservationClient.addReturnBook(Integer.parseInt(bookIDField.getText()),readerIDField.getText());
+                    if(buttonGroup.getSelection() != null)
                     ReservationClient.addRank(readerIDField.getText(),Integer.parseInt(bookIDField.getText()),rank);
                 } else {
                     ReservationClient.addReserve(readerIDField.getText(),Integer.parseInt(bookIDField.getText()),sqlDate);
