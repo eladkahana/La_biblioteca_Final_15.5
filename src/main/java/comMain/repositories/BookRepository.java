@@ -48,4 +48,11 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
              @Param("ID") int ID);
 
 
+    @Procedure(name = "SuggestBooks")
+    List<Object[]> SuggestBooks(@Param("readerID") int readerID);
+
+
+    @Procedure(name = "createCopy")
+    void createCopy(@Param("bookID") int bookID);
+
 }

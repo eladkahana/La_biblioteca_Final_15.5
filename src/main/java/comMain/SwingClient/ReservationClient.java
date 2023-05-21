@@ -72,4 +72,12 @@ public abstract class ReservationClient {
         restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});
 
     }
+
+
+    public static void reminder() {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/emails/reminder";
+        restTemplate.exchange(url, HttpMethod.PUT, null, new ParameterizedTypeReference<List<Object[]>>() {});
+    }
+
 }

@@ -6,6 +6,8 @@
  */
 package comMain.GUI;
 
+import comMain.SwingClient.InformationGUI;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -17,28 +19,52 @@ public class SettingsScreen extends JPanel {
      * Constructs a new SettingsScreen with the default settings.
      */
     public SettingsScreen() {
-        setLayout(new BorderLayout());
+        setLayout(new GridLayout(3, 1, 10, 10)); // Use GridLayout for the main container
 
-        // create the input fields and labels
-        libraryNameField = new JTextField();
-        libraryAddressField = new JTextField();
-        enableNotificationsCheckbox = new JCheckBox("Enable notifications");
+// Create a panel for the reminder settings
+        JPanel reminderPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        reminderPanel.setBorder(BorderFactory.createTitledBorder("Reminder Settings")); // Add a titled border
 
-        // create a panel for the input fields and labels
-        JPanel inputPanel = new JPanel(new GridLayout(3, 2));
-        inputPanel.add(new JLabel("Library name:"));
-        inputPanel.add(libraryNameField);
-        inputPanel.add(new JLabel("Library address:"));
-        inputPanel.add(libraryAddressField);
-        inputPanel.add(enableNotificationsCheckbox);
+        JLabel daysLabel = new JLabel("Add days:");
+        reminderPanel.add(daysLabel);
 
-        // create a panel for the save button
+        JTextField daysField = new JTextField();
+        daysField.setColumns(10); // Set preferred width
+        reminderPanel.add(daysField);
+
+        JComboBox<String> daysComboBox = new JComboBox<>();
+        daysComboBox.setPrototypeDisplayValue("XXXXXXXX"); // Set a larger width for the combo box
+        reminderPanel.add(daysComboBox);
+
+        JButton addButton = new JButton("+");
+        addButton.addActionListener(e -> {
+            String day = (String) daysField.getText();
+            if (day != null && !day.isEmpty()) {
+                daysComboBox.addItem(day);
+            }
+        });
+        reminderPanel.add(addButton);
+
+        JButton removeButton = new JButton("-");
+        removeButton.addActionListener(e -> {
+            String chosenDay = (String) daysComboBox.getSelectedItem();
+            if (chosenDay != null && !chosenDay.isEmpty()) {
+                daysComboBox.removeItem(chosenDay);
+            }
+        });
+        reminderPanel.add(removeButton);
+
+// Create a panel for the save button
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
         buttonPanel.add(new JButton("Save"));
 
-        // add the input and button panels to the screen
-        add(inputPanel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
+// Add the panels to the screen
+        add(reminderPanel);
+        add(new JPanel()); // Empty panel for spacing
+        add(buttonPanel);
+
+
     }
 }
 

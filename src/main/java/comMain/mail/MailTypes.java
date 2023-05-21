@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,7 @@ import java.util.Map;
 @RequestMapping("/emails")
 public class MailTypes {
 
-    private String DaysInString;
+    private String DaysInString = "2,-2,-10";
 
     /**
      * function that update the days of reminding
@@ -53,19 +54,13 @@ public class MailTypes {
     /**
      * send email of reminding to return the book
      *
-     * @throws SQLException
      * @throws JsonProcessingException
      */
-    @PostMapping("/reminder")
-    public void reminder() throws SQLException, JsonProcessingException {
+    @PutMapping("/reminder")
+    public void reminder() throws  JsonProcessingException {
 
 
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPAPU");
-//        EntityManager em = emf.createEntityManager();
-//        StoredProcedureQuery sp = em.createStoredProcedureQuery("dbo.reservedaysleft");
-//        sp.registerStoredProcedureParameter("arrStr", String.class, ParameterMode.IN);
-//        sp.setParameter("arrStr", this.DaysInString);
-//        sp.execute();
+
 
 
         String url = "http://localhost:8080/reserve/ReserveDaysLeft";
@@ -81,13 +76,14 @@ public class MailTypes {
         List<Object[]> myTableList = objectMapper.readValue(response, new TypeReference<List<Object[]>>() {
         });
 
-        for (Object[] item : myTableList) {
-            System.out.println(item[0]);
-        }
+
+
+
 
         // write the content of the email
 
         for (Object[] item : myTableList) {
+            System.out.println(item[0]);
             StringBuilder content = new StringBuilder();
             content.append("שלום ").append(item[0]).append(".<br>");
             if ((int) item[2] >= 0) {
@@ -101,11 +97,32 @@ public class MailTypes {
                         .append(item[3])
                         .append("'");
             }
+
+
+
+             url = "http://localhost:8080/book/SuggestBooks";
+             restTemplate = new RestTemplate();
+             uri = UriComponentsBuilder.fromUriString(url).queryParam("readerID", item[5]).build().toUri();
+
+
+             response = restTemplate.getForObject(uri, String.class);
+
+             objectMapper = new ObjectMapper();
+            List<Object[]> bookSuggest = objectMapper.readValue(response, new TypeReference<List<Object[]>>() {
+            });
+
+
+
+
+            content.append("<br><br><br>בנוסף אנו ממליצים לך להשאיל את הספר: <br>");
+            content.append("'"+bookSuggest.get(0)[4]+"'");
+            content.append("<br>חושבים שתהנה לקרוא אותו :) <br>");
             content.append("<br> תודה רבה ויום טוב!<br>");
             content.append("<br> ספריית - La Biblioteca<br>");
 
             Email email = new Email((String) item[1], "תזכורת להחזרת ספר", content.toString());
-            email.setImage((byte[]) item[4]);
+            email.setImage(((String) item[4]).getBytes(StandardCharsets.UTF_8));
+
             email.sendEmail();
         }
 

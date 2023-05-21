@@ -102,4 +102,16 @@ public class BookController {
         );
     }
 
+
+    @GetMapping("/SuggestBooks")
+    public List<Object[]> SuggestBooks(int readerID){
+        return bookService.SuggestBooks(readerID);
+    }
+
+
+    @PutMapping("/createCopy")
+    public void createCopy(int bookID){
+         bookService.createCopy(bookID);
+    }
+
 }

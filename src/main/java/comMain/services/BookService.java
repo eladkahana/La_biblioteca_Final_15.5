@@ -124,4 +124,19 @@ public class BookService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<Object[]> SuggestBooks(int readerID){
+        return bookRepository.SuggestBooks(readerID);
+    }
+
+
+    @Transactional(readOnly = true)
+    public void createCopy(int bookID){
+         bookRepository.createCopy(bookID);
+    }
+
+
+
+
+
 }

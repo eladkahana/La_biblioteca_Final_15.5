@@ -11,13 +11,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import comMain.SwingClient.InformationGUI;
+import comMain.SwingClient.ReservationClient;
 import comMain.entities.ReserveEntity;
 
 
 public class ReservationManagementScreen extends JPanel {
+    private final JButton reminderButton;
     private JLabel titleLabel;
     private JList<ReserveEntity> reserveList;
-    private JButton editReserveButton;
     private JButton deleteReserveButton;
     private JButton addReserveButton;
     private JTextField searchField;
@@ -36,7 +37,7 @@ public class ReservationManagementScreen extends JPanel {
         titleLabel = new JLabel("Reserves Management");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         reserveList = new JList<ReserveEntity>();
-        editReserveButton = new JButton("Edit");
+        reminderButton = new JButton("reminder");
         deleteReserveButton = new JButton("Delete");
         searchField = new JTextField(20);
         searchButton = new JButton("Search");
@@ -60,8 +61,10 @@ public class ReservationManagementScreen extends JPanel {
         add(reserveListScrollPane, BorderLayout.CENTER);
 
         JPanel reserveListButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        reserveListButtonPanel.add(editReserveButton);
+
         reserveListButtonPanel.add(deleteReserveButton);
+        reserveListButtonPanel.add(reminderButton);
+
         reserveListButtonPanel.add(searchPanel);
         add(reserveListButtonPanel, BorderLayout.SOUTH);
 
@@ -100,6 +103,11 @@ public class ReservationManagementScreen extends JPanel {
                 renderer.setHorizontalAlignment(SwingConstants.RIGHT);
                 return renderer;
             }
+        });
+
+
+        reminderButton.addActionListener(e -> {
+            ReservationClient.reminder();
         });
     }
 }
