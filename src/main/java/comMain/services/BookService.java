@@ -131,11 +131,15 @@ public class BookService {
 
 
     @Transactional(readOnly = true)
-    public void createCopy(int bookID){
-         bookRepository.createCopy(bookID);
+    public List<Object[]> createCopy(int bookID){
+         return bookRepository.createCopy(bookID);
     }
 
 
+    @Transactional(readOnly = true)
+    public void DeleteBook(int copyID){
+         bookRepository.DeleteBook(copyID);
+    }
 
 
 

@@ -354,7 +354,6 @@ public class AddEditBookScreen extends JPanel {
             InformationGUI.setAuthorToBook(authorListChose,isbnField.getText());
             InformationGUI.setAudienceToBook(audienceListChose,isbnField.getText());
 
-            int newId = 100;
 // Create a new dialog
             JDialog dialog = new JDialog();
             dialog.setTitle("Confirmation Message");
@@ -370,7 +369,7 @@ public class AddEditBookScreen extends JPanel {
             JPanel barcodePanel = new JPanel(new BorderLayout(10, 10));
 
 // Generate the barcode image as a byte array
-            byte[] barcodeData = InformationGUI.getBarcode(Integer.toString(newId));
+            byte[] barcodeData = InformationGUI.getBarcode(Integer.toString(newID));
             ImageIcon imageForPrint = null;
             try {
                 // Create an InputStream from the barcodeData

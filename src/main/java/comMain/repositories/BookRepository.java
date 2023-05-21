@@ -53,6 +53,9 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
 
     @Procedure(name = "createCopy")
-    void createCopy(@Param("bookID") int bookID);
+    List<Object[]> createCopy(@Param("bookID") int bookID);
+
+    @Procedure(name = "DeleteBook")
+    void DeleteBook(@Param("copyID") int copyID);
 
 }

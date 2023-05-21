@@ -109,9 +109,16 @@ public class BookController {
     }
 
 
-    @PutMapping("/createCopy")
-    public void createCopy(int bookID){
-         bookService.createCopy(bookID);
+    @PostMapping("/createCopy")
+    public List<Object[]> createCopy(int bookID){
+         return bookService.createCopy(bookID);
     }
+
+
+    @PutMapping("/DeleteBook")
+    public void DeleteBook(int copyID){
+         bookService.DeleteBook(copyID);
+    }
+
 
 }
