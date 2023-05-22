@@ -15,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -24,6 +26,9 @@ public class MailBoxScreen extends JPanel {
     private JList<String> readList;
     private JTextArea messageArea;
     private JButton respondButton;
+    private JButton refreshButton;
+
+    private List<RequestsEntity> unCheckedList, CheckedList;
 
     /**
      * Constructs a MailBoxScreen object.
@@ -35,12 +40,22 @@ public class MailBoxScreen extends JPanel {
         JPanel topPanel = new JPanel();
         JLabel titleLabel = new JLabel("Mail Box");
         topPanel.add(titleLabel);
+
+
+        refreshButton = new JButton("refresh");
+        refreshButton.setPreferredSize(new Dimension(100, 30));
+
+
+
+        topPanel.add(refreshButton);
+
+
         add(topPanel, BorderLayout.NORTH);
 
 
         ArrayList<String> inboxMessages = new ArrayList<>();
         ArrayList<String> inboxArray = new ArrayList<>();
-        List<RequestsEntity> unCheckedList = InformationGUI.getUnCheckedRequests();
+        unCheckedList = InformationGUI.getUnCheckedRequests();
 
         for (RequestsEntity request : unCheckedList) {
             // Create sample inbox messages and content
@@ -54,7 +69,7 @@ public class MailBoxScreen extends JPanel {
             inboxListModel.addElement(message);
         }
 
-        JList<String> inboxList = new JList<>(inboxListModel);
+        inboxList = new JList<>(inboxListModel);
 
 
         inboxList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -69,11 +84,9 @@ public class MailBoxScreen extends JPanel {
         add(inboxPanel, BorderLayout.WEST);
 
 
-
-
         ArrayList<String> readMessages = new ArrayList<>();
         ArrayList<String> readArray = new ArrayList<>();
-        List<RequestsEntity> CheckedList = InformationGUI.getCheckedRequests();
+        CheckedList = InformationGUI.getCheckedRequests();
 
         for (RequestsEntity request : CheckedList) {
             // Create sample inbox messages and content
@@ -87,7 +100,7 @@ public class MailBoxScreen extends JPanel {
             readListModel.addElement(message);
         }
 
-        JList<String> readList = new JList<>(readListModel);
+        readList = new JList<>(readListModel);
 
 
         readList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -114,10 +127,9 @@ public class MailBoxScreen extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 RequestsEntity request;
                 // Create response window
-                if(inboxList.getSelectedIndex() > readList.getSelectedIndex()){
+                if (inboxList.getSelectedIndex() > readList.getSelectedIndex()) {
                     request = unCheckedList.get(inboxList.getSelectedIndex());
-                }
-                else{
+                } else {
                     request = CheckedList.get(readList.getSelectedIndex());
                 }
                 RespondingWindow respondWindow = new RespondingWindow(request);
@@ -130,11 +142,63 @@ public class MailBoxScreen extends JPanel {
         add(messagePanel, BorderLayout.CENTER);
 
 
+        refreshButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Clear lists
+                inboxListModel.clear();
+
+                readListModel.clear();
+                inboxArray.clear();
+                readArray.clear();
+
+                // Reload mailbox information
+                unCheckedList = null;
+                try {
+                    unCheckedList = InformationGUI.getUnCheckedRequests();
+                } catch (JsonProcessingException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                for (RequestsEntity request : unCheckedList) {
+                    // Create sample inbox messages and content
+                    inboxMessages.add(request.getContactContent());
+                    inboxArray.add(InformationGUI.getMailDetails(request));
+                }
+
+                for (String message : inboxArray) {
+                    inboxListModel.addElement(message);
+                }
+
+                CheckedList = null;
+                try {
+                    CheckedList = InformationGUI.getCheckedRequests();
+                } catch (JsonProcessingException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                for (RequestsEntity request : CheckedList) {
+                    // Create sample inbox messages and content
+                    readMessages.add(request.getContactContent());
+                    readArray.add(InformationGUI.getMailDetails(request));
+                }
+
+                for (String message : readArray) {
+                    readListModel.addElement(message);
+                }
+
+                // Clear message area and disable respond button
+                messageArea.setText("");
+                messageArea.setFont(messageArea.getFont().deriveFont(Font.PLAIN));
+                respondButton.setEnabled(false);
+            }
+        });
+
 
         // Add list selection listener to show message content and enable respond button
         inboxList.addListSelectionListener(new ListSelectionListener() {
             /**
              * display the message in the screen. in let the user to response
+             *
              * @param e the event that characterizes the change.
              */
             public void valueChanged(ListSelectionEvent e) {
@@ -156,6 +220,7 @@ public class MailBoxScreen extends JPanel {
         readList.addListSelectionListener(new ListSelectionListener() {
             /**
              * display the message in the screen. in let the user to response
+             *
              * @param e the event that characterizes the change.
              */
             public void valueChanged(ListSelectionEvent e) {
@@ -176,7 +241,10 @@ public class MailBoxScreen extends JPanel {
         });
 
 
-
     }
+
+
+
+
 }
 

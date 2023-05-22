@@ -44,6 +44,7 @@ public class ReservesActionsScreen extends JPanel {
 
         dueToLabel = new JLabel("Due Date:");
         dueToChooser = new JDateChooser();
+        dueToChooser.setDateFormatString("dd/MM/yyyy"); // Set the date format
 
         // Initialize star rating panel
         JPanel ratingPanel = new JPanel(new GridLayout(1, 5, 5, 5));
@@ -120,8 +121,7 @@ public class ReservesActionsScreen extends JPanel {
             }
         });
 
-        long milliseconds = dueToChooser.getDate().getTime();
-        java.sql.Date sqlDate = new java.sql.Date(milliseconds);
+
 
 
         // Add action listeners
@@ -133,16 +133,17 @@ public class ReservesActionsScreen extends JPanel {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.DATE, 14);
-                dueToChooser.setDate(cal.getTime());
+
 
                 String selectedType = (String) reservationTypeComboBox.getSelectedItem();
                 if (selectedType.equals("Return")) {
                     ReservationClient.addReturnBook(Integer.parseInt(bookIDField.getText()),readerIDField.getText());
-                    if(buttonGroup.getSelection() != null)
-                    ReservationClient.addRank(readerIDField.getText(),Integer.parseInt(bookIDField.getText()),rank);
+                    if(buttonGroup.getSelection() != null) {
+                        ReservationClient.addRank(readerIDField.getText(), Integer.parseInt(bookIDField.getText()), rank);
+                    }
                 } else {
+                    long milliseconds = dueToChooser.getDate().getTime();
+                    java.sql.Date sqlDate = new java.sql.Date(milliseconds);
                     ReservationClient.addReserve(readerIDField.getText(),Integer.parseInt(bookIDField.getText()),sqlDate);
                 }
             }
