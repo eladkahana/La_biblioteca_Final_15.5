@@ -58,6 +58,9 @@ public class AddEditBookScreen extends JPanel {
 
     private BookEntity book;
 
+    private byte[] chosenImage;
+
+
     /**
      * Constructor for the AddEditBookScreen class. It sets the layout for the panel
      * and initializes all the components that will be displayed on the screen.
@@ -252,12 +255,12 @@ public class AddEditBookScreen extends JPanel {
         fieldsPanel.add(scrollPane);
 
 
+
         // Create the image panel
 
-        byte[] chosenImage = new byte[1];
+        chosenImage = new byte[0]; // Set initial value to an empty byte array
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        uploadButton = new JButton("Upload Image");
+        JButton uploadButton = new JButton("Upload Image");
         uploadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(this);
@@ -266,20 +269,20 @@ public class AddEditBookScreen extends JPanel {
                 try {
                     BufferedImage image = ImageIO.read(selectedFile);
 
-                    // Convert BufferedImage to byte[]
-
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     ImageIO.write(image, "png", baos);
-
-
-                    ImageIcon icon = new ImageIcon(image);
-                    imageLabel.setIcon(icon);
+                    baos.flush();
+                    chosenImage = baos.toByteArray();
+                    baos.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+            } else {
+                chosenImage = new byte[0]; // Set chosenImage to an empty byte array
             }
         });
 
-        chosenImage = baos.toByteArray();
+
 
 
 
@@ -339,11 +342,14 @@ public class AddEditBookScreen extends JPanel {
             closePanel();
         });
 
-        byte[] finalChosenImage = chosenImage;
         saveButton.addActionListener(e -> {
+            if(chosenImage == null){
+
+            }
+
             Integer newID = InformationGUI.addCompleteBook(isbnField.getText(),titleField.getText(),
                     editionField.getText(),shelfmarkField.getText(),Integer.parseInt(pagesField.getText()),Integer.parseInt(yearField.getText()),
-                    finalChosenImage,languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText());
+                    chosenImage,languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText());
 
             if(enableSeriesCheckbox.isSelected()) {
                 Component editor = seriesComboBox.getEditor().getEditorComponent();

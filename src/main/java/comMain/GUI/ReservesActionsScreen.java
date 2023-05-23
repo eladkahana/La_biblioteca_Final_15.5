@@ -34,7 +34,7 @@ public class ReservesActionsScreen extends JPanel {
 
         // Initialize components
         reservationTypeLabel = new JLabel("Reservation Type:");
-        reservationTypeComboBox = new JComboBox<String>(new String[]{"ReserveEntity", "Return"});
+        reservationTypeComboBox = new JComboBox<String>(new String[]{"Reserve", "Return"});
 
         readerIDLabel = new JLabel("Reader ID:");
         readerIDField = new JTextField();
