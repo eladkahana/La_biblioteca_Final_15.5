@@ -8,12 +8,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.swing.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class EditBookClient {
+public abstract class AddEditBookClient {
 
     private static RestTemplate restTemplate;
 
@@ -222,6 +221,46 @@ public abstract class EditBookClient {
                 .toUri();
 
         restTemplate.delete(uri);
+    }
+
+
+    public static int addCompleteBook(String ISBN,
+                                      String title,
+                                      String edition,
+                                      String shelfmark,
+                                      int numberOfPages,
+                                      int publishYear,
+                                      byte[] coverImage,
+                                      String language,
+                                      String publisher,
+                                      String note) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/book/addCompleteBook";
+
+        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+        parameters.add("ISBN", ISBN);
+        parameters.add("title", title);
+        parameters.add("edition", edition);
+        parameters.add("shelfmark", shelfmark);
+        parameters.add("numberOfPages", numberOfPages);
+        parameters.add("publishYear", publishYear);
+        parameters.add("coverImage", coverImage);
+        parameters.add("language", language);
+        parameters.add("publisher", publisher);
+        parameters.add("note", note);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+
+        ResponseEntity<List<Object[]>> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {
+        });
+        List<Object[]> response = responseEntity.getBody();
+
+        int ID = (int) response.get(0)[0];
+
+        return ID;
     }
 
 

@@ -88,4 +88,34 @@ public class ReadersService {
     public List<Object[]> TryToConnect(String IP, String Mac,  String UserName, String Password){
         return readersRepository.TryToConnect(IP,Mac,UserName,Password);
     }
+
+
+    @Transactional(readOnly = true)
+    public void EditReader(
+            String IDno,
+            String adress,
+            String phoneNo,
+            String firstName,
+            String lastName,
+            String birthDate,
+            String gender,
+            String Email,
+            int ID
+    ) {
+
+        java.sql.Date sqlDate = java.sql.Date.valueOf(birthDate);
+
+         readersRepository.EditReader(
+                IDno,
+                adress,
+                phoneNo,
+                firstName,
+                lastName,
+                sqlDate,
+                gender,
+                Email,
+                ID
+        );
+    }
+
 }

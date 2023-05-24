@@ -19,7 +19,6 @@ public class ReadersManagementScreen extends JPanel {
     private JLabel titleLabel;
     private JList<ReadersEntity> readerList;
     private JButton editReaderButton;
-    private JButton deleteReaderButton;
     private JButton addReaderButton;
     private JTextField searchField;
     private JButton searchButton;
@@ -36,7 +35,6 @@ public class ReadersManagementScreen extends JPanel {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         readerList = new JList<ReadersEntity>();
         editReaderButton = new JButton("Edit");
-        deleteReaderButton = new JButton("Delete");
         addReaderButton = new JButton("Add");
         searchField = new JTextField(20);
         searchButton = new JButton("Search");
@@ -62,9 +60,32 @@ public class ReadersManagementScreen extends JPanel {
         JPanel readerListButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         readerListButtonPanel.add(addReaderButton);
         readerListButtonPanel.add(editReaderButton);
-        readerListButtonPanel.add(deleteReaderButton);
         readerListButtonPanel.add(searchPanel);
         add(readerListButtonPanel, BorderLayout.SOUTH);
+
+
+        editReaderButton.addActionListener(new ActionListener() {
+            /**
+             * Called when the Edit button is clicked. Opens the AddEditBookScreen.
+             * @param e the action event
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open the AddEditBookScreen when the Edit button is clicked
+                AddEditUserScreen addEditUserScreen = new AddEditUserScreen();
+                addEditUserScreen.setPreferredSize(new Dimension(1200, 600));
+                addEditUserScreen.Edit(readerListModel.getElementAt(readerList.getSelectedIndex()));
+                JFrame newFrame = new JFrame();
+                newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                newFrame.setContentPane(addEditUserScreen);
+                newFrame.pack();
+                newFrame.setVisible(true);
+
+
+
+
+            }
+        });
 
         // Add action listeners
         addReaderButton.addActionListener(new ActionListener() {

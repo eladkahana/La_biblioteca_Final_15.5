@@ -7,14 +7,16 @@ package comMain.GUI;
 import javax.swing.*;
 import java.awt.*;
 
-import javax.swing.*;
-import java.awt.*;
-import java.sql.Date;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import com.toedter.calendar.JDateChooser;
+import comMain.SwingClient.AddEditReaderClient;
 import comMain.SwingClient.InformationGUI;
+import comMain.entities.ReadersEntity;
 
 public class AddEditUserScreen extends JPanel {
+    private final JPanel buttonPanel;
     private JLabel titleLabel;
     private JLabel idLabel;
     private JLabel firstNameLabel;
@@ -85,8 +87,10 @@ public class AddEditUserScreen extends JPanel {
         formPanel.add(emailTextField);
         add(formPanel, BorderLayout.CENTER);
 
+
+
         // Create the buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         saveButton = new JButton("Save");
         cancelButton = new JButton("Cancel");
         saveButton.addActionListener(e -> {
@@ -96,7 +100,7 @@ public class AddEditUserScreen extends JPanel {
             long milliseconds = birthDateChooser.getDate().getTime();
             java.sql.Date sqlDate = new java.sql.Date(milliseconds);
 
-            InformationGUI.addReader(idTextField.getText(),addressTextField.getText(),phoneNoTextField.getText(),
+            AddEditReaderClient.addReader(idTextField.getText(),addressTextField.getText(),phoneNoTextField.getText(),
                     firstNameTextField.getText(), lastNameTextField.getText()
                     , sqlDate,genderComboBox.getItemAt(genderComboBox.getSelectedIndex()),emailTextField.getText());
 
@@ -115,5 +119,39 @@ public class AddEditUserScreen extends JPanel {
      */
     private void closePanel() {
         SwingUtilities.getWindowAncestor(this).dispose();
+    }
+
+
+
+    public void Edit(ReadersEntity reader) {
+        this.idTextField.setText(reader.getIDno());
+        String name = InformationGUI.getName(reader.getFirstName(),reader.getLastName());
+        this.firstNameTextField.setText(name.substring(0, name.indexOf(',')));
+        this.lastNameTextField.setText(name.substring(name.indexOf(',') + 2));
+        this.birthDateChooser.setDate(reader.getBirthDate());
+        this.genderComboBox.setSelectedItem(InformationGUI.getGenderByID(reader.getGenderId()));
+        this.addressTextField.setText(reader.getAdress());
+        this.phoneNoTextField.setText(reader.getPhoneNo());
+        this.emailTextField.setText(reader.getEmail());
+
+
+        saveButton.setVisible(false);
+        JButton updatebutton = new JButton("update");
+        this.buttonPanel.add(updatebutton);
+        updatebutton.addActionListener(new ActionListener() {
+
+            long milliseconds = birthDateChooser.getDate().getTime();
+            java.sql.Date sqlDate = new java.sql.Date(milliseconds);
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddEditReaderClient.EditRedaer(idTextField.getText(), addressTextField.getText(),
+                        phoneNoTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(),
+                        sqlDate, genderComboBox.getItemAt(genderComboBox.getSelectedIndex()),
+                        emailTextField.getText(),reader.getId());
+
+            }
+        });
+
     }
 }

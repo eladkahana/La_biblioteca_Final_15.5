@@ -6,7 +6,7 @@
 
 package comMain.GUI;
 
-import comMain.SwingClient.EditBookClient;
+import comMain.SwingClient.AddEditBookClient;
 import comMain.SwingClient.InformationGUI;
 import comMain.entities.BookEntity;
 
@@ -15,7 +15,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.io.*;
 import javax.imageio.ImageIO;
@@ -23,10 +22,6 @@ import javax.swing.text.JTextComponent;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicReferenceArray;
-
-import static comMain.Barcode.BarcodeGenerator.generateBarcode;
 
 
 public class AddEditBookScreen extends JPanel {
@@ -347,7 +342,7 @@ public class AddEditBookScreen extends JPanel {
 
             }
 
-            Integer newID = InformationGUI.addCompleteBook(isbnField.getText(),titleField.getText(),
+            Integer newID = AddEditBookClient.addCompleteBook(isbnField.getText(),titleField.getText(),
                     editionField.getText(),shelfmarkField.getText(),Integer.parseInt(pagesField.getText()),Integer.parseInt(yearField.getText()),
                     chosenImage,languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText());
 
@@ -488,29 +483,29 @@ public class AddEditBookScreen extends JPanel {
         this.pagesField.setText(Integer.toString(book.getNumberOfPages()));
         this.yearField.setText(Integer.toString(book.getPublishYear()));
         this.noteArea.setText(book.getNote());
-        this.publisherField.setText(EditBookClient.getPublisherByBookID(book));
-        this.shelfmarkField.setText(EditBookClient.getShelfByBookID(book));
+        this.publisherField.setText(AddEditBookClient.getPublisherByBookID(book));
+        this.shelfmarkField.setText(AddEditBookClient.getShelfByBookID(book));
 
 
 
-        ArrayList<String> authors = EditBookClient.getAuthorsByBookID(book.getId());
+        ArrayList<String> authors = AddEditBookClient.getAuthorsByBookID(book.getId());
         for(String author: authors){
             this.authorListChose.addItem(author);
         }
 
-        ArrayList<String> audiences = EditBookClient.getAudiencesByBookID(book.getId());
+        ArrayList<String> audiences = AddEditBookClient.getAudiencesByBookID(book.getId());
         for(String audience: audiences){
             this.audienceListChose.addItem(audience);
         }
 
-        ArrayList<String> categories = EditBookClient.getCategoriesByBookID(book.getId());
+        ArrayList<String> categories = AddEditBookClient.getCategoriesByBookID(book.getId());
         for(String category: categories){
             this.categoryListChose.addItem(category);
         }
 
 
 
-        Object[] series = EditBookClient.getSeriesByBookID(book.getId());
+        Object[] series = AddEditBookClient.getSeriesByBookID(book.getId());
         if(series != null) {
             enableSeriesCheckbox.setSelected(true);
             seriesComboBox.setEnabled(true);
@@ -528,20 +523,20 @@ public class AddEditBookScreen extends JPanel {
         updatebutton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EditBookClient.EditBook(isbnField.getText(),titleField.getText(),
+                AddEditBookClient.EditBook(isbnField.getText(),titleField.getText(),
                         editionField.getText(),shelfmarkField.getText(),Integer.parseInt(pagesField.getText()),Integer.parseInt(yearField.getText()),
                         book.getCoverImage(),languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText(),book.getId());
 
                 if(enableSeriesCheckbox.isSelected()) {
                     Component editor = seriesComboBox.getEditor().getEditorComponent();
                     String selectedText = ((JTextComponent) editor).getText();
-                    EditBookClient.deleteSeriesfromBook(book.getId());
+                    AddEditBookClient.deleteSeriesfromBook(book.getId());
                     InformationGUI.setBookToSeries(selectedText, isbnField.getText(), Integer.parseInt(bookNumberTextField.getText()));
                 }
 
-                EditBookClient.deleteCategoriesfromBook(book.getId());
-                EditBookClient.deleteAudiencesfromBook(book.getId());
-                EditBookClient.deleteAuthorsFromBook(book.getId());
+                AddEditBookClient.deleteCategoriesfromBook(book.getId());
+                AddEditBookClient.deleteAudiencesfromBook(book.getId());
+                AddEditBookClient.deleteAuthorsFromBook(book.getId());
 
                 InformationGUI.setCategoryToBook(categoryListChose,isbnField.getText());
                 InformationGUI.setAuthorToBook(authorListChose,isbnField.getText());

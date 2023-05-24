@@ -27,4 +27,20 @@ public interface ReadersRepository extends JpaRepository<ReadersEntity, Integer>
                          @Param("UserName") String UserName,
                          @Param("Password") String Password);
 
+
+
+
+    @Procedure(name = "EditReader")
+    void EditReader
+            (@Param("IDno") String IDno,
+             @Param("adress") String adress,
+             @Param("phoneNo") String phoneNo,
+             @Param("firstName") String firstName,
+             @Param("lastName") String lastName,
+             @Param("birthDate") java.sql.Date birthDate,
+             @Param("gender") String gender,
+             @Param("Email") String Email,
+             @Param("ID") int ID);
+
+
 }

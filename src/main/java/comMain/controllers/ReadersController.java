@@ -103,4 +103,30 @@ public class ReadersController {
         }
     }
 
+
+    @PutMapping("/EditReader")
+    public void EditReader(@RequestParam String IDno,
+                                    @RequestParam String adress,
+                                    @RequestParam String phoneNo,
+                                    @RequestParam String firstName,
+                                    @RequestParam String lastName,
+                                    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String birthDate,
+                                    @RequestParam String gender,
+                                    @RequestParam String Email,
+                          @RequestParam int ID) {
+
+
+        readersService.EditReader(
+                IDno,
+                adress,
+                phoneNo,
+                firstName,
+                lastName,
+                birthDate,
+                gender,
+                Email,
+                ID
+        );
+    }
+
 }
