@@ -110,20 +110,14 @@
 </main>
 
 <script>
-  const queryString = window.location.search;
-  const params = new URLSearchParams(queryString);
-  const userID = params.get('userID');
+  const userID = sessionStorage.getItem('userID');
+
 
   if (userID === null) {
     window.location.href = 'LoginPage.html';
   }
 
-  if (userID !== null && !isNaN(userID)) {
-    const navigationLinks = document.querySelectorAll('a');
-    navigationLinks.forEach(link => {
-      link.href += '?userID=' + userID;
-    });
-  }
+
 
   const contactForm = document.getElementById('contact-form');
 

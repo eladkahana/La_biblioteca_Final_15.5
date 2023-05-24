@@ -228,13 +228,8 @@
 
 <script>
 
-  const queryString = window.location.search;
+  const userID = sessionStorage.getItem('userID');
 
-  // Create a URLSearchParams object from the query string
-  const params = new URLSearchParams(queryString);
-
-  // Get the value of the userID parameter
-  const userID = params.get('userID');
 
   if (userID === null) {
     window.location.href = 'LoginPage.html';
@@ -291,12 +286,7 @@
             console.error('Error:', error);
           });
 
-  if(userID !== null && !isNaN(userID)){
-    const navigationLinks = document.querySelectorAll('a');
-    navigationLinks.forEach(link => {
-      link.href += '?userID=' + userID;
-    });
-  }
+
 
 </script>
 </body>

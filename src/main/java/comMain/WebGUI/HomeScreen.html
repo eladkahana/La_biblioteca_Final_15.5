@@ -125,9 +125,9 @@
 
 <nav>
   <ul>
-    <li><a href="BooksPage.html?userID=">Search Books</a></li>
-    <li><a href="History.html?userID=">Borrowing History</a></li>
-    <li><a href="Contact.html?userID=">Contact Us</a></li>
+    <li><a href="BooksPage.html">Search Books</a></li>
+    <li><a href="History.html">Borrowing History</a></li>
+    <li><a href="Contact.html">Contact Us</a></li>
   </ul>
 </nav>
 
@@ -162,26 +162,16 @@
 
 
 
-  // Get the query string from the URL
-  const queryString = window.location.search;
 
-  // Create a URLSearchParams object from the query string
-  const params = new URLSearchParams(queryString);
 
-  // Get the value of the userID parameter
-  const userID = params.get('userID');
+  const userID = sessionStorage.getItem('userID');
+
 
   if (userID === null) {
     window.location.href = 'LoginPage.html';
   }
 
 
-
-  // Update the href attribute of all navigation links with the userID parameter
-  const navigationLinks = document.querySelectorAll('nav a');
-  navigationLinks.forEach(link => {
-    link.href = link.href + userID;
-  });
 
 
   // Use the parameter value

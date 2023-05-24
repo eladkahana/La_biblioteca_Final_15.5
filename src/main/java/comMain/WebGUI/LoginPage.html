@@ -126,7 +126,13 @@
                         // Check the response data to determine if login was successful
                         if (userID !== null && !isNaN(userID)) {
                             // Redirect to the next page and pass the number
-                            const nextPageUrl = 'HomeScreen.html?userID=' + responseData;
+                            const nextPageUrl = 'HomeScreen.html';
+                            const userID = responseData;
+
+// Store the userID in session storage
+                            sessionStorage.setItem('userID', userID);
+
+// Navigate to the next page
                             window.location.href = nextPageUrl;
                         } else {
                             // Display an error message or perform other actions if login failed

@@ -140,13 +140,7 @@
 
 <script>
 
-  const queryString = window.location.search;
-
-  // Create a URLSearchParams object from the query string
-  const params = new URLSearchParams(queryString);
-
-  // Get the value of the userID parameter
-  const userID = params.get('userID');
+  const userID = sessionStorage.getItem('userID');
 
   if (userID === null) {
     window.location.href = 'LoginPage.html';
@@ -234,12 +228,7 @@
     return `https://via.placeholder.com/100x150.png?text=${encodeURIComponent(title)}`;
   }
 
-  if(userID !== null && !isNaN(userID)){
-    const navigationLinks = document.querySelectorAll('a');
-    navigationLinks.forEach(link => {
-      link.href += '?userID=' + userID;
-    });
-  }
+
 
 
 </script>
