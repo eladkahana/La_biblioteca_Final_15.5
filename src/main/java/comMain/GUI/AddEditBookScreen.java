@@ -27,29 +27,28 @@ import java.util.ArrayList;
 public class AddEditBookScreen extends JPanel {
 
     private final JButton saveButton;
-    private final JButton cancelButton;
     private final JCheckBox enableSeriesCheckbox;
     private final JPanel buttonPanel;
-    private  JTextField bookNumberTextField;
-    private  JComboBox<String> categoryListChose;
-    private  JComboBox<String> authorListChose;
-    private  JComboBox<String> audienceListChose;
+    private final JTextField bookNumberTextField;
+    private final JComboBox<String> categoryListChose;
+    private final JComboBox<String> authorListChose;
+    private final JComboBox<String> audienceListChose;
 
-    private JTextField isbnField;
-    private JTextField titleField;
-    private JTextField editionField;
-    private JTextField shelfmarkField;
-    private JTextField pagesField;
-    private JTextField yearField;
-    private JComboBox<String> languageComboBox, publishersComoBox;
-    private JTextField publisherField;
+    private final JTextField isbnField;
+    private final JTextField titleField;
+    private final JTextField editionField;
+    private final JTextField shelfmarkField;
+    private final JTextField pagesField;
+    private final JTextField yearField;
+    private final JComboBox<String> languageComboBox;
+    private JComboBox<String> publishersComoBox;
+    private final JTextField publisherField;
     private JComboBox<String> categoryComboBox;
     private JComboBox<String> authorComboBox;
-    private JComboBox<String> seriesComboBox;
+    private final JComboBox<String> seriesComboBox;
     private JComboBox<String> audienceComboBox;
-    private JTextArea noteArea;
+    private final JTextArea noteArea;
     private JButton uploadButton;
-    private JLabel imageLabel;
 
     private BookEntity book;
 
@@ -312,9 +311,7 @@ public class AddEditBookScreen extends JPanel {
         bookNumberTextField.setEnabled(enableSeriesCheckbox.isSelected());
 
 
-
-
-        imageLabel = new JLabel();
+        JLabel imageLabel = new JLabel();
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         JPanel imagePanel = new JPanel(new BorderLayout());
@@ -328,7 +325,7 @@ public class AddEditBookScreen extends JPanel {
         // Create the buttons
          buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         saveButton = new JButton("Save");
-        cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton("Cancel");
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
         add(buttonPanel, BorderLayout.SOUTH);
@@ -338,11 +335,9 @@ public class AddEditBookScreen extends JPanel {
         });
 
         saveButton.addActionListener(e -> {
-            if(chosenImage == null){
 
-            }
 
-            Integer newID = AddEditBookClient.addCompleteBook(isbnField.getText(),titleField.getText(),
+            int newID = AddEditBookClient.addCompleteBook(isbnField.getText(),titleField.getText(),
                     editionField.getText(),shelfmarkField.getText(),Integer.parseInt(pagesField.getText()),Integer.parseInt(yearField.getText()),
                     chosenImage,languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText());
 

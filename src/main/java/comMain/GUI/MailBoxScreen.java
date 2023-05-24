@@ -22,6 +22,8 @@ import javax.swing.event.ListSelectionListener;
 
 public class MailBoxScreen extends JPanel {
 
+    private final ArrayList<String> inboxMessages;
+    private final ArrayList<String> inboxArray;
     private JList<String> inboxList;
     private JList<String> readList;
     private JTextArea messageArea;
@@ -53,8 +55,8 @@ public class MailBoxScreen extends JPanel {
         add(topPanel, BorderLayout.NORTH);
 
 
-        ArrayList<String> inboxMessages = new ArrayList<>();
-        ArrayList<String> inboxArray = new ArrayList<>();
+         inboxMessages = new ArrayList<>();
+         inboxArray = new ArrayList<>();
         unCheckedList = InformationGUI.getUnCheckedRequests();
 
         for (RequestsEntity request : unCheckedList) {
