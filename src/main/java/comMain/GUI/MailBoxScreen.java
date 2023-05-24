@@ -24,6 +24,8 @@ public class MailBoxScreen extends JPanel {
 
     private final ArrayList<String> inboxMessages;
     private final ArrayList<String> inboxArray;
+    private final ArrayList<String> readMessages;
+    private final ArrayList<String> readArray;
     private JList<String> inboxList;
     private JList<String> readList;
     private JTextArea messageArea;
@@ -48,15 +50,14 @@ public class MailBoxScreen extends JPanel {
         refreshButton.setPreferredSize(new Dimension(100, 30));
 
 
-
         topPanel.add(refreshButton);
 
 
         add(topPanel, BorderLayout.NORTH);
 
 
-         inboxMessages = new ArrayList<>();
-         inboxArray = new ArrayList<>();
+        inboxMessages = new ArrayList<>();
+        inboxArray = new ArrayList<>();
         unCheckedList = InformationGUI.getUnCheckedRequests();
 
         for (RequestsEntity request : unCheckedList) {
@@ -86,8 +87,8 @@ public class MailBoxScreen extends JPanel {
         add(inboxPanel, BorderLayout.WEST);
 
 
-        ArrayList<String> readMessages = new ArrayList<>();
-        ArrayList<String> readArray = new ArrayList<>();
+        readMessages = new ArrayList<>();
+        readArray = new ArrayList<>();
         CheckedList = InformationGUI.getCheckedRequests();
 
         for (RequestsEntity request : CheckedList) {
@@ -244,8 +245,6 @@ public class MailBoxScreen extends JPanel {
 
 
     }
-
-
 
 
 }
