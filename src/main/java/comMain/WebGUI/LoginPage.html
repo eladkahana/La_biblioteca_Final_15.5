@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Login Page</title>
     <style>
         body {
@@ -140,6 +143,7 @@
                         }
                     })
                     .catch((error) => {
+                        alert('שם משתמש או הסיסמה אינם נכונים!');
                         console.error('Error:', error);
                     });
             })
