@@ -129,4 +129,12 @@ public class ReadersController {
         );
     }
 
+
+    @PostMapping("/LogIn/AddPassword")
+    public List<Object[]> TryToConnect(@RequestParam("uID") int uID,
+                                       @RequestParam("Password") String Password){
+        return readersService.AddPassword(uID,Password);
+
+    }
+
 }

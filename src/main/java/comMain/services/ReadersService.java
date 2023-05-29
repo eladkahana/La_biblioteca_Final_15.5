@@ -118,4 +118,10 @@ public class ReadersService {
         );
     }
 
+
+    @Transactional(readOnly = true)
+    public List<Object[]> AddPassword(int uID, String Password){
+        return readersRepository.AddPassword(uID,Password);
+    }
+
 }

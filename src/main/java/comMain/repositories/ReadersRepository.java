@@ -43,4 +43,13 @@ public interface ReadersRepository extends JpaRepository<ReadersEntity, Integer>
              @Param("ID") int ID);
 
 
+
+    @Procedure(procedureName = "LogIn.AddPassword")
+     List<Object[]> AddPassword(@Param("uID") int uID,
+                               @Param("Password") String Password);
+
+
+
 }
+
+
