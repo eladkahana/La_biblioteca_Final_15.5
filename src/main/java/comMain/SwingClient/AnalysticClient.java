@@ -14,6 +14,7 @@ import java.util.List;
 
 public abstract class  AnalysticClient {
 
+
     private static RestTemplate restTemplate;
     public static String MonthlyResrvesAmount() throws JsonProcessingException {
         restTemplate = new RestTemplate();

@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import comMain.SwingClient.InformationGUI;
 import comMain.SwingClient.ReservationClient;
@@ -67,6 +68,11 @@ public class ReservationManagementScreen extends JPanel {
 
         reserveListButtonPanel.add(searchPanel);
         add(reserveListButtonPanel, BorderLayout.SOUTH);
+
+
+
+
+
 
         // Add action listeners
 

@@ -7,12 +7,22 @@
 package comMain.GUI;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
 import javax.swing.*;
 import java.awt.*;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.io.*;
+import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 
 public class HomeScreen{
+
+//    private final static String trustStorePath = "D:\\new\\La_biblioteca_Final_5.5-master\\src\\main\\resources\\truststore.jks";
+//    private final static char[] trustStorePassword = "password".toCharArray();
+
 
     // The tabbed pane that displays the different screens
     public static JTabbedPane tabbedPane = new JTabbedPane();
@@ -22,7 +32,17 @@ public class HomeScreen{
      * the tabbed pane with the different screens.
      * @param args The command-line arguments.
      */
-    public static void main(String[] args) throws JsonProcessingException, NoSuchAlgorithmException, KeyManagementException {
+    public static void main(String[] args) throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException {
+
+
+//        //importCertificate("D:\\new\\La_biblioteca_Final_5.5-master\\src\\main\\resources\\clientHttps.crt", "server");
+//
+//        System.setProperty("javax.net.ssl.trustStore", trustStorePath);
+//        System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword.toString());
+
+
+
+
         // Create the JFrame
         JFrame frame = new JFrame("Library Management System");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,6 +83,28 @@ public class HomeScreen{
         // Display the frame
         frame.setVisible(true);
     }
+
+//    private static void importCertificate(String certFilePath, String alias) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException {
+//        // Load the certificate from file
+//        FileInputStream fileInputStream = new FileInputStream(certFilePath);
+//        BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+//        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+//        Certificate certificate = certificateFactory.generateCertificate(bufferedInputStream);
+//
+//        // Add the certificate to the truststore
+//        KeyStore trustStore = KeyStore.getInstance("JKS");
+//        trustStore.load(new FileInputStream(trustStorePath), trustStorePassword);
+//        trustStore.setCertificateEntry(alias, certificate);
+//
+//        // Save the modified truststore
+//        FileOutputStream fileOutputStream = new FileOutputStream(trustStorePath);
+//        trustStore.store(fileOutputStream, trustStorePassword);
+//
+//        // Close streams
+//        bufferedInputStream.close();
+//        fileInputStream.close();
+//        fileOutputStream.close();
+//    }
 
 
 

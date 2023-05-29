@@ -34,6 +34,8 @@ public class BooksManagementScreen extends JPanel {
     private JTextField searchField;
     private JButton searchButton;
 
+    DefaultListModel<BookEntity> filteredListModel;
+
     /**
      * Constructor that initializes the Books Management screen with its components.
      */
@@ -114,7 +116,14 @@ public class BooksManagementScreen extends JPanel {
                 // Open the AddEditBookScreen when the Edit button is clicked
                 AddEditBookScreen addEditBookScreen = new AddEditBookScreen();
                 addEditBookScreen.setPreferredSize(new Dimension(1200, 600));
-                addEditBookScreen.Edit(bookListModel.getElementAt(bookList.getSelectedIndex()));
+                if(filteredListModel != null){
+                    addEditBookScreen.Edit(filteredListModel.getElementAt(bookList.getSelectedIndex()));
+
+                }
+                else {
+                    addEditBookScreen.Edit(bookListModel.getElementAt(bookList.getSelectedIndex()));
+                }
+
                 JFrame newFrame = new JFrame();
                 newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 newFrame.setContentPane(addEditBookScreen);
@@ -176,7 +185,7 @@ public class BooksManagementScreen extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String query = searchField.getText();
-                DefaultListModel<BookEntity> filteredListModel = new DefaultListModel<BookEntity>();
+                filteredListModel = new DefaultListModel<BookEntity>();
                 for (int i = 0; i < bookListModel.getSize(); i++) {
                     BookEntity book = bookListModel.getElementAt(i);
                     if (book.getTitle().contains(query)) {
@@ -207,8 +216,14 @@ public class BooksManagementScreen extends JPanel {
 
         createCopyButton.addActionListener(e ->
         {
-            int newId = BookManagerClient.createCopy(bookListModel.get(bookList.getSelectedIndex()).getId());
+            int newId;
+            if(filteredListModel != null){
+                 newId = BookManagerClient.createCopy(filteredListModel.get(bookList.getSelectedIndex()).getId());
 
+            }
+            else {
+                 newId = BookManagerClient.createCopy(bookListModel.get(bookList.getSelectedIndex()).getId());
+            }
 
             JDialog dialog = new JDialog();
             dialog.setTitle("Confirmation Message");
