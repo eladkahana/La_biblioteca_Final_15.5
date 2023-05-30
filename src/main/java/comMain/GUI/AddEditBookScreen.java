@@ -261,6 +261,8 @@ public class AddEditBookScreen extends JPanel {
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
                 try {
+                    uploadButton.setBackground(Color.green);
+
                     BufferedImage image = ImageIO.read(selectedFile);
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -481,9 +483,10 @@ public class AddEditBookScreen extends JPanel {
         this.publisherField.setText(AddEditBookClient.getPublisherByBookID(book));
         this.shelfmarkField.setText(AddEditBookClient.getShelfByBookID(book));
 
+        chosenImage = book.getCoverImage();
 
 
-        ArrayList<String> authors = AddEditBookClient.getAuthorsByBookID(book.getId());
+                ArrayList<String> authors = AddEditBookClient.getAuthorsByBookID(book.getId());
         for(String author: authors){
             this.authorListChose.addItem(author);
         }
@@ -509,6 +512,7 @@ public class AddEditBookScreen extends JPanel {
             seriesComboBox.setSelectedItem((String) series[0]);
 
 
+
         }
 
 
@@ -520,7 +524,7 @@ public class AddEditBookScreen extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 AddEditBookClient.EditBook(isbnField.getText(),titleField.getText(),
                         editionField.getText(),shelfmarkField.getText(),Integer.parseInt(pagesField.getText()),Integer.parseInt(yearField.getText()),
-                        book.getCoverImage(),languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText(),book.getId());
+                        chosenImage,languageComboBox.getItemAt(languageComboBox.getSelectedIndex()),publisherField.getText(),noteArea.getText(),book.getId());
 
                 if(enableSeriesCheckbox.isSelected()) {
                     Component editor = seriesComboBox.getEditor().getEditorComponent();
