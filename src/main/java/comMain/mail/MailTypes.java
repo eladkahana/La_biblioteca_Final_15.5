@@ -113,12 +113,14 @@ public class MailTypes {
 
 
 
+            if(bookSuggest != null) {
 
-            content.append("<br><br><br>בנוסף אנו ממליצים לך להשאיל את הספר: <br>");
-            content.append("'"+bookSuggest.get(0)[4]+"'");
-            content.append("<br>חושבים שתהנה לקרוא אותו :) <br>");
-            content.append("<br> תודה רבה ויום טוב!<br>");
-            content.append("<br> ספריית - La Biblioteca<br>");
+                content.append("<br><br><br>בנוסף אנו ממליצים לך להשאיל את הספר: <br>");
+                content.append("'" + bookSuggest.get(0)[4] + "'");
+                content.append("<br>חושבים שתהנה לקרוא אותו :) <br>");
+                content.append("<br> תודה רבה ויום טוב!<br>");
+                content.append("<br> ספריית - La Biblioteca<br>");
+            }
 
             Email email = new Email((String) item[1], "תזכורת להחזרת ספר", content.toString());
             email.setImage(((String) item[4]).getBytes(StandardCharsets.UTF_8));

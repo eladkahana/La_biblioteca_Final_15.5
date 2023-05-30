@@ -41,8 +41,6 @@ public class HomeScreen{
 //        System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword.toString());
 
 
-
-
         // Create the JFrame
         JFrame frame = new JFrame("Library Management System");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,6 +80,23 @@ public class HomeScreen{
 
         // Display the frame
         frame.setVisible(true);
+
+
+        tabbedPane.addChangeListener(e -> {
+            String selectedTab = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+            if (selectedTab.equals("Analytics")) {
+
+                try {
+                    analyticsScreen.refersh();
+                } catch (JsonProcessingException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else if (selectedTab.equals("Books Management")) {
+                bookManagementScreen.refresh();
+            } else if (selectedTab.equals("Readers Management")) {
+                readersManagementScreen.refresh();
+            }
+        });
     }
 
 //    private static void importCertificate(String certFilePath, String alias) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException {

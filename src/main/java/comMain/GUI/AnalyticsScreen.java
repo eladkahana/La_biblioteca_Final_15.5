@@ -25,6 +25,13 @@ import java.util.List;
 
 public class AnalyticsScreen extends JPanel {
 
+    private  JFreeChart borrowedByDayChart;
+    private  JFreeChart borrowedByHourChart;
+    private  JLabel mostBorrowedValueLabel;
+    private  JLabel monthlyLoansValueLabel;
+    private  JLabel dailyLoansValueLabel;
+    private CategoryDataset borrowedByHourData;
+    private CategoryDataset borrowedByDayData;
     private JPanel panel;
     private JPanel infoPanel;
 
@@ -40,10 +47,10 @@ public class AnalyticsScreen extends JPanel {
         setLayout(new BorderLayout());
 
         // Create data for borrowed books graph by hour
-        CategoryDataset borrowedByHourData = createBorrowedBooksByHourData();
+         borrowedByHourData = createBorrowedBooksByHourData();
 
         // Create chart for borrowed books graph by hour
-        JFreeChart borrowedByHourChart = ChartFactory.createBarChart(
+         borrowedByHourChart = ChartFactory.createBarChart(
                 "Borrowed Books by Hour", // chart title
                 "Hour", // x axis label
                 "Number of Books", // y axis label
@@ -67,10 +74,10 @@ public class AnalyticsScreen extends JPanel {
         borrowedByHourChartPanel.setPreferredSize(new Dimension(500, 270));
 
         // Create data for borrowed books graph by day
-        CategoryDataset borrowedByDayData = createBorrowedBooksByDayData();
+         borrowedByDayData = createBorrowedBooksByDayData();
 
         // Create chart for borrowed books graph by day
-        JFreeChart borrowedByDayChart = ChartFactory.createBarChart(
+         borrowedByDayChart = ChartFactory.createBarChart(
                 "Borrowed Books by Day", // chart title
                 "Day", // x axis label
                 "Number of Books", // y axis label
@@ -126,7 +133,7 @@ public class AnalyticsScreen extends JPanel {
         mostBorrowedTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
         infoPanel.add(mostBorrowedTitleLabel);
 
-        JLabel mostBorrowedValueLabel = new JLabel(AnalysticClient.MostReservedBook());
+         mostBorrowedValueLabel = new JLabel(AnalysticClient.MostReservedBook());
         mostBorrowedValueLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         infoPanel.add(mostBorrowedValueLabel);
         infoPanel.add(Box.createVerticalStrut(100)); // Add spacing
@@ -136,7 +143,7 @@ public class AnalyticsScreen extends JPanel {
         monthlyLoansTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
         infoPanel.add(monthlyLoansTitleLabel);
 
-        JLabel monthlyLoansValueLabel = new JLabel(AnalysticClient.MonthlyResrvesAmount());
+         monthlyLoansValueLabel = new JLabel(AnalysticClient.MonthlyResrvesAmount());
         monthlyLoansValueLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         infoPanel.add(monthlyLoansValueLabel);
         infoPanel.add(Box.createVerticalStrut(100)); // Add spacing
@@ -146,7 +153,7 @@ public class AnalyticsScreen extends JPanel {
         dailyLoansTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
         infoPanel.add(dailyLoansTitleLabel);
 
-        JLabel dailyLoansValueLabel = new JLabel(AnalysticClient.todayResrvesAmount());
+         dailyLoansValueLabel = new JLabel(AnalysticClient.todayResrvesAmount());
         dailyLoansValueLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         infoPanel.add(dailyLoansValueLabel);
 
@@ -206,6 +213,24 @@ public class AnalyticsScreen extends JPanel {
 
 
 
+    public void refersh() throws JsonProcessingException {
+        borrowedByHourData = createBorrowedBooksByHourData();
+        borrowedByDayData = createBorrowedBooksByDayData();
+
+        // Update the chart panels
+        borrowedByHourChart.getCategoryPlot().setDataset(borrowedByHourData);
+        borrowedByDayChart.getCategoryPlot().setDataset(borrowedByDayData);
+
+        // Update the labels
+        mostBorrowedValueLabel.setText(AnalysticClient.MostReservedBook());
+        monthlyLoansValueLabel.setText(AnalysticClient.MonthlyResrvesAmount());
+        dailyLoansValueLabel.setText(AnalysticClient.todayResrvesAmount());
+
+        // Repaint the window
+        revalidate();
+        repaint();
+
+    }
 
 
 }

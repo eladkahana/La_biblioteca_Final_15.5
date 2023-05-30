@@ -87,8 +87,6 @@
       margin-bottom: 20px;
     }
 
-
-
     .update img {
       width: 200px;
       margin-right: 20px;
@@ -112,14 +110,33 @@
       text-align: center;
     }
 
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
 
+    .left-half,
+    .right-half {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
 
+    .left-half {
+      background-color: #f2f2f2;
+    }
+
+    .right-half {
+      background-color: #e0e0e0;
+    }
   </style>
 </head>
 
 <body>
 <header>
-
   <h1>Library Home Page</h1>
 </header>
 
@@ -138,25 +155,35 @@
     <h1>La-biblioteca</h1>
   </div>
 
-  <section class="updates" dir="rtl">
-    <h2>שעות פתיחה:</h2>
-    <ul>
-      <li>
-        <h3>ימים א' - ה'</h3>
-        <p>12:00 - 19:00.</p>
-      </li>
-      <li>
-        <h3>ימי שישי וערבי חג</h3>
-        <p>10:00 - 15:00.</p>
-      </li>
-
-    </ul>
-  </section>
+  <div dir="rtl" class="container">
+    <div  class="left-half">
+      <div class="updates">
+        <h2 dir="rtl">שעות פתיחה:</h2>
+        <ul>
+          <li>
+            <h3>ימים א' - ה'</h3>
+            <p>12:00 - 19:00.</p>
+          </li>
+          <li>
+            <h3>ימי שישי וערבי חג</h3>
+            <p>10:00 - 15:00.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="right-half">
+      <div class="content">
+        <h2 dir="rtl">ההמלצה שלנו :)</h2>
+        <p id="suggest"></p>
+      </div>
+    </div>
+  </div>
 </main>
 
 <footer>
   <p>La biblioteca &copy; 2023. All rights reserved.</p>
 </footer>
+
 
 <script>
   // Redirect to login page if userID is null
@@ -175,8 +202,35 @@
 
 
 
+
+
+
   // Use the parameter value
   console.log(userID); // Output: the value of the userID parameter
+
+
+  fetch(`http://localhost:8080/book/SuggestBooks?readerID=${userID}`)
+          .then(response => response.json())
+          .then(data => {
+            data.forEach(item => {
+              const suggestElement = document.getElementById("suggest");
+              suggestElement.set("אנו ממליצים לך לקרוא את הספר:<br>" + item[4] + "<br>");
+            });
+          })
+          .catch(error => {
+            console.log("Error occurred:", error);
+          });
+
+
+
+
+
+
+
+
+
+
+
 </script>
 </body>
 </html>

@@ -26,6 +26,7 @@ import comMain.entities.BookEntity;
 
 public class BooksManagementScreen extends JPanel {
     private final JButton createCopyButton;
+    private  DefaultListModel<BookEntity> bookListModel;
     private JLabel titleLabel;
     private JList<BookEntity> bookList;
     private JButton editBookButton;
@@ -55,7 +56,7 @@ public class BooksManagementScreen extends JPanel {
         searchButton = new JButton("Search");
 
         // Set book list model
-        DefaultListModel<BookEntity> bookListModel  = InformationGUI.getAllBooks();
+         bookListModel  = InformationGUI.getAllBooks();
         bookList.setModel(bookListModel);
 
 
@@ -331,5 +332,10 @@ public class BooksManagementScreen extends JPanel {
                 }
             }
         };
+    }
+
+    public void refresh(){
+        bookListModel = InformationGUI.getAllBooks();
+        bookList.setModel(bookListModel);
     }
 }

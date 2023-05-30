@@ -17,6 +17,7 @@ import comMain.entities.ReadersEntity;
 
 
 public class ReadersManagementScreen extends JPanel {
+    private  DefaultListModel<ReadersEntity> readerListModel;
     private JLabel titleLabel;
     private JList<ReadersEntity> readerList;
     private JButton editReaderButton;
@@ -46,7 +47,7 @@ public class ReadersManagementScreen extends JPanel {
         changePasswordButton = new JButton("change password");
 
         // Set reader list model
-        DefaultListModel<ReadersEntity> readerListModel =InformationGUI.getAllReaders();
+         readerListModel = InformationGUI.getAllReaders();
         readerList.setModel(readerListModel);
 
 
@@ -250,5 +251,10 @@ public class ReadersManagementScreen extends JPanel {
                 return renderer;
             }
         });
+    }
+
+    public void refresh(){
+        readerListModel = InformationGUI.getAllReaders();
+        readerList.setModel(readerListModel);
     }
 }

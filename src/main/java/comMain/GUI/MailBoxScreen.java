@@ -147,52 +147,8 @@ public class MailBoxScreen extends JPanel {
 
         refreshButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Clear lists
-                inboxListModel.clear();
+                refreshMailbox();
 
-                readListModel.clear();
-                inboxArray.clear();
-                readArray.clear();
-
-                // Reload mailbox information
-                unCheckedList = null;
-                try {
-                    unCheckedList = InformationGUI.getUnCheckedRequests();
-                } catch (JsonProcessingException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-                for (RequestsEntity request : unCheckedList) {
-                    // Create sample inbox messages and content
-                    inboxMessages.add(request.getContactContent());
-                    inboxArray.add(InformationGUI.getMailDetails(request));
-                }
-
-                for (String message : inboxArray) {
-                    inboxListModel.addElement(message);
-                }
-
-                CheckedList = null;
-                try {
-                    CheckedList = InformationGUI.getCheckedRequests();
-                } catch (JsonProcessingException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-                for (RequestsEntity request : CheckedList) {
-                    // Create sample inbox messages and content
-                    readMessages.add(request.getContactContent());
-                    readArray.add(InformationGUI.getMailDetails(request));
-                }
-
-                for (String message : readArray) {
-                    readListModel.addElement(message);
-                }
-
-                // Clear message area and disable respond button
-                messageArea.setText("");
-                messageArea.setFont(messageArea.getFont().deriveFont(Font.PLAIN));
-                respondButton.setEnabled(false);
             }
         });
 
@@ -245,6 +201,51 @@ public class MailBoxScreen extends JPanel {
 
 
     }
+
+    private void refreshMailbox() {
+        try {
+            // Clear lists
+            DefaultListModel<String> inboxListModel = (DefaultListModel<String>) inboxList.getModel();
+            inboxListModel.clear();
+            inboxArray.clear();
+            inboxMessages.clear();
+
+            DefaultListModel<String> readListModel = (DefaultListModel<String>) readList.getModel();
+            readListModel.clear();
+            readArray.clear();
+            readMessages.clear();
+
+            // Reload mailbox information
+            unCheckedList = InformationGUI.getUnCheckedRequests();
+            for (RequestsEntity request : unCheckedList) {
+                // Create sample inbox messages and content
+                inboxMessages.add(request.getContactContent());
+                inboxArray.add(InformationGUI.getMailDetails(request));
+            }
+            for (String message : inboxArray) {
+                inboxListModel.addElement(message);
+            }
+
+            CheckedList = InformationGUI.getCheckedRequests();
+            for (RequestsEntity request : CheckedList) {
+                // Create sample inbox messages and content
+                readMessages.add(request.getContactContent());
+                readArray.add(InformationGUI.getMailDetails(request));
+            }
+            for (String message : readArray) {
+                readListModel.addElement(message);
+            }
+
+            // Clear message area and disable respond button
+            messageArea.setText("");
+            messageArea.setFont(messageArea.getFont().deriveFont(Font.PLAIN));
+            respondButton.setEnabled(false);
+        } catch (JsonProcessingException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+
 
 
 }
