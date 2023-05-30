@@ -132,6 +132,8 @@
     .right-half {
       background-color: #e0e0e0;
     }
+
+
   </style>
 </head>
 
@@ -172,9 +174,9 @@
       </div>
     </div>
     <div class="right-half">
-      <div class="content">
-        <h2 dir="rtl">ההמלצה שלנו :)</h2>
-        <p id="suggest"></p>
+      <div class="updates">
+        <h2 dir="rtl" align="center">ההמלצה שלנו :)</h2>
+        <p class="suggest" id="suggest" style="font-size: 19px"></p>
       </div>
     </div>
   </div>
@@ -187,38 +189,29 @@
 
 <script>
   // Redirect to login page if userID is null
-
-
-
-
-
   const userID = sessionStorage.getItem('userID');
-
-
   if (userID === null) {
     window.location.href = 'LoginPage.html';
   }
 
-
-
-
-
-
-
   // Use the parameter value
   console.log(userID); // Output: the value of the userID parameter
 
-
-  fetch(`http://localhost:8080/book/SuggestBooks?readerID=${userID}`)
+  fetch(`http://localhost:8080/book/SuggestBooksWeb?readerID=${userID}`)
           .then(response => response.json())
           .then(data => {
+            const suggestElement = document.getElementById("suggest");
+            suggestElement.innerHTML = "חושבים שתיהנו לקרוא את הספר:<br>";
+
             data.forEach(item => {
-              const suggestElement = document.getElementById("suggest");
-              suggestElement.set("אנו ממליצים לך לקרוא את הספר:<br>" + item[4] + "<br>");
+              const title = item[4];
+              suggestElement.innerHTML +=
+                      `<p style="font-size: 50px; color: crimson; font-weight: bold" align="center">${title}<br></p>`;
+
             });
           })
           .catch(error => {
-            console.log("Error occurred:", error);
+            console.error('Error:', error);
           });
 
 
@@ -226,11 +219,7 @@
 
 
 
-
-
-
-
-
 </script>
+
 </body>
 </html>
