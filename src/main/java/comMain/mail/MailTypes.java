@@ -41,7 +41,8 @@ public class MailTypes {
      * @param newDays - The days in relation to the book return date
      *                when it is necessary to send a reminder
      */
-    public void changeDays(List<Object> newDays) {
+    @PutMapping("/changeDays")
+    public void changeDays(@RequestParam List<Object> newDays) {
         this.DaysInString = "";
         for (Object day : newDays) {
             this.DaysInString += day.toString();

@@ -131,8 +131,8 @@ public class ReadersController {
 
 
     @PostMapping("/LogIn/AddPassword")
-    public List<Object[]> TryToConnect(@RequestParam("uID") int uID,
-                                       @RequestParam("Password") String Password){
+    public List<Object[]> TryToConnect(@RequestParam() int uID,
+                                       @RequestParam() String Password){
         return readersService.AddPassword(uID,Password);
 
     }

@@ -12,6 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -78,6 +79,21 @@ public abstract class ReservationClient {
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8080/emails/reminder";
         restTemplate.exchange(url, HttpMethod.PUT, null, new ParameterizedTypeReference<List<Object[]>>() {});
+    }
+
+
+    public static void changeDays(List<Object> days){
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/emails/changeDays";
+        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+        parameters.add("newDays", days);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+
+        restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});
     }
 
 }

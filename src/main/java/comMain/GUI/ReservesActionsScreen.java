@@ -146,6 +146,9 @@ public class ReservesActionsScreen extends JPanel {
                     java.sql.Date sqlDate = new java.sql.Date(milliseconds);
                     ReservationClient.addReserve(readerIDField.getText(),Integer.parseInt(bookIDField.getText()),sqlDate);
                 }
+
+
+                JOptionPane.showMessageDialog(null, "The " + selectedType + " done successfully");
             }
         });
 

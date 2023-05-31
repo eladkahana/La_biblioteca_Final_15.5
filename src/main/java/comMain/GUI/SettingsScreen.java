@@ -7,9 +7,13 @@
 package comMain.GUI;
 
 import comMain.SwingClient.InformationGUI;
+import comMain.SwingClient.ReservationClient;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SettingsScreen extends JPanel {
     private JTextField libraryNameField, libraryAddressField;
@@ -20,6 +24,9 @@ public class SettingsScreen extends JPanel {
      */
     public SettingsScreen() {
         setLayout(new GridLayout(3, 1, 10, 10)); // Use GridLayout for the main container
+
+        List<Object> days =  new ArrayList<>();
+
 
 // Create a panel for the reminder settings
         JPanel reminderPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -41,6 +48,7 @@ public class SettingsScreen extends JPanel {
             String day = (String) daysField.getText();
             if (day != null && !day.isEmpty()) {
                 daysComboBox.addItem(day);
+                days.add(day);
             }
         });
         reminderPanel.add(addButton);
@@ -50,6 +58,7 @@ public class SettingsScreen extends JPanel {
             String chosenDay = (String) daysComboBox.getSelectedItem();
             if (chosenDay != null && !chosenDay.isEmpty()) {
                 daysComboBox.removeItem(chosenDay);
+                days.remove(chosenDay);
             }
         });
         reminderPanel.add(removeButton);
@@ -57,7 +66,14 @@ public class SettingsScreen extends JPanel {
 // Create a panel for the save button
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-        buttonPanel.add(new JButton("Save"));
+        JButton saveButton = new JButton("save");
+        buttonPanel.add(saveButton);
+        saveButton.addActionListener(e -> {
+            ReservationClient.changeDays(days);
+            JOptionPane.showMessageDialog(null, "Changes saved successfully.");
+        });
+
+
 
 // Add the panels to the screen
         add(reminderPanel);

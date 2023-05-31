@@ -114,6 +114,7 @@ public class ReservationManagementScreen extends JPanel {
 
         reminderButton.addActionListener(e -> {
             ReservationClient.reminder();
+            JOptionPane.showMessageDialog(null, "send the messages.");
         });
     }
 }
