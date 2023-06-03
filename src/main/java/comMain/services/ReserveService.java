@@ -85,6 +85,12 @@ public class ReserveService {
     }
 
     @Transactional(readOnly = true)
+    public List<Object[]> getAllReservations() {
+        return reserveRepository.getAllReservations();
+    }
+
+
+    @Transactional(readOnly = true)
     public void AddReserve(String readerIDno, Integer BookID, String dueTo) {
         java.sql.Date sqlDate = java.sql.Date.valueOf(dueTo);
 

@@ -5,31 +5,30 @@
 
 package comMain.GUI;
 
+import comMain.SwingClient.InformationGUI;
+import comMain.SwingClient.ReservationClient;
+
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-import comMain.SwingClient.InformationGUI;
-import comMain.SwingClient.ReservationClient;
-import comMain.entities.ReserveEntity;
-
+import java.util.List;
 
 public class ReservationManagementScreen extends JPanel {
-    private final JButton reminderButton;
+    private JButton reminderButton;
     private JLabel titleLabel;
-    private JList<ReserveEntity> reserveList;
+    private JTable reserveTable;
     private JButton deleteReserveButton;
-    private JButton addReserveButton;
     private JTextField searchField;
     private JButton searchButton;
 
+    private ReservationTableModel tableModel;
+    private TableRowSorter<ReservationTableModel> tableRowSorter;
 
-    /**
-     * Constructs a new ReservationManagementScreen object.
-     * Sets layout and initializes components.
-     */
     public ReservationManagementScreen() {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -37,16 +36,16 @@ public class ReservationManagementScreen extends JPanel {
         // Initialize components
         titleLabel = new JLabel("Reserves Management");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        reserveList = new JList<ReserveEntity>();
-        reminderButton = new JButton("reminder");
+        reminderButton = new JButton("Reminder");
         deleteReserveButton = new JButton("Delete");
         searchField = new JTextField(20);
         searchButton = new JButton("Search");
 
-        // Set reserve list model
-        DefaultListModel<ReserveEntity> reserveListModel = InformationGUI.getAllReserves();
-        reserveList.setModel(reserveListModel);
-
+        tableModel = new ReservationTableModel();
+        reserveTable = new JTable(tableModel);
+        tableRowSorter = new TableRowSorter<>(tableModel);
+        reserveTable.setRowSorter(tableRowSorter);
+        reserveTable.setDefaultRenderer(Object.class, new RightAlignedCellRenderer());
 
         // Add components to panel
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -56,20 +55,18 @@ public class ReservationManagementScreen extends JPanel {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
-        add(searchPanel, BorderLayout.SOUTH);
 
-        JScrollPane reserveListScrollPane = new JScrollPane(reserveList);
-        add(reserveListScrollPane, BorderLayout.CENTER);
+        JScrollPane reserveTableScrollPane = new JScrollPane(reserveTable);
+        add(reserveTableScrollPane, BorderLayout.CENTER);
 
-        JPanel reserveListButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.add(deleteReserveButton);
+        buttonPanel.add(reminderButton);
 
-        reserveListButtonPanel.add(deleteReserveButton);
-        reserveListButtonPanel.add(reminderButton);
-
-        reserveListButtonPanel.add(searchPanel);
-        add(reserveListButtonPanel, BorderLayout.SOUTH);
-
-
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(searchPanel, BorderLayout.EAST);
+        bottomPanel.add(buttonPanel, BorderLayout.WEST);
+        add(bottomPanel, BorderLayout.SOUTH);
 
 
 
@@ -78,43 +75,78 @@ public class ReservationManagementScreen extends JPanel {
 
 
 
+
         searchButton.addActionListener(new ActionListener() {
-            /*
-                filter the list by the search key
-             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 String query = searchField.getText();
-                DefaultListModel<ReserveEntity> filteredListModel = new DefaultListModel<ReserveEntity>();
-                for (int i = 0; i < reserveListModel.getSize(); i++) {
-                    ReserveEntity reserve = reserveListModel.getElementAt(i);
-                    if (InformationGUI.reservationTitle(reserve).contains(query)) {
-                        filteredListModel.addElement(reserve);
-                    }
-                }
-                reserveList.setModel(filteredListModel);
+                filterTable(query);
             }
         });
-
-
-        reserveList.setCellRenderer(new DefaultListCellRenderer() {
-            /*
-               display the properties of the reserves in the list
-             */
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                ReserveEntity reserve = (ReserveEntity) value;
-                renderer.setText(InformationGUI.reservationTitle(reserve));
-                renderer.setHorizontalAlignment(SwingConstants.RIGHT);
-                return renderer;
-            }
-        });
-
 
         reminderButton.addActionListener(e -> {
             ReservationClient.reminder();
             JOptionPane.showMessageDialog(null, "send the messages.");
         });
+    }
+
+    public void refresh() {
+        tableModel.updateData();
+        searchField.setText(""); // Clear the search field
+        filterTable(""); // Reset the table filter
+    }
+
+
+    public void filterTable(String query) {
+        RowFilter<ReservationTableModel, Object> rowFilter = RowFilter.regexFilter(query);
+        tableRowSorter.setRowFilter(rowFilter);
+    }
+
+    private class ReservationTableModel extends AbstractTableModel {
+        private final String[] columnNames = {"Book", "Reader", "From", "To"};
+        private List<Object[]> reservations;
+        private List<Object[]> filteredReservations;
+
+        public ReservationTableModel() {
+            reservations = InformationGUI.getAllReserves();
+            filteredReservations = new ArrayList<>(reservations);
+        }
+
+
+
+        @Override
+        public int getRowCount() {
+            return filteredReservations.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Object[] reservation = filteredReservations.get(rowIndex);
+            return reservation[columnIndex];
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return columnNames[column];
+        }
+
+
+        public void updateData() {
+            reservations = InformationGUI.getAllReserves();
+            filteredReservations = new ArrayList<>(reservations);
+            fireTableDataChanged(); // Notify the table that the data has changed
+        }
+
+    }
+
+    private class RightAlignedCellRenderer extends DefaultTableCellRenderer {
+        public RightAlignedCellRenderer() {
+            setHorizontalAlignment(SwingConstants.CENTER);
+        }
     }
 }

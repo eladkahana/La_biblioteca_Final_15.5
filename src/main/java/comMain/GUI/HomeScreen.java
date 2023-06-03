@@ -96,6 +96,9 @@ public class HomeScreen{
             } else if (selectedTab.equals("Readers Management")) {
                 readersManagementScreen.refresh();
             }
+            else if (selectedTab.equals("Reservation Management")) {
+                reservationManagementScreen.refresh();
+            }
         });
     }
 

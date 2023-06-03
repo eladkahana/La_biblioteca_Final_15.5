@@ -76,6 +76,11 @@ public class ReserveController {
         return reserveService.displayReservesByHours();
     }
 
+    @GetMapping("/getAllReservations")
+    public List<Object[]> getAllReservations(){
+        return reserveService.getAllReservations();
+    }
+
     @PutMapping("/AddReserve")
     public void AddReserve(@RequestParam String readerIDno,@RequestParam Integer BookID,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String dueTo){
         reserveService.AddReserve(readerIDno,BookID,dueTo);

@@ -59,19 +59,14 @@ public abstract class InformationGUI {
     }
 
 
-    public static DefaultListModel<ReserveEntity> getAllReserves() {
+    public static List<Object[]> getAllReserves() {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/reserve";
+        String url = "http://localhost:8080/reserve/getAllReservations";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
-        ParameterizedTypeReference<ArrayList<ReserveEntity>> responseType = new ParameterizedTypeReference<ArrayList<ReserveEntity>>() {
-        };
-        ArrayList<ReserveEntity> response = restTemplate.exchange(uri, HttpMethod.GET, null, responseType).getBody();
-        DefaultListModel<ReserveEntity> reservesListModel = new DefaultListModel<>();
-        for (ReserveEntity reserve : response) {
-            reservesListModel.addElement(reserve);
-        }
+        ParameterizedTypeReference<ArrayList<Object[]>> responseType = new ParameterizedTypeReference<ArrayList<Object[]>>() {};
+        ArrayList<Object[]> response = restTemplate.exchange(uri, HttpMethod.GET, null, responseType).getBody();
 
-        return reservesListModel;
+        return response;
     }
 
     public static JComboBox<String> getAllCategories() {
@@ -266,28 +261,6 @@ public abstract class InformationGUI {
 
 
 
-
-    public static String reservationTitle(ReserveEntity reserve){
-
-        String url = "http://localhost:8080/readers/" + reserve.getReaderId();
-        URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
-
-        ReadersEntity reader = restTemplate.getForObject(uri, ReadersEntity.class);
-
-        url = "http://localhost:8080/copies/" + reserve.getCopyID();
-        uri = UriComponentsBuilder.fromUriString(url).build().toUri();
-
-        CopiesEntity copy = restTemplate.getForObject(uri, CopiesEntity.class);
-
-        url = "http://localhost:8080/book/" + copy.getOriginalId();
-        uri = UriComponentsBuilder.fromUriString(url).build().toUri();
-
-        BookEntity book = restTemplate.getForObject(uri, BookEntity.class);
-
-
-        return ("Book:     " + book.getTitle() + "     |     Reader:     " + getName(reader.getFirstName(),reader.getLastName()) +
-                "     |     from:     " + reserve.getReserveDate() + "     -     to:     " + reserve.getDueDate());
-    }
 
 
     public static List<RequestsEntity> getUnCheckedRequests() throws JsonProcessingException {

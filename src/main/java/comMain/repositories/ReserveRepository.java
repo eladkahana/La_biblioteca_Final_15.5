@@ -29,6 +29,9 @@ public interface ReserveRepository extends JpaRepository<ReserveEntity, Integer>
     List<Object[]> displayReservesByHours();
 
 
+    @Procedure(name = "getAllReservations")
+    List<Object[]> getAllReservations();
+
     @Procedure(name = "AddReserve")
     void AddReserve(@Param("readerIDno") String readerIDno, @Param("BookID") Integer BookID, @Param("dueTo") Date dueTo);
 
