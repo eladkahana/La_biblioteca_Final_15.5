@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SettingsScreen extends JPanel {
@@ -25,7 +26,7 @@ public class SettingsScreen extends JPanel {
     public SettingsScreen() {
         setLayout(new GridLayout(3, 1, 10, 10)); // Use GridLayout for the main container
 
-        List<Object> days =  new ArrayList<>();
+        List<String> days =  new ArrayList<>();
 
 
 // Create a panel for the reminder settings
@@ -45,7 +46,7 @@ public class SettingsScreen extends JPanel {
 
         JButton addButton = new JButton("+");
         addButton.addActionListener(e -> {
-            String day = (String) daysField.getText();
+            String day = daysField.getText();
             if (day != null && !day.isEmpty()) {
                 daysComboBox.addItem(day);
                 days.add(day);
@@ -69,6 +70,8 @@ public class SettingsScreen extends JPanel {
         JButton saveButton = new JButton("save");
         buttonPanel.add(saveButton);
         saveButton.addActionListener(e -> {
+
+
             ReservationClient.changeDays(days);
             JOptionPane.showMessageDialog(null, "Changes saved successfully.");
         });

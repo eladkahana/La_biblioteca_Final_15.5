@@ -82,18 +82,25 @@ public abstract class ReservationClient {
     }
 
 
-    public static void changeDays(List<Object> days){
+    public static void changeDays(List<String> days){
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8080/emails/changeDays";
-        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("newDays", days);
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+
+        String DaysInString = "";
+        for (String day : days) {
+            DaysInString += day;
+            DaysInString += ",";
+        }
+
+        parameters.add("newDays", DaysInString);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, headers);
 
-        restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});
+        restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<String>() {});
     }
 
 }

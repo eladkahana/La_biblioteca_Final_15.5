@@ -190,7 +190,7 @@ public class AnalyticsScreen extends JPanel {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (Object[] rowData : data) {
             Integer value = (Integer) rowData[1];
-            String hour = (rowData[0].toString() + ":00");
+            String hour = (rowData[0].toString());
             dataset.addValue(value, "Reserves", hour);
         }
         return dataset;

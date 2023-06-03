@@ -42,12 +42,10 @@ public class MailTypes {
      *                when it is necessary to send a reminder
      */
     @PutMapping("/changeDays")
-    public void changeDays(@RequestParam List<Object> newDays) {
-        this.DaysInString = "";
-        for (Object day : newDays) {
-            this.DaysInString += day.toString();
-            this.DaysInString += ",";
-        }
+    public void changeDays(@RequestParam String newDays) {
+
+
+        this.DaysInString = newDays;
 
 
     }
@@ -61,13 +59,9 @@ public class MailTypes {
     public void reminder() throws  JsonProcessingException {
 
 
-
-
-
         String url = "http://localhost:8080/reserve/ReserveDaysLeft";
         RestTemplate restTemplate = new RestTemplate();
-        String daysInString = DaysInString; // Set the value of the query parameter
-        URI uri = UriComponentsBuilder.fromUriString(url).queryParam("arrStr", daysInString).build().toUri();
+        URI uri = UriComponentsBuilder.fromUriString(url).queryParam("arrStr", this.DaysInString).build().toUri();
 
 
         String response = restTemplate.getForObject(uri, String.class);
