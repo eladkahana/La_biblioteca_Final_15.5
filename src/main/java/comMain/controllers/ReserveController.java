@@ -104,4 +104,10 @@ public class ReserveController {
         headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
         return ResponseEntity.ok().headers(headers).body(reserves);
     }
+
+
+    @PutMapping("/AddExtension")
+    public void AddExtension(@RequestParam int oldReserveID,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String newDate){
+        reserveService.AddExtension(oldReserveID,newDate);
+    }
 }

@@ -78,9 +78,9 @@ public class ReadersController {
 
 
     @PostMapping("/LogIn/TryToConnect")
-    public ResponseEntity<List<Object[]>> TryToConnect(@RequestParam("IP") String IP,
-                                                @RequestParam("UserName") String UserName,
-                                                @RequestParam("Password") String Password) {
+    public ResponseEntity<List<Object[]>> TryToConnect(@Valid @RequestParam("IP") String IP,
+                                                       @Valid @RequestParam("UserName") String UserName,
+                                                       @Valid @RequestParam("Password") String Password) {
 
         try {
             InetAddress ipAddress = InetAddress.getLocalHost();

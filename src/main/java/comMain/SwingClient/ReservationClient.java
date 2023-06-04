@@ -36,6 +36,25 @@ public abstract class ReservationClient {
 
     }
 
+
+    public static void addExtension(int readerIDno,Date newDate){
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/reserve/AddExtension";
+
+
+        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+        parameters.add("oldReserveID", readerIDno);
+        parameters.add("newDate", newDate.toString());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+
+        restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {});
+
+    }
+
     public static void addRank(String IDno, Integer copyID, Integer rank){
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8080/reserve/AddRank";

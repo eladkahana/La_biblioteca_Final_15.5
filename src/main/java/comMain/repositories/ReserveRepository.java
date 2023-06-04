@@ -47,4 +47,9 @@ public interface ReserveRepository extends JpaRepository<ReserveEntity, Integer>
     List<Object[]> getHistoryOfReader(@Param("readerID") Integer readerID);
 
 
+    @Procedure(name = "AddExtension")
+    void AddExtension(@Param("oldReserveID") Integer readerIDno,
+                      @Param("newDate") Date newDate);
+
+
 }

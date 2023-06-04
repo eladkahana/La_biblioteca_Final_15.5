@@ -113,5 +113,13 @@ public class ReserveService {
         return reserveRepository.getHistoryOfReader(readerID);
     }
 
+
+    @Transactional(readOnly = true)
+    public void AddExtension(int oldReserveID, String newDate) {
+        java.sql.Date sqlDate = java.sql.Date.valueOf(newDate);
+
+        reserveRepository.AddExtension(oldReserveID, sqlDate);
+    }
+
 }
 

@@ -5,6 +5,7 @@
 
 package comMain.GUI;
 
+import com.toedter.calendar.JDateChooser;
 import comMain.SwingClient.InformationGUI;
 import comMain.SwingClient.ReservationClient;
 
@@ -16,13 +17,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ReservationManagementScreen extends JPanel {
     private JButton reminderButton;
     private JLabel titleLabel;
     private JTable reserveTable;
-    private JButton deleteReserveButton;
+    private JButton extensionReserveButton;
     private JTextField searchField;
     private JButton searchButton;
 
@@ -37,7 +39,7 @@ public class ReservationManagementScreen extends JPanel {
         titleLabel = new JLabel("Reserves Management");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         reminderButton = new JButton("Reminder");
-        deleteReserveButton = new JButton("Delete");
+        extensionReserveButton = new JButton("Extension");
         searchField = new JTextField(20);
         searchButton = new JButton("Search");
 
@@ -60,7 +62,7 @@ public class ReservationManagementScreen extends JPanel {
         add(reserveTableScrollPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.add(deleteReserveButton);
+        buttonPanel.add(extensionReserveButton);
         buttonPanel.add(reminderButton);
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -76,6 +78,54 @@ public class ReservationManagementScreen extends JPanel {
 
 
 
+        extensionReserveButton.addActionListener(e -> {
+
+
+            JDialog dialog = new JDialog();
+            dialog.setTitle("Extension Reserve Window");
+            dialog.setLayout(new BorderLayout());
+
+            JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
+
+
+            JLabel dueToLabel = new JLabel("new return date:");
+            JDateChooser dueToChooser = new JDateChooser();
+            dueToChooser.setDateFormatString("dd/MM/yyyy"); // Set the date format
+            contentPanel.add(dueToLabel, BorderLayout.WEST);
+            contentPanel.add(dueToChooser, BorderLayout.CENTER);
+
+            JPanel extensionButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            JButton cancelButton = new JButton("Cancel");
+            cancelButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    dialog.dispose();
+                }
+            });
+            JButton confirmButton = new JButton("Confirm");
+            confirmButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    long milliseconds = dueToChooser.getDate().getTime();
+                    java.sql.Date sqlDate = new java.sql.Date(milliseconds);
+
+                    int tableRow = reserveTable.getSelectedRow();
+                    int reserveID = (int) tableModel.getSelectLine(tableRow)[4];
+
+                    ReservationClient.addExtension(reserveID,sqlDate);
+                    // Perform any necessary actions with the entered ID and due date
+                    dialog.dispose();
+                }
+            });
+            extensionButtonPanel.add(cancelButton);
+            extensionButtonPanel.add(confirmButton);
+
+            dialog.add(contentPanel, BorderLayout.CENTER);
+            dialog.add(extensionButtonPanel, BorderLayout.SOUTH);
+            dialog.setSize(300, 150);
+            dialog.setVisible(true);
+        });
+
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,6 +138,9 @@ public class ReservationManagementScreen extends JPanel {
             ReservationClient.reminder();
             JOptionPane.showMessageDialog(null, "send the messages.");
         });
+
+
+
     }
 
     public void refresh() {
@@ -139,7 +192,11 @@ public class ReservationManagementScreen extends JPanel {
         public void updateData() {
             reservations = InformationGUI.getAllReserves();
             filteredReservations = new ArrayList<>(reservations);
-            fireTableDataChanged(); // Notify the table that the data has changed
+            fireTableDataChanged();
+        }
+
+        public Object[] getSelectLine(int selectedLine){
+            return this.reservations.get(selectedLine);
         }
 
     }

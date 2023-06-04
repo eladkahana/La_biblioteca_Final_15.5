@@ -112,7 +112,7 @@
         getIpAddress()
             .then((ip) => {
                 // Create an object with the form data and retrieved IP address
-                const data = new URLSearchParams();
+                const data = new URLSearchParams();  //TODO
                 data.append('IP', ip);
                 data.append('UserName', username);
                 data.append('Password', password);
