@@ -18,7 +18,7 @@ public abstract class AddEditBookClient {
 
     public static ArrayList<String> getAuthorsByBookID(int BookID) {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/bookVSAuthor/getAllAuthorsByBook";
+        String url = "https://localhost:8080/bookVSAuthor/getAllAuthorsByBook";
         URI uri = UriComponentsBuilder.fromUriString(url).queryParam("bookID",  BookID).build().toUri();
         ParameterizedTypeReference<ArrayList<BookVsAuthorEntity>> responseType = new ParameterizedTypeReference<ArrayList<BookVsAuthorEntity>>() {
         };
@@ -26,7 +26,7 @@ public abstract class AddEditBookClient {
         ArrayList<String> authorsList = new ArrayList<>();
         for (BookVsAuthorEntity authorID : response) {
 
-             url = "http://localhost:8080/author/" + authorID.getAuthorId();
+             url = "https://localhost:8080/author/" + authorID.getAuthorId();
              uri = UriComponentsBuilder.fromUriString(url).build().toUri();
             ParameterizedTypeReference<AuthorEntity> newResponseType = new ParameterizedTypeReference<AuthorEntity>() {
             };
@@ -44,7 +44,7 @@ public abstract class AddEditBookClient {
 
     public static ArrayList<String> getAudiencesByBookID(int BookID) {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/audienceVSBook/getAllAudiencesByBook";
+        String url = "https://localhost:8080/audienceVSBook/getAllAudiencesByBook";
         URI uri = UriComponentsBuilder.fromUriString(url).queryParam("bookID",  BookID).build().toUri();
         ParameterizedTypeReference<ArrayList<AudienceVsBookEntity>> responseType = new ParameterizedTypeReference<ArrayList<AudienceVsBookEntity>>() {
         };
@@ -52,7 +52,7 @@ public abstract class AddEditBookClient {
         ArrayList<String> audienceList = new ArrayList<>();
         for (AudienceVsBookEntity audienceID : response) {
 
-            url = "http://localhost:8080/audience/" + audienceID.getGroupId();
+            url = "https://localhost:8080/audience/" + audienceID.getGroupId();
             uri = UriComponentsBuilder.fromUriString(url).build().toUri();
             ParameterizedTypeReference<AudienceEntity> newResponseType = new ParameterizedTypeReference<AudienceEntity>() {
             };
@@ -68,7 +68,7 @@ public abstract class AddEditBookClient {
 
     public static ArrayList<String> getCategoriesByBookID(int BookID) {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/bookVSCategory/getAllCategoriesByBook";
+        String url = "https://localhost:8080/bookVSCategory/getAllCategoriesByBook";
         URI uri = UriComponentsBuilder.fromUriString(url).queryParam("bookID",  BookID).build().toUri();
         ParameterizedTypeReference<ArrayList<BookVsCategoryEntity>> responseType = new ParameterizedTypeReference<ArrayList<BookVsCategoryEntity>>() {
         };
@@ -76,7 +76,7 @@ public abstract class AddEditBookClient {
         ArrayList<String> categoriesList = new ArrayList<>();
         for (BookVsCategoryEntity categoryID : response) {
 
-            url = "http://localhost:8080/categories/" + categoryID.getCategoryId();
+            url = "https://localhost:8080/categories/" + categoryID.getCategoryId();
             uri = UriComponentsBuilder.fromUriString(url).build().toUri();
             ParameterizedTypeReference<CategoriesEntity> newResponseType = new ParameterizedTypeReference<CategoriesEntity>() {
             };
@@ -93,7 +93,7 @@ public abstract class AddEditBookClient {
 
     public static Object[] getSeriesByBookID(int BookID) {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/seriesVSBook/getSeriesByBook";
+        String url = "https://localhost:8080/seriesVSBook/getSeriesByBook";
         URI uri = UriComponentsBuilder.fromUriString(url).queryParam("bookID",  BookID).build().toUri();
         ParameterizedTypeReference<List<Object[]>> responseType = new ParameterizedTypeReference<List<Object[]>>() {
 
@@ -112,7 +112,7 @@ public abstract class AddEditBookClient {
 
     public static String getShelfByBookID(BookEntity book) {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/shelfmark/" + book.getShelfmarkId();
+        String url = "https://localhost:8080/shelfmark/" + book.getShelfmarkId();
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ParameterizedTypeReference<ShelfmarkEntity> newResponseType = new ParameterizedTypeReference<ShelfmarkEntity>() {
         };
@@ -126,7 +126,7 @@ public abstract class AddEditBookClient {
 
     public static String getPublisherByBookID(BookEntity book) {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/publisher/" + book.getPublisherId();
+        String url = "https://localhost:8080/publisher/" + book.getPublisherId();
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ParameterizedTypeReference<PublisherEntity> newResponseType = new ParameterizedTypeReference<PublisherEntity>() {
         };
@@ -151,7 +151,7 @@ public abstract class AddEditBookClient {
                                 String note,
                                 int ID) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/book/EditBook";
+        String url = "https://localhost:8080/book/EditBook";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -178,7 +178,7 @@ public abstract class AddEditBookClient {
 
     public static void deleteAuthorsFromBook(int bookID) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/bookVSAuthor/deleteAuthorFromBook";
+        String url = "https://localhost:8080/bookVSAuthor/deleteAuthorFromBook";
         URI uri = UriComponentsBuilder.fromUriString(url)
                 .queryParam("bookID", bookID)
                 .build()
@@ -191,7 +191,7 @@ public abstract class AddEditBookClient {
 
     public static void deleteAudiencesfromBook(int bookID) {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/audienceVSBook/deleteAudienceFromBook";
+        String url = "https://localhost:8080/audienceVSBook/deleteAudienceFromBook";
         URI uri = UriComponentsBuilder.fromUriString(url)
                 .queryParam("bookID", bookID)
                 .build()
@@ -203,7 +203,7 @@ public abstract class AddEditBookClient {
 
     public static void deleteCategoriesfromBook(int bookID) {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/bookVSCategory/deleteCategoryFromBook";
+        String url = "https://localhost:8080/bookVSCategory/deleteCategoryFromBook";
         URI uri = UriComponentsBuilder.fromUriString(url)
                 .queryParam("bookID", bookID)
                 .build()
@@ -214,7 +214,7 @@ public abstract class AddEditBookClient {
 
     public static void deleteSeriesfromBook(int bookID) {
          restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/seriesVSBook/deleteBookFromSeries";
+        String url = "https://localhost:8080/seriesVSBook/deleteBookFromSeries";
         URI uri = UriComponentsBuilder.fromUriString(url)
                 .queryParam("bookID", bookID)
                 .build()
@@ -235,7 +235,7 @@ public abstract class AddEditBookClient {
                                       String publisher,
                                       String note) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/book/addCompleteBook";
+        String url = "https://localhost:8080/book/addCompleteBook";
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("ISBN", ISBN);

@@ -13,7 +13,7 @@ public class ReaderManagerClient {
     public static void changePassword(int uID,
                                       String Password) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/readers/LogIn/AddPassword";
+        String url = "https://localhost:8080/readers/LogIn/AddPassword";
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("uID", uID);

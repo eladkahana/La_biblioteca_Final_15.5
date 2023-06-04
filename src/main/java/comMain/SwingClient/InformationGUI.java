@@ -30,7 +30,7 @@ public abstract class InformationGUI {
 
     public static DefaultListModel<BookEntity> getAllBooks() {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/book";
+        String url = "https://localhost:8080/book";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ParameterizedTypeReference<ArrayList<BookEntity>> responseType = new ParameterizedTypeReference<ArrayList<BookEntity>>() {
         };
@@ -45,7 +45,7 @@ public abstract class InformationGUI {
 
     public static DefaultListModel<ReadersEntity> getAllReaders() {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/readers";
+        String url = "https://localhost:8080/readers";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ParameterizedTypeReference<ArrayList<ReadersEntity>> responseType = new ParameterizedTypeReference<ArrayList<ReadersEntity>>() {
         };
@@ -61,7 +61,7 @@ public abstract class InformationGUI {
 
     public static List<Object[]> getAllReserves() {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/reserve/getAllReservations";
+        String url = "https://localhost:8080/reserve/getAllReservations";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ParameterizedTypeReference<ArrayList<Object[]>> responseType = new ParameterizedTypeReference<ArrayList<Object[]>>() {};
         ArrayList<Object[]> response = restTemplate.exchange(uri, HttpMethod.GET, null, responseType).getBody();
@@ -71,7 +71,7 @@ public abstract class InformationGUI {
 
     public static JComboBox<String> getAllCategories() {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/categories";
+        String url = "https://localhost:8080/categories";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ParameterizedTypeReference<ArrayList<CategoriesEntity>> responseType = new ParameterizedTypeReference<ArrayList<CategoriesEntity>>() {
         };
@@ -86,7 +86,7 @@ public abstract class InformationGUI {
 
     public static JComboBox<String> getAllLanguages() {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/language";
+        String url = "https://localhost:8080/language";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ParameterizedTypeReference<ArrayList<LanguageEntity>> responseType = new ParameterizedTypeReference<ArrayList<LanguageEntity>>() {
         };
@@ -101,7 +101,7 @@ public abstract class InformationGUI {
 
     public static JComboBox<String> getAllAudiences() {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/audience";
+        String url = "https://localhost:8080/audience";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ParameterizedTypeReference<ArrayList<AudienceEntity>> responseType = new ParameterizedTypeReference<ArrayList<AudienceEntity>>() {
         };
@@ -117,7 +117,7 @@ public abstract class InformationGUI {
 
     public static JComboBox<String> getAllAuthors() {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/author";
+        String url = "https://localhost:8080/author";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ParameterizedTypeReference<ArrayList<AuthorEntity>> responseType = new ParameterizedTypeReference<ArrayList<AuthorEntity>>() {
         };
@@ -131,12 +131,12 @@ public abstract class InformationGUI {
 
 
     public static String getName(int FisrNameID, int LastNameID) {
-        String url = "http://localhost:8080/firstName/" + FisrNameID;
+        String url = "https://localhost:8080/firstName/" + FisrNameID;
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
         FirstNameEntity firstName = restTemplate.getForObject(uri, FirstNameEntity.class);
 
-        url = "http://localhost:8080/lastName/" + LastNameID;
+        url = "https://localhost:8080/lastName/" + LastNameID;
         uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
         LastNameEntity lastName = restTemplate.getForObject(uri, LastNameEntity.class);
@@ -146,7 +146,7 @@ public abstract class InformationGUI {
 
     public static JComboBox<String> getAllSeries() {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/seriesBook";
+        String url = "https://localhost:8080/seriesBook";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ParameterizedTypeReference<ArrayList<SeriesBookEntity>> responseType = new ParameterizedTypeReference<ArrayList<SeriesBookEntity>>() {
         };
@@ -163,7 +163,7 @@ public abstract class InformationGUI {
 
     public static byte[] getBarcode(String ID) {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/barcode/" + ID;
+        String url = "https://localhost:8080/barcode/" + ID;
         URI uri = UriComponentsBuilder.fromUriString(url)
                 .build().toUri();
         ParameterizedTypeReference<byte[]> responseType = new ParameterizedTypeReference<byte[]>() {
@@ -179,7 +179,7 @@ public abstract class InformationGUI {
 
     public static void setBookToSeries(String bookSeries, String ISBN, int bookIndexInSeries) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/seriesVSBook/setBookToSeries";
+        String url = "https://localhost:8080/seriesVSBook/setBookToSeries";
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("BookSeries", bookSeries);
         parameters.add("ISBN", ISBN);
@@ -196,7 +196,7 @@ public abstract class InformationGUI {
 
     public static void setCategoryToBook(JComboBox<String> categoriesList, String ISBN) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/bookVSCategory/setCategoryToBook";
+        String url = "https://localhost:8080/bookVSCategory/setCategoryToBook";
 
         for (int i = 0; i < categoriesList.getItemCount(); i++) {
             String category = categoriesList.getItemAt(i);
@@ -218,7 +218,7 @@ public abstract class InformationGUI {
 
     public static void setAuthorToBook(JComboBox<String> authorsList, String ISBN) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/bookVSAuthor/setAuthorToBook";
+        String url = "https://localhost:8080/bookVSAuthor/setAuthorToBook";
 
 
         for (int i = 0; i < authorsList.getItemCount(); i++) {
@@ -240,7 +240,7 @@ public abstract class InformationGUI {
 
     public static void setAudienceToBook(JComboBox<String> audienceList, String ISBN) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/audienceVSBook/setAudienceToBook";
+        String url = "https://localhost:8080/audienceVSBook/setAudienceToBook";
 
 
         for (int i = 0; i < audienceList.getItemCount(); i++) {
@@ -265,7 +265,7 @@ public abstract class InformationGUI {
 
     public static List<RequestsEntity> getUnCheckedRequests() throws JsonProcessingException {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/requests/getUnCheckedRequests";
+        String url = "https://localhost:8080/requests/getUnCheckedRequests";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
         String response = restTemplate.getForObject(uri, String.class);
@@ -280,7 +280,7 @@ public abstract class InformationGUI {
 
     public static List<RequestsEntity> getCheckedRequests() throws JsonProcessingException {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/requests/getCheckedRequests";
+        String url = "https://localhost:8080/requests/getCheckedRequests";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
         String response = restTemplate.getForObject(uri, String.class);
@@ -295,7 +295,7 @@ public abstract class InformationGUI {
 
     public static String getMailDetails(RequestsEntity request){
 
-        String url = "http://localhost:8080/readers/" + request.getReaderId();
+        String url = "https://localhost:8080/readers/" + request.getReaderId();
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
         ReadersEntity reader = restTemplate.getForObject(uri, ReadersEntity.class);
@@ -308,7 +308,7 @@ public abstract class InformationGUI {
 
     public static void requestChecked(int RequestID) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/requests/requestChecked";
+        String url = "https://localhost:8080/requests/requestChecked";
 
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -325,7 +325,7 @@ public abstract class InformationGUI {
 
     public static void responseEmail(RequestsEntity request, String answer){
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/emails/reaction";
+        String url = "https://localhost:8080/emails/reaction";
 
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -344,7 +344,7 @@ public abstract class InformationGUI {
 
     public static String getGenderByID(int genderID){
 
-        String url = "http://localhost:8080/gender/" + genderID;
+        String url = "https://localhost:8080/gender/" + genderID;
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
         GenderEntity gender = restTemplate.getForObject(uri, GenderEntity.class);

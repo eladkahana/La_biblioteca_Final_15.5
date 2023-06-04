@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class BookManagerClient {
     public static int createCopy(int bookID) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/book/createCopy";
+        String url = "https://localhost:8080/book/createCopy";
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("bookID", bookID);
@@ -30,7 +30,7 @@ public abstract class BookManagerClient {
 
     public static void deleteCopy(int copyID) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/book/DeleteBook";
+        String url = "https://localhost:8080/book/DeleteBook";
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("copyID", copyID);

@@ -18,7 +18,7 @@ public abstract class  AnalysticClient {
     private static RestTemplate restTemplate;
     public static String MonthlyResrvesAmount() throws JsonProcessingException {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/reserve/MonthlyResrvesAmount";
+        String url = "https://localhost:8080/reserve/MonthlyResrvesAmount";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
         String response = restTemplate.getForObject(uri, String.class);
@@ -33,7 +33,7 @@ public abstract class  AnalysticClient {
 
     public static String todayResrvesAmount() throws JsonProcessingException {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/reserve/todayResrvesAmount";
+        String url = "https://localhost:8080/reserve/todayResrvesAmount";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
         String response = restTemplate.getForObject(uri, String.class);
@@ -48,7 +48,7 @@ public abstract class  AnalysticClient {
 
     public static List<Object[]> displayReservesByDays() throws JsonProcessingException {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/reserve/displayReservesByDays";
+        String url = "https://localhost:8080/reserve/displayReservesByDays";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
         String response = restTemplate.getForObject(uri, String.class);
@@ -63,7 +63,7 @@ public abstract class  AnalysticClient {
 
     public static List<Object[]> displayReservesByHours() throws JsonProcessingException {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/reserve/displayReservesByHours";
+        String url = "https://localhost:8080/reserve/displayReservesByHours";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
 
@@ -79,7 +79,7 @@ public abstract class  AnalysticClient {
 
     public static String MostReservedBook() throws JsonProcessingException {
         restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/book/MostReservedBook";
+        String url = "https://localhost:8080/book/MostReservedBook";
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
         String response = restTemplate.getForObject(uri, String.class);
@@ -90,7 +90,7 @@ public abstract class  AnalysticClient {
 
         Integer  OriginalId = (Integer) myTableList.get(0)[0];
 
-        url = "http://localhost:8080/book/" + OriginalId;
+        url = "https://localhost:8080/book/" + OriginalId;
         uri = UriComponentsBuilder.fromUriString(url).build().toUri();
 
         BookEntity book = restTemplate.getForObject(uri, BookEntity.class);

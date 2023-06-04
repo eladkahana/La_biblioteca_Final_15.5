@@ -20,7 +20,7 @@ public class AddEditReaderClient {
                                 String Email,
                                 int ID) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/readers/EditReader";
+        String url = "https://localhost:8080/readers/EditReader";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -51,7 +51,7 @@ public class AddEditReaderClient {
                                 String gender,
                                 String Email) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/readers/addReader";
+        String url = "https://localhost:8080/readers/addReader";
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("ID", ID);

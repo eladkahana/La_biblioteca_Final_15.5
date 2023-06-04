@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class ReservationClient {
     public static void addReserve(String readerIDno,Integer BookID, Date dueTo){
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/reserve/AddReserve";
+        String url = "https://localhost:8080/reserve/AddReserve";
 
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -39,7 +39,7 @@ public abstract class ReservationClient {
 
     public static void addExtension(int readerIDno,Date newDate){
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/reserve/AddExtension";
+        String url = "https://localhost:8080/reserve/AddExtension";
 
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -57,7 +57,7 @@ public abstract class ReservationClient {
 
     public static void addRank(String IDno, Integer copyID, Integer rank){
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/reserve/AddRank";
+        String url = "https://localhost:8080/reserve/AddRank";
 
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -77,7 +77,7 @@ public abstract class ReservationClient {
 
     public static void addReturnBook(Integer copyID, String readerIDno){
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/reserve/AddReturnBook";
+        String url = "https://localhost:8080/reserve/AddReturnBook";
 
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -96,14 +96,14 @@ public abstract class ReservationClient {
 
     public static void reminder() {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/emails/reminder";
+        String url = "https://localhost:8080/emails/reminder";
         restTemplate.exchange(url, HttpMethod.PUT, null, new ParameterizedTypeReference<List<Object[]>>() {});
     }
 
 
     public static void changeDays(List<String> days){
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/emails/changeDays";
+        String url = "https://localhost:8080/emails/changeDays";
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
         String DaysInString = "";
