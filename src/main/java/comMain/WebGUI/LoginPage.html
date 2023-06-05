@@ -153,8 +153,10 @@
     }
 
     // Add an event listener to the form for the submit event
+    // Add an event listener to the form for the submit event
     const form = document.getElementById('loginForm');
-    form.addEventListener('submit', handleFormSubmit);
+    form.addEventListener('submit', (event) => handleFormSubmit(event));
+
 </script>
 
 

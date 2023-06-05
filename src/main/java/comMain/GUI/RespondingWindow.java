@@ -38,7 +38,8 @@ public class RespondingWindow extends JFrame {
 
         sendButton.addActionListener(e -> {
             InformationGUI.responseEmail(request, messageTextArea.getText());
-            SwingUtilities.getWindowAncestor(this).dispose();
+            JOptionPane.showMessageDialog(null, "send the messages.");
+            dispose();
         });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(sendButton);

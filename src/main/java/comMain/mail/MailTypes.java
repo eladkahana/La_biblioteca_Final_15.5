@@ -16,6 +16,7 @@ import comMain.entities.RequestsEntity;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +29,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+@Service
 
-@RestController
-@RequestMapping("/emails")
 public class MailTypes {
 
     private String DaysInString = "2,-2,-10";
@@ -55,11 +55,10 @@ public class MailTypes {
      *
      * @throws JsonProcessingException
      */
-    @PutMapping("/reminder")
     public void reminder() throws  JsonProcessingException {
 
 
-        String url = "http://localhost:8080/reserve/ReserveDaysLeft";
+        String url = "https://localhost:8080/reserve/ReserveDaysLeft";
         RestTemplate restTemplate = new RestTemplate();
         URI uri = UriComponentsBuilder.fromUriString(url).queryParam("arrStr", this.DaysInString).build().toUri();
 
@@ -78,7 +77,6 @@ public class MailTypes {
         // write the content of the email
 
         for (Object[] item : myTableList) {
-            System.out.println(item[0]);
             StringBuilder content = new StringBuilder();
             content.append("שלום ").append(item[0]).append(".<br>");
             if ((int) item[2] >= 0) {
@@ -95,7 +93,7 @@ public class MailTypes {
 
 
 
-             url = "http://localhost:8080/book/SuggestBooks";
+             url = "https://localhost:8080/book/SuggestBooks";
              restTemplate = new RestTemplate();
              uri = UriComponentsBuilder.fromUriString(url).queryParam("readerID", item[5]).build().toUri();
 
@@ -133,21 +131,20 @@ public class MailTypes {
      * @param requestID - the reader who sent a request
      * @param answer  - the content of the reaction
      */
-    @PutMapping("/reaction")
     public void reaction(@RequestParam("requestID") Integer requestID, @RequestParam("answer") String answer) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/requests/" + requestID;
+        String url = "https://localhost:8080/requests/" + requestID;
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ResponseEntity<RequestsEntity> requestResult = restTemplate.exchange(uri, HttpMethod.GET, null, RequestsEntity.class);
         RequestsEntity request = requestResult.getBody();
 
 
-         url = "http://localhost:8080/readers/" + request.getReaderId();
+         url = "https://localhost:8080/readers/" + request.getReaderId();
          uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ResponseEntity<ReadersEntity> readerResult = restTemplate.exchange(uri, HttpMethod.GET, null, ReadersEntity.class);
         ReadersEntity reader = readerResult.getBody();
 
-        url = "http://localhost:8080/respones/addResponse";
+        url = "https://localhost:8080/respones/addResponse";
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("requestID", request.getId());

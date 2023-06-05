@@ -22,6 +22,7 @@ import javax.swing.text.JTextComponent;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.ArrayList;
+import java.util.Base64;
 
 
 public class AddEditBookScreen extends JPanel {
@@ -266,10 +267,14 @@ public class AddEditBookScreen extends JPanel {
                     BufferedImage image = ImageIO.read(selectedFile);
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    ImageIO.write(image, "png", baos);
+                    ImageIO.write(image, "jpg", baos);
                     baos.flush();
                     chosenImage = baos.toByteArray();
                     baos.close();
+
+                    // Convert chosenImage to Base64
+                    String base64Image = Base64.getEncoder().encodeToString(chosenImage);
+                    chosenImage = base64Image.getBytes();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -540,6 +545,9 @@ public class AddEditBookScreen extends JPanel {
                 InformationGUI.setCategoryToBook(categoryListChose,isbnField.getText());
                 InformationGUI.setAuthorToBook(authorListChose,isbnField.getText());
                 InformationGUI.setAudienceToBook(audienceListChose,isbnField.getText());
+
+
+                JOptionPane.showMessageDialog(null, "The book is updated.");
             }
         });
 
