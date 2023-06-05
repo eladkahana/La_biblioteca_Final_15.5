@@ -5,7 +5,6 @@ import comMain.services.ReadersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -131,10 +130,19 @@ public class ReadersController {
 
 
     @PostMapping("/LogIn/AddPassword")
-    public List<Object[]> TryToConnect(@RequestParam() int uID,
+    public List<Object[]> AddPassword(@RequestParam() int uID,
                                        @RequestParam() String Password){
         return readersService.AddPassword(uID,Password);
 
+    }
+
+    @PostMapping("/LogIn/AddPasswordWeb")
+    public ResponseEntity<Object> AddPasswordWeb(@RequestParam() int uID,
+                                                 @RequestParam() String Password){
+        readersService.AddPassword(uID, Password);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
+        return ResponseEntity.ok().headers(headers).build();
     }
 
 }

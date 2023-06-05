@@ -211,7 +211,9 @@
   form.addEventListener('submit', searchBooks);
 
   // Fetch the book data from the server
-  fetch('http://localhost:8080/book/getBooksForWeb')
+  fetch('https://localhost:8080/book/getBooksForWeb', {
+    method: 'GET',
+  })
           .then(response => response.json())
           .then(data => {
             books = data; // Assign the fetched data to the 'books' variable
@@ -220,6 +222,7 @@
           .catch(error => {
             console.error('Error fetching book data:', error);
           });
+
 
   // Function to get the book image URL based on the title
   function getBookImageUrl(title) {

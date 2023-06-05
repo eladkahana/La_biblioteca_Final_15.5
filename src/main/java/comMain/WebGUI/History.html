@@ -257,8 +257,17 @@
 
 
   // Fetch data from the URL
-  fetch(`http://localhost:8080/reserve/getHistoryOfReader?readerID=${userID}`)
-          .then(response => response.json())
+  const params = new URLSearchParams();
+  params.append('readerID', userID);
+
+  const url = `https://localhost:8080/reserve/getHistoryOfReader?${params.toString()}`;
+
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })         .then(response => response.json())
           .then(data => {
             let rows = '';
 

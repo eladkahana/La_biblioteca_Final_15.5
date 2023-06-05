@@ -130,14 +130,17 @@
 
     // Create an object with the form data
     // Make the POST request
-    fetch('http://localhost:8080/requests/AddRequest', {
-      method: 'POST',
+    const params = new URLSearchParams();
+    params.append('readerID', userID);
+    params.append('content', message);
+    params.append('topic', topic);
 
+    fetch('https://localhost:8080/requests/AddRequest', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
-
-      body: `readerID=${encodeURIComponent(userID)}&content=${encodeURIComponent(message)}&topic=${encodeURIComponent(topic)}`
+      body: params
     })
             .then(response => {
               if (response.ok) {
