@@ -22,6 +22,7 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+
     @PostMapping
     public String save(@Valid @RequestBody BookEntity vO) {
         return bookService.save(vO).toString();

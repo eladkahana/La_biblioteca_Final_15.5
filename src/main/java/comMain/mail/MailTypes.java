@@ -11,8 +11,14 @@ package comMain.mail;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import comMain.controllers.BookController;
+import comMain.controllers.ReserveController;
 import comMain.entities.ReadersEntity;
 import comMain.entities.RequestsEntity;
+import comMain.repositories.BookRepository;
+import comMain.services.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
@@ -30,10 +36,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @Service
-
+@RequiredArgsConstructor
 public class MailTypes {
 
     private String DaysInString = "2,-2,-10";
+    @Autowired
+    private final RequestsService requestsService;
+    @Autowired
+    private final ReserveService reserveService;
+    @Autowired
+    private final BookService bookService;
+
+    @Autowired
+    private final ReadersService readersService;
+
+    @Autowired
+    private final ResponseService responseService;
 
     /**
      * function that update the days of reminding
@@ -58,19 +76,9 @@ public class MailTypes {
     public void reminder() throws  JsonProcessingException {
 
 
-        String url = "https://localhost:8080/reserve/ReserveDaysLeft";
-        RestTemplate restTemplate = new RestTemplate();
-        URI uri = UriComponentsBuilder.fromUriString(url).queryParam("arrStr", this.DaysInString).build().toUri();
 
 
-        String response = restTemplate.getForObject(uri, String.class);
-
-// Use Jackson library to deserialize the JSON string into a list of MyTable objects
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Object[]> myTableList = objectMapper.readValue(response, new TypeReference<List<Object[]>>() {
-        });
-
-
+        List<Object[]> myTableList = reserveService.ReserveDaysLeft(this.DaysInString);
 
 
 
@@ -93,16 +101,8 @@ public class MailTypes {
 
 
 
-             url = "https://localhost:8080/book/SuggestBooks";
-             restTemplate = new RestTemplate();
-             uri = UriComponentsBuilder.fromUriString(url).queryParam("readerID", item[5]).build().toUri();
 
-
-             response = restTemplate.getForObject(uri, String.class);
-
-             objectMapper = new ObjectMapper();
-            List<Object[]> bookSuggest = objectMapper.readValue(response, new TypeReference<List<Object[]>>() {
-            });
+            List<Object[]> bookSuggest = bookService.SuggestBooks((int) item[5]);
 
 
 
@@ -116,7 +116,7 @@ public class MailTypes {
             }
 
             Email email = new Email((String) item[1], "תזכורת להחזרת ספר", content.toString());
-            email.setImage(((String) item[4]).getBytes(StandardCharsets.UTF_8));
+            email.setImage((byte[]) (item[4]));
 
             email.sendEmail();
         }
@@ -132,34 +132,23 @@ public class MailTypes {
      * @param answer  - the content of the reaction
      */
     public void reaction(@RequestParam("requestID") Integer requestID, @RequestParam("answer") String answer) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = "https://localhost:8080/requests/" + requestID;
-        URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
-        ResponseEntity<RequestsEntity> requestResult = restTemplate.exchange(uri, HttpMethod.GET, null, RequestsEntity.class);
-        RequestsEntity request = requestResult.getBody();
 
 
-         url = "https://localhost:8080/readers/" + request.getReaderId();
-         uri = UriComponentsBuilder.fromUriString(url).build().toUri();
-        ResponseEntity<ReadersEntity> readerResult = restTemplate.exchange(uri, HttpMethod.GET, null, ReadersEntity.class);
-        ReadersEntity reader = readerResult.getBody();
 
-        url = "https://localhost:8080/respones/addResponse";
+        RequestsEntity request = requestsService.getById(requestID);
 
-        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("requestID", request.getId());
-        parameters.add("content", answer);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+
+        ReadersEntity reader = readersService.getById(request.getReaderId());
+
+
 
         Email email = new Email(reader.getEmail(), "מענה לפנייתך - מערכת ספרייה", answer);
         if(email.sendEmail()) {
 
-            restTemplate.exchange(url, HttpMethod.PUT, requestEntity, new ParameterizedTypeReference<List<Object[]>>() {
-            });
+            responseService.addResponse(requestID, answer);
+
         }
 
     }

@@ -186,8 +186,10 @@
       const [title, image, author, availability] = book;
       if (title || author || availability) {
         if (image) {
+
+
           var imgElement = document.createElement('img');
-          imgElement.src = "data:image/png;base64," + image;
+          imgElement.src = "data:image/jpeg;base64," + image;
           rows += `<tr>
                 <td><img class="book-image" src="${imgElement.src}" alt="${title}"></td>
                 <td>${title}</td>

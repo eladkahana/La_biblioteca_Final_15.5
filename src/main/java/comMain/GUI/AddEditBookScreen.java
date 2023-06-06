@@ -9,11 +9,13 @@ package comMain.GUI;
 import comMain.SwingClient.AddEditBookClient;
 import comMain.SwingClient.InformationGUI;
 import comMain.entities.BookEntity;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BaseMultiResolutionImage;
 import java.awt.image.BufferedImage;
 import java.awt.print.Printable;
 import java.io.*;
@@ -21,6 +23,8 @@ import javax.imageio.ImageIO;
 import javax.swing.text.JTextComponent;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
 
@@ -253,7 +257,7 @@ public class AddEditBookScreen extends JPanel {
 
         // Create the image panel
 
-        chosenImage = new byte[0]; // Set initial value to an empty byte array
+        chosenImage = null; // Set initial value to null
 
         JButton uploadButton = new JButton("Upload Image");
         uploadButton.addActionListener(e -> {
@@ -262,26 +266,29 @@ public class AddEditBookScreen extends JPanel {
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
                 try {
-                    uploadButton.setBackground(Color.green);
+                    uploadButton.setBackground(Color.GREEN);
 
                     BufferedImage image = ImageIO.read(selectedFile);
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     ImageIO.write(image, "jpg", baos);
-                    baos.flush();
-                    chosenImage = baos.toByteArray();
-                    baos.close();
 
-                    // Convert chosenImage to Base64
-                    String base64Image = Base64.getEncoder().encodeToString(chosenImage);
-                    chosenImage = base64Image.getBytes();
+
+                    baos.flush();
+
+                    chosenImage = Base64.getEncoder().encode(baos.toByteArray());
+
+
+                    baos.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
             } else {
-                chosenImage = new byte[0]; // Set chosenImage to an empty byte array
+                chosenImage = null;
             }
         });
+
+
 
 
 
