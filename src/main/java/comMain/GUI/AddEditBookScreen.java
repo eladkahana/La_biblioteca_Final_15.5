@@ -257,7 +257,7 @@ public class AddEditBookScreen extends JPanel {
 
         // Create the image panel
 
-        chosenImage = null; // Set initial value to null
+        chosenImage = new byte[0]; // Set initial value to null
 
         JButton uploadButton = new JButton("Upload Image");
         uploadButton.addActionListener(e -> {
@@ -284,7 +284,7 @@ public class AddEditBookScreen extends JPanel {
                     ex.printStackTrace();
                 }
             } else {
-                chosenImage = null;
+                chosenImage = new byte[0];
             }
         });
 
