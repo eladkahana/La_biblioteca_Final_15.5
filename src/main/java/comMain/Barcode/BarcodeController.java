@@ -2,6 +2,7 @@ package comMain.Barcode;
 
 import net.sourceforge.barbecue.BarcodeException;
 import net.sourceforge.barbecue.output.OutputException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,10 +15,13 @@ import java.io.IOException;
 
 @RestController
 class BarcodeController {
+
+    @Autowired
+    private BarcodeGenerator barcodeGenerator;
     @GetMapping("/barcode/{input}")
     public ResponseEntity<byte[]> generateBarcode(@PathVariable String input) {
         try {
-            byte[] barcodeBytes = BarcodeGenerator.generateBarcode(input);
+            byte[] barcodeBytes = barcodeGenerator.generateBarcode(input);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_PNG);
             return new ResponseEntity<>(barcodeBytes, headers, HttpStatus.OK);
