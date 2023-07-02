@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-
+@CrossOrigin
 @Validated
 @RestController
 @RequestMapping("/audienceVSBook")

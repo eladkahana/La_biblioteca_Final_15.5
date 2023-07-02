@@ -17,6 +17,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.List;
 
+@CrossOrigin
 @Validated
 @RestController
 @RequestMapping("/readers")
@@ -81,25 +82,11 @@ public class ReadersController {
                                                        @Valid @RequestParam("UserName") String UserName,
                                                        @Valid @RequestParam("Password") String Password) {
 
-        try {
-            InetAddress ipAddress = InetAddress.getLocalHost();
-            NetworkInterface networkInterface = NetworkInterface.getByInetAddress(ipAddress);
-            byte[] macAddressBytes = networkInterface.getHardwareAddress();
 
-            StringBuilder macAddress = new StringBuilder();
-            for (int i = 0; i < macAddressBytes.length; i++) {
-                macAddress.append(String.format("%02X%s", macAddressBytes[i], (i < macAddressBytes.length - 1) ? "-" : ""));
-            }
 
-            List<Object[]> userID = readersService.TryToConnect(IP, macAddress.toString(), UserName, Password);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
-            return ResponseEntity.ok().headers(headers).body(userID);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        } catch (SocketException e) {
-            throw new RuntimeException(e);
-        }
+        List<Object[]> userID = readersService.TryToConnect(IP,  UserName, Password);
+        HttpHeaders headers = new HttpHeaders();
+        return ResponseEntity.ok().headers(headers).body(userID);
     }
 
 
@@ -141,7 +128,6 @@ public class ReadersController {
                                                  @RequestParam() String Password){
         readersService.AddPassword(uID, Password);
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
         return ResponseEntity.ok().headers(headers).build();
     }
 

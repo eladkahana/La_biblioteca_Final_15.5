@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Book Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    /* Updated color pattern */
+    :root {
+      --color-primary: #C2DEDC;
+      --color-secondary: #ECE5C7;
+      --color-tertiary: #CDC2AE;
+      --color-quaternary: #116A7B;
+    }
+
+    #books-management-tab {
+      margin: 0 auto;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      background-color: white;
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--color-primary);
+    }
+
+    #search-container {
+      display: flex;
+      justify-content: center;
+      background-color: var(--color-primary);
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #search-input {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+      border: none;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+
+    #search-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: var(--color-quaternary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #book-actions {
+      background-color: var(--color-primary);
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    #book-actions button {
+      margin-bottom: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: var(--color-quaternary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #book-actions button:disabled {
+      background-color: var(--color-tertiary);
+      cursor: not-allowed;
+    }
+
+    #book-table {
+      margin-top: 120px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: var(--color-tertiary);
+    }
+
+    tr:hover {
+      background-color: var(--color-tertiary);
+    }
+
+    .selected {
+      background-color: var(--color-secondary);
+    }
+
+    .book-image {
+      width: 100px;
+      height: 150px;
+    }
+
+    .sticky-container {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .sticky {
+      position: sticky;
+      top: 0;
+      background-color: var(--color-primary);
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .sticky-actions {
+      top: 80px;
+      text-align: center;
+    }
+  </style>
+
+
+</head>
+
+<body>
+<div id="books-management-tab">
+  <h3>Books Management</h3>
+
+  <div class="sticky-container">
+    <div id="search-container" class="sticky">
+      <input type="text" id="search-input" placeholder="Search by title or author">
+      <button id="search-button" onclick="searchBooks()">Search</button>
+    </div>
+
+    <div id="book-actions" class="sticky sticky-actions">
+      <button id="edit-book-button" disabled>Edit</button>
+      <button id="delete-book-button" disabled>Delete</button>
+      <button id="create-copy-button" disabled>Create Copy</button>
+      <button id="add-book-button">Add</button>
+    </div>
+  </div>
+
+  <table id="book-table">
+    <thead>
+    <tr>
+      <th>Image</th>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Availability</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Display book list here -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // Sample book data
+  let bookData = [];
+
+  // Function to populate the book table
+  function populateBookTable(data) {
+    const tableBody = document.querySelector("#book-table tbody");
+
+    // Clear existing table rows
+    tableBody.innerHTML = "";
+
+    // Add book rows to the table
+    let rows = "";
+    data.forEach((book, index) => {
+      const [title, image, author, availability] = book;
+      if (title || author || availability) {
+        let imgElement = document.createElement('img');
+        if (image) {
+          imgElement.src = "data:image/jpeg;base64, " + image;
+        } else {
+          imgElement.src = getBookImageUrl(title);
+        }
+        rows += `<tr>
+          <td><img class="book-image" src="${imgElement.src}" alt="${title}"></td>
+          <td>${title}</td>
+          <td>${author}</td>
+          <td>${availability}</td>
+        </tr>`;
+      }
+    });
+    tableBody.innerHTML = rows; // Set the table's content to the generated rows
+
+    const tableRows = document.querySelectorAll("#book-table tbody tr");
+    tableRows.forEach((row) => {
+      row.addEventListener("click", function () {
+        // Toggle selection on row click
+        row.classList.toggle("selected");
+
+        // Enable/disable action buttons based on the selected row
+        const selectedRows = document.querySelectorAll(".selected");
+        const editButton = document.querySelector("#edit-book-button");
+        const deleteButton = document.querySelector("#delete-book-button");
+        const createCopyButton = document.querySelector("#create-copy-button");
+
+        if (selectedRows.length === 1) {
+          // Enable action buttons when a single row is selected
+          editButton.removeAttribute("disabled");
+          deleteButton.removeAttribute("disabled");
+          createCopyButton.removeAttribute("disabled");
+        } else {
+          // Disable action buttons when zero or multiple rows are selected
+          editButton.setAttribute("disabled", true);
+          deleteButton.setAttribute("disabled", true);
+          createCopyButton.setAttribute("disabled", true);
+        }
+      });
+
+      tableBody.appendChild(row);
+    });
+  }
+
+  // Initial population of the book table
+  fetch("https://localhost:8080/book/getBooksForWeb")
+          .then((response) => response.json())
+          .then((data) => {
+            bookData = data; // Assign the fetched data to the 'bookData' variable
+            populateBookTable(bookData);
+          })
+          .catch((error) => {
+            console.error("Error fetching book data:", error);
+          });
+
+  function getBookImageUrl(title) {
+    // Replace this function with the logic to generate the actual image URL for each book
+    // For now, I'll return a placeholder URL
+    return `https://via.placeholder.com/100x150.png?text=${encodeURIComponent(title)}`;
+  }
+
+  // Search button click event
+  function searchBooks() {
+    const searchValue = document.getElementById("search-input").value.toLowerCase();
+    const filteredBooks = bookData.filter(book =>
+            book[0] && book[0].toLowerCase().includes(searchValue) ||
+            book[2] && book[2].toLowerCase().includes(searchValue)
+    );
+    populateBookTable(filteredBooks);
+  }
+
+  document.getElementById("edit-book-button").addEventListener("click", function () {
+    const selectedRow = document.querySelector(".selected");
+    if (selectedRow) {
+      // Get the book data from the selected row and perform the edit action
+      const title = selectedRow.cells[1].textContent;
+      const author = selectedRow.cells[2].textContent;
+      const availability = selectedRow.cells[3].textContent;
+      console.log("Edit book:", title, author, availability);
+    }
+  });
+
+  document.getElementById("delete-book-button").addEventListener("click", function () {
+    const selectedRows = document.querySelectorAll(".selected");
+    if (selectedRows.length > 0) {
+      // Iterate over selected rows and perform the delete action
+      selectedRows.forEach((row) => {
+        const title = row.cells[1].textContent;
+        const author = row.cells[2].textContent;
+        const availability = row.cells[3].textContent;
+        console.log("Delete book:", title, author, availability);
+      });
+
+      // Clear selection after performing the action
+      selectedRows.forEach((row) => {
+        row.classList.remove("selected");
+      });
+    }
+  });
+
+  document.getElementById("create-copy-button").addEventListener("click", function () {
+    const selectedRow = document.querySelector(".selected");
+    if (selectedRow) {
+      // Get the book data from the selected row and perform the create copy action
+      const title = selectedRow.cells[1].textContent;
+      const author = selectedRow.cells[2].textContent;
+      const availability = selectedRow.cells[3].textContent;
+      console.log("Create copy of book:", title, author, availability);
+    }
+  });
+
+  document.getElementById("add-book-button").addEventListener("click", function () {
+    window.location.href = "AddEditBook.html";
+
+
+    // Repopulate the table with the updated book data
+    populateBookTable(bookData);
+  });
+</script>
+</body>
+
+</html>

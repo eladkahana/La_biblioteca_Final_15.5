@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mail Box</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mail-container {
+      display: flex;
+      max-width: 95%;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .mail-sidebar {
+      flex: 1;
+      padding: 20px;
+      background-color: #116A7B;
+      color: #fff;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      overflow-y: auto;
+    }
+
+    .mail-sidebar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .mail-tabs {
+      display: flex;
+      overflow-x: auto;
+      margin-top: 30px;
+      border-bottom: 1px solid #C2DEDC;
+    }
+
+    .mail-tab {
+      padding: 10px 20px;
+      text-align: center;
+      cursor: pointer;
+      border-top-right-radius: 5px;
+      border-top-left-radius: 5px;
+      transition: background-color 0.3s ease;
+      font-weight: bold;
+      color: #f3d39b;
+    }
+
+    .mail-tab.active {
+      background-color: #C2DEDC;
+      color: #b0a020;
+    }
+
+    .mail-list {
+      list-style-type: none;
+      padding: 0;
+      overflow-y: auto;
+      max-height: 400px;
+    }
+
+    .mail-list-item {
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid #C2DEDC;
+      transition: background-color 0.3s ease;
+    }
+
+    .mail-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .mail-list-item:hover {
+      background-color: #CDC2AE;
+    }
+
+    .mail-content {
+      flex: 2;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .mail-content h2 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    .mail-content p {
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    .mail-editor {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+
+    .mail-editor textarea {
+      width: 100%;
+      height: 200px;
+      resize: vertical;
+      margin-bottom: 10px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .mail-editor button {
+      padding: 8px 16px;
+      background-color: #116A7B;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .mail-editor button:hover {
+      background-color: #C2DEDC;
+    }
+
+    .mail-content button {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: #116A7B;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .mail-content button:hover {
+      background-color: #C2DEDC;
+    }
+
+
+  </style>
+</head>
+<body>
+<div class="mail-container">
+  <div class="mail-sidebar">
+    <h1>Mail Box</h1>
+    <div class="mail-tabs" id="mail-tabs">
+      <div class="mail-tab active" id="inbox-tab">Inbox</div>
+      <div class="mail-tab" id="sent-tab">Sent</div>
+      <div class="mail-tab" id="read-tab">Read</div>
+    </div>
+    <div class="mail-list" id="mail-list"></div>
+  </div>
+  <div class="mail-content" id="mail-content">
+    <h2>Selected Email</h2>
+    <p>Email details will be displayed here.</p>
+  </div>
+</div>
+
+<script>
+  const inboxTab = document.getElementById('inbox-tab');
+  const sentTab = document.getElementById('sent-tab');
+  const readTab = document.getElementById('read-tab');
+  const mailTabs = document.getElementById('mail-tabs');
+  const mailList = document.getElementById('mail-list');
+  const mailContent = document.getElementById('mail-content');
+
+  inboxTab.addEventListener('click', () => {
+    setActiveTab(inboxTab);
+    updateMailList(inboxData);
+  });
+
+  sentTab.addEventListener('click', () => {
+    setActiveTab(sentTab);
+    updateMailList(sentData);
+  });
+
+  readTab.addEventListener('click', () => {
+    setActiveTab(readTab);
+    updateMailList(readData);
+  });
+
+  function setActiveTab(tab) {
+    const tabs = [inboxTab, sentTab, readTab];
+    tabs.forEach(t => {
+      t.classList.remove('active');
+    });
+    tab.classList.add('active');
+  }
+
+  function updateMailList(data) {
+    mailList.innerHTML = '';
+    data.forEach(mail => {
+      const listItem = document.createElement('div');
+      listItem.classList.add('mail-list-item');
+      listItem.textContent = mail.subject;
+      mailList.appendChild(listItem);
+    });
+  }
+
+  function updateMailContent(mail) {
+    mailContent.innerHTML = `
+        <h2>${mail.subject}</h2>
+        <p><strong>From:</strong> ${mail.from}</p>
+        <p><strong>Date:</strong> ${mail.date}</p>
+        <p>${mail.content}</p>
+        <button class="respond-button" id="respond-button">Respond</button>
+      `;
+    const respondButton = document.getElementById('respond-button');
+    respondButton.addEventListener('click', openMailEditor);
+  }
+
+  function openMailEditor() {
+    mailContent.innerHTML = `
+        <h2>Compose Response</h2>
+        <form id="mail-form" class="mail-editor">
+          <textarea id="message" name="message" placeholder="Compose your response..." required></textarea>
+          <button type="submit" id="send-button">Send</button>
+        </form>
+      `;
+    const mailForm = document.getElementById('mail-form');
+    mailForm.addEventListener('submit', sendResponse);
+  }
+
+  function sendResponse(e) {
+    e.preventDefault();
+    const message = document.getElementById('message').value;
+
+    // Send the response email using the provided message
+    console.log('Sending response email...');
+    console.log('Message:', message);
+
+    // Clear the mail editor
+    mailContent.innerHTML = '';
+  }
+
+  const inboxData = [
+    { subject: 'Email 1 Subject', from: 'Sender 1', date: 'June 1, 2023', content: 'Email 1 Content' },
+    { subject: 'Email 2 Subject', from: 'Sender 2', date: 'June 2, 2023', content: 'Email 2 Content' },
+    { subject: 'Email 3 Subject', from: 'Sender 3', date: 'June 3, 2023', content: 'Email 3 Content' }
+  ];
+
+  const sentData = [
+    { subject: 'Sent Email 1 Subject', from: 'Recipient 1', date: 'June 4, 2023', content: 'Sent Email 1 Content' },
+    { subject: 'Sent Email 2 Subject', from: 'Recipient 2', date: 'June 5, 2023', content: 'Sent Email 2 Content' },
+    { subject: 'Sent Email 3 Subject', from: 'Recipient 3', date: 'June 6, 2023', content: 'Sent Email 3 Content' }
+  ];
+
+  const readData = [
+    { subject: 'Read Email 1 Subject', from: 'Sender 1', date: 'June 7, 2023', content: 'Read Email 1 Content' },
+    { subject: 'Read Email 2 Subject', from: 'Sender 2', date: 'June 8, 2023', content: 'Read Email 2 Content' },
+    { subject: 'Read Email 3 Subject', from: 'Sender 3', date: 'June 9, 2023', content: 'Read Email 3 Content' }
+  ];
+
+  mailList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('mail-list-item')) {
+      const selectedEmail = e.target.textContent;
+      const currentTab = document.querySelector('.mail-tab.active').id;
+      let mail;
+
+      switch (currentTab) {
+        case 'inbox-tab':
+          mail = inboxData.find(m => m.subject === selectedEmail);
+          break;
+        case 'sent-tab':
+          mail = sentData.find(m => m.subject === selectedEmail);
+          break;
+        case 'read-tab':
+          mail = readData.find(m => m.subject === selectedEmail);
+          break;
+      }
+
+      if (mail) {
+        updateMailContent(mail);
+      }
+    }
+  });
+
+  // Set default folder and update mail list
+  setActiveTab(inboxTab);
+  updateMailList(inboxData);
+</script>
+</body>
+</html>

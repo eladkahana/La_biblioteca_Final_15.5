@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@CrossOrigin
 @Validated
 @RestController
 @RequestMapping("/reserve")
@@ -71,6 +72,7 @@ public class ReserveController {
         return reserveService.displayReservesByDays();
     }
 
+    @CrossOrigin
     @GetMapping("/displayReservesByHours")
     public List<Object[]> displayReservesByHours(){
         return reserveService.displayReservesByHours();
@@ -101,7 +103,6 @@ public class ReserveController {
     public ResponseEntity<List<Object[]>> getHistoryOfReader(@RequestParam Integer readerID) {
         List<Object[]> reserves = reserveService.getHistoryOfReader(readerID);
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
         return ResponseEntity.ok().headers(headers).body(reserves);
     }
 

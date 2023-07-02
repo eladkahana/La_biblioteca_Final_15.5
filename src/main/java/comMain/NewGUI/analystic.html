@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Analytics Screen</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      background-color: #C2DEDC;
+    }
+
+    .analytics-container {
+      flex: 1;
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: #ECE5C7;
+    }
+
+    .info-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: rgba(190, 255, 231, 0.79);
+    }
+
+    .card {
+      background-color: #ECE5C7;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      margin-bottom: 40px;
+
+    }
+
+    .card:last-child {
+      margin-bottom: 0;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #116A7B;
+      margin-bottom: 20px;
+    }
+
+    .label {
+      margin-bottom: 10px;
+      color: #5D5C61;
+      font-size: 24px;
+      line-height: 1.5;
+    }
+
+    .label span {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="analytics-container">
+  <h1>Borrowed Books Analytics</h1>
+  <canvas id="borrowedByHourChart"></canvas>
+  <canvas id="borrowedByDayChart"></canvas>
+</div>
+
+<div class="info-container">
+  <div class="card">
+    <div class="label" id="Most Borrowed"><span>Most Borrowed Book:</span> The Great Gatsby</div>
+  </div>
+
+  <div class="card">
+    <div class="label" id="Monthly Loans"><span>Monthly Loans:</span> 250</div>
+  </div>
+
+  <div class="card">
+    <div class="label" id="Daily Loans"><span>Daily Loans:</span> 15</div>
+  </div>
+</div>
+
+<script>
+  // Get the canvas elements
+  const borrowedByHourCanvas = document.getElementById('borrowedByHourChart');
+  const borrowedByDayCanvas = document.getElementById('borrowedByDayChart');
+
+  // Create the chart contexts
+  const borrowedByHourCtx = borrowedByHourCanvas.getContext('2d');
+  const borrowedByDayCtx = borrowedByDayCanvas.getContext('2d');
+
+  // Define the data for borrowed books by hour
+  const borrowedByHourData = {
+    labels: [],
+    datasets: [
+      {
+        label: 'Borrowed Books',
+        data: [],
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }
+    ]
+  };
+
+  // Create the borrowed books by hour chart and store its reference
+  const borrowedByHourChart = new Chart(borrowedByHourCtx, {
+    type: 'bar',
+    data: borrowedByHourData,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  // Define the data for borrowed books by day
+  const borrowedByDayData = {
+    labels: [],
+    datasets: [
+      {
+        label: 'Borrowed Books',
+        data: [],
+        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }
+    ]
+  };
+
+  // Create the borrowed books by day chart and store its reference
+  const borrowedByDayChart = new Chart(borrowedByDayCtx, {
+    type: 'bar',
+    data: borrowedByDayData,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  fetch('https://localhost:8080/reserve/displayReservesByDays')
+          .then(response => response.json())
+          .then(data => {
+            displaydays(data);
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+  fetch('https://localhost:8080/reserve/displayReservesByHours')
+          .then(response => response.json())
+          .then(data => {
+            displayhours(data);
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+  fetch('https://localhost:8080/book/MostReservedBook')
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("Most Borrowed").innerHTML = "<strong>Most Borrowed book:</strong> " + data;
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+
+  fetch('https://localhost:8080/reserve/MonthlyResrvesAmount')
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("Monthly Loans").innerHTML = "<strong>Monthly Loans:</strong> " + data;
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+
+  fetch('https://localhost:8080/reserve/todayResrvesAmount')
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("Daily Loans").innerHTML = "<strong>Daily Loans:</strong> " + data;
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+
+
+  function displaydays(data) {
+    data.forEach(line => {
+      borrowedByDayData.labels.push(line[0]);
+      borrowedByDayData.datasets[0].data.push(line[1]);
+    });
+
+    // Update borrowed books by day chart data
+    borrowedByDayChart.data.labels = borrowedByDayData.labels;
+    borrowedByDayChart.data.datasets[0].data = borrowedByDayData.datasets[0].data;
+    borrowedByDayChart.update();
+  }
+
+  function displayhours(data) {
+    data.forEach(line => {
+      borrowedByHourData.labels.push((line[0] + ':00').toString());
+      borrowedByHourData.datasets[0].data.push(line[1]);
+    });
+
+    // Update borrowed books by hour chart data
+    borrowedByHourChart.data.labels = borrowedByHourData.labels;
+    borrowedByHourChart.data.datasets[0].data = borrowedByHourData.datasets[0].data;
+    borrowedByHourChart.update();
+  }
+</script>
+
+</body>
+</html>

@@ -9,11 +9,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin
 @Validated
 @RestController
 @RequestMapping("/book")
@@ -57,12 +60,12 @@ public class BookController {
                                           @RequestParam String shelfmark,
                                           @RequestParam int numberOfPages,
                                           @RequestParam int publishYear,
-                                          @RequestParam byte[] coverImage,
+                                          @RequestParam MultipartFile coverImage,
                                           @RequestParam String language,
                                           @RequestParam String publisher,
-                                          @RequestParam String note) {
+                                          @RequestParam String note) throws IOException {
         List<Object[]> result = bookService.addCompleteBook(
-            ISBN,title,edition,shelfmark,numberOfPages,publishYear,coverImage,language,publisher,note
+            ISBN,title,edition,shelfmark,numberOfPages,publishYear,coverImage.getBytes(),language,publisher,note
         );
         return result;
     }
@@ -77,7 +80,6 @@ public class BookController {
     public ResponseEntity<List<Object[]>> getBooksForWeb() {
         List<Object[]> books = bookService.getBooksForWeb();
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
         return ResponseEntity.ok().headers(headers).body(books);
     }
 
@@ -89,13 +91,13 @@ public class BookController {
                                           @RequestParam String shelfmark,
                                           @RequestParam int numberOfPages,
                                           @RequestParam int publishYear,
-                                          @RequestParam byte[] coverImage,
+                                          @RequestParam MultipartFile coverImage,
                                           @RequestParam String language,
                                           @RequestParam String publisher,
                                           @RequestParam String note,
-                                   @RequestParam int ID) {
+                                   @RequestParam int ID) throws IOException {
          bookService.EditBook(
-                ISBN,title,edition,shelfmark,numberOfPages,publishYear,coverImage,language,publisher,note,ID
+                ISBN,title,edition,shelfmark,numberOfPages,publishYear, coverImage.getBytes(),language,publisher,note,ID
         );
     }
 

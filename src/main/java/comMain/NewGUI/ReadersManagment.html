@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Library Readers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        /* Updated color pattern */
+        :root {
+            --color-primary: #C2DEDC;
+            --color-secondary: #ECE5C7;
+            --color-tertiary: #CDC2AE;
+            --color-quaternary: #116A7B;
+        }
+
+        #readers-management-tab {
+            margin: 0 auto;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--color-primary);
+        }
+
+        #search-container {
+            display: flex;
+            justify-content: center;
+            background-color: var(--color-primary);
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #search-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+            border: none;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        #search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: var(--color-quaternary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #reader-actions {
+            background-color: var(--color-primary);
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #reader-actions button {
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: var(--color-quaternary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #reader-actions button:disabled {
+            background-color: var(--color-tertiary);
+            cursor: not-allowed;
+        }
+
+        #reader-table {
+            margin-top: 120px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--color-tertiary);
+        }
+
+        tr:hover {
+            background-color: var(--color-tertiary);
+        }
+
+        .selected {
+            background-color: var(--color-secondary);
+        }
+
+        .book-image {
+            width: 100px;
+            height: 150px;
+        }
+
+        .sticky-container {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .sticky {
+            position: sticky;
+            top: 0;
+            background-color: var(--color-primary);
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sticky-actions {
+            top: 80px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<div id="readers-management-tab">
+    <h3>Readers Management</h3>
+
+    <div class="sticky-container">
+        <div id="search-container" class="sticky">
+            <input type="text" id="search-input" placeholder="Search by name or email">
+            <button id="search-button" onclick="searchReaders()">Search</button>
+        </div>
+
+        <div id="reader-actions" class="sticky sticky-actions">
+            <button id="edit-reader-button" disabled>Edit</button>
+            <button id="delete-reader-button" disabled>Delete</button>
+            <button id="add-reader-button">Add</button>
+        </div>
+    </div>
+
+    <table id="reader-table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>ID</th>
+            <th>Email</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Display reader list here -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Sample reader data
+    let readerData = [];
+
+    // Function to populate the reader table
+    function populateReaderTable(data) {
+        const tableBody = document.querySelector("#reader-table tbody");
+
+        // Clear existing table rows
+        tableBody.innerHTML = "";
+
+        // Add reader rows to the table
+        let rows = "";
+        const fetchPromises = data.map((reader) => {
+            const firstNamePromise = fetch(`https://localhost:8080/firstName/${reader.firstName}`)
+                .then((response) => response.json())
+                .then((data) => data.firstName);
+
+            const lastNamePromise = fetch(`https://localhost:8080/lastName/${reader.lastName}`)
+                .then((response) => response.json())
+                .then((data) => data.lastName);
+
+            return Promise.all([firstNamePromise, lastNamePromise])
+                .then(([firstName, lastName]) => {
+                    rows += `<tr>
+          <td>${firstName} ${lastName}</td>
+          <td>${calculateAge(reader.birthDate)}</td>
+          <td>${reader.idno}</td>
+          <td>${reader.email}</td>
+        </tr>`;
+                });
+        });
+
+        Promise.all(fetchPromises)
+            .then(() => {
+                tableBody.innerHTML = rows; // Set the table's content to the generated rows
+
+                const tableRows = document.querySelectorAll("#reader-table tbody tr");
+                tableRows.forEach((row) => {
+                    row.addEventListener("click", function () {
+                        // Toggle selection on row click
+                        row.classList.toggle("selected");
+
+                        // Enable/disable action buttons based on the selected row
+                        const selectedRows = document.querySelectorAll(".selected");
+                        const editButton = document.querySelector("#edit-reader-button");
+                        const deleteButton = document.querySelector("#delete-reader-button");
+
+                        if (selectedRows.length === 1) {
+                            // Enable action buttons when a single row is selected
+                            editButton.removeAttribute("disabled");
+                            deleteButton.removeAttribute("disabled");
+                        } else {
+                            // Disable action buttons when zero or multiple rows are selected
+                            editButton.setAttribute("disabled", true);
+                            deleteButton.setAttribute("disabled", true);
+                        }
+                    });
+
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching reader names:", error);
+            });
+    }
+
+
+
+    // Calculate age based on birth date
+    function calculateAge(birthDate) {
+        const today = new Date();
+        const dob = new Date(birthDate);
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+
+    function getStringNames(firstName, lastName) {
+        let Fn = '';
+        let Ln = '';
+
+        fetch(`https://localhost:8080/firstName/${firstName}`)
+            .then((response) => response.json())
+            .then((data) => {
+                Fn = data.firstName;
+            });
+
+        fetch(`https://localhost:8080/lastName/${lastName}`)
+            .then((response) => response.json())
+            .then((data) => {
+                Ln = data.lastName;
+            });
+
+        return Fn;
+    }
+
+
+
+
+    // Initial population of the reader table
+    fetch("https://localhost:8080/readers")
+        .then((response) => response.json())
+        .then((data) => {
+            readerData = data; // Assign the fetched data to the 'readerData' variable
+            populateReaderTable(readerData);
+        })
+        .catch((error) => {
+            console.error("Error fetching reader data:", error);
+        });
+
+    function getReaderImageUrl(name) {
+        // Replace this function with the logic to generate the actual image URL for each reader
+        // For now, I'll return a placeholder URL
+        return `https://via.placeholder.com/100x150.png?text=${encodeURIComponent(name)}`;
+    }
+
+    // Search button click event
+    function searchReaders() {
+        const searchValue = document.getElementById("search-input").value.toLowerCase();
+        const filteredReaders = readerData.filter(reader =>
+            reader[0] && reader[0].toLowerCase().includes(searchValue) ||
+            reader[2] && reader[2].toLowerCase().includes(searchValue)
+        );
+        populateReaderTable(filteredReaders);
+    }
+
+    document.getElementById("edit-reader-button").addEventListener("click", function () {
+        const selectedRow = document.querySelector(".selected");
+        if (selectedRow) {
+            // Get the reader data from the selected row and perform the edit action
+            const readerId = selectedRow.cells[2].textContent;
+            const reader = readerData.find(item => item[0] === readerId);
+            const [id, address, phoneNo, firstName, lastName, birthDate, registrationDate, genderID, email, idno] = reader;
+            console.log("Edit reader:", firstName, lastName, email);
+        }
+    });
+
+    document.getElementById("delete-reader-button").addEventListener("click", function () {
+        const selectedRows = document.querySelectorAll(".selected");
+        if (selectedRows.length > 0) {
+            // Iterate over selected rows and perform the delete action
+            selectedRows.forEach((row) => {
+                const readerId = row.cells[2].textContent;
+                const reader = readerData.find(item => item[0] === readerId);
+                const [id, address, phoneNo, firstName, lastName, birthDate, registrationDate, genderID, email, idno] = reader;
+                console.log("Delete reader:", firstName, lastName, email);
+            });
+
+            // Clear selection after performing the action
+            selectedRows.forEach((row) => {
+                row.classList.remove("selected");
+            });
+        }
+    });
+
+
+    document.getElementById("add-reader-button").addEventListener("click", function () {
+        window.open("AddEditReader.html", "popupWindow", "width=600,height=400");
+
+        // Repopulate the table with the updated reader data
+        populateReaderTable(readerData);
+    });
+</script>
+</body>
+
+</html>

@@ -88,15 +88,8 @@ public abstract class  AnalysticClient {
         ObjectMapper objectMapper = new ObjectMapper();
         List<Object[]> myTableList = objectMapper.readValue(response, new TypeReference<List<Object[]>>(){});
 
-        Integer  OriginalId = (Integer) myTableList.get(0)[0];
 
-        url = "https://localhost:8080/book/" + OriginalId;
-        uri = UriComponentsBuilder.fromUriString(url).build().toUri();
-
-        BookEntity book = restTemplate.getForObject(uri, BookEntity.class);
-
-
-        return book.getTitle();
+        return (String) myTableList.get(0)[0];
     }
 
 

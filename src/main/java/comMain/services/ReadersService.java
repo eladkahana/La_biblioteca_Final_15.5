@@ -8,6 +8,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.sql.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -85,8 +89,25 @@ public class ReadersService {
     }
 
     @Transactional(readOnly = true)
-    public List<Object[]> TryToConnect(String IP, String Mac,  String UserName, String Password){
-        return readersRepository.TryToConnect(IP,Mac,UserName,Password);
+    public List<Object[]> TryToConnect(String IP,  String UserName, String Password){
+
+        try {
+            InetAddress ipAddress = InetAddress.getLocalHost();
+            NetworkInterface networkInterface = NetworkInterface.getByInetAddress(ipAddress);
+            byte[] macAddressBytes = networkInterface.getHardwareAddress();
+
+            StringBuilder macAddress = new StringBuilder();
+            for (int i = 0; i < macAddressBytes.length; i++) {
+                macAddress.append(String.format("%02X%s", macAddressBytes[i], (i < macAddressBytes.length - 1) ? "-" : ""));
+            }
+
+            return readersRepository.TryToConnect(IP,macAddress.toString(),UserName,Password);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 

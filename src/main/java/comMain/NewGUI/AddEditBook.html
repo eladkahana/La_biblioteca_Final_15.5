@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add/Edit Book Screen</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      justify-content: left;
+    }
+
+    .form {
+      width: 100%;
+
+      margin-top: 20px;
+      background-color: #C2DEDC;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .form label,
+    .form input,
+    .form select,
+    .form textarea {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .form input[type="text"],
+    .form input[type="number"],
+    .form select,
+    .form textarea {
+      width: 300px;
+      padding: 8px;
+      border: 1px solid #ECE5C7;
+      border-radius: 4px;
+    }
+
+    .form input[type="checkbox"] {
+      margin-top: 10px;
+    }
+
+    .form textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    .form .button-panel {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .form .button-panel button {
+      margin-right: 10px;
+      padding: 8px 16px;
+      background-color: #116A7B;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .form .button-panel button:last-child {
+      margin-right: 0;
+      background-color: #f44336;
+    }
+
+    .chosen-list {
+      display: flex;
+      align-items: center;
+    }
+
+    .chosen-list-item {
+      margin-right: 10px;
+    }
+
+    .chosen-list-item input[type="text"] {
+      width: 200px;
+    }
+
+    .chosen-list-item button {
+      margin-left: 5px;
+    }
+
+    .chosen-list-item select {
+      width: 200px;
+    }
+
+    .chosen-list-item button {
+      margin-left: 5px;
+      padding: 2px 5px;
+      background-color: #CDC2AE;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .series-section {
+      border: 1px solid #CDC2AE;
+      border-radius: 4px;
+      padding: 15px;
+      margin-top: 100px;
+      width: 75%;
+    }
+
+    .series-section label {
+      font-weight: bold;
+    }
+
+    .series-section .chosen-list-item {
+      margin-top: 10px;
+    }
+
+    .chosen-list-item div {
+      display: block;
+      margin-top: 10px;
+    }
+
+
+
+    .remove-selection {
+      background-color: red;
+      color: white;
+    }
+
+    #confirmation-dialog {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+    }
+
+    #confirmation-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    #confirmation-content img {
+      max-width: 200px;
+      max-height: 200px;
+      margin-bottom: 10px;
+    }
+
+    #confirmation-content p {
+      margin-bottom: 20px;
+    }
+
+    #confirmation-content button {
+      margin-top: 10px;
+    }
+
+    .first-half{
+      float: left;
+      margin-right: 20%;
+    }
+
+  </style>
+</head>
+<body>
+<div class="container">
+  <form class="form" id="myForm">
+    <div class="first-half">
+    <label for="isbn">ISBN:</label>
+    <input type="text" id="isbn" autocomplete="off">
+    <label for="title">Title:</label>
+    <input type="text" id="title" autocomplete="off">
+
+    <label for="edition">Edition:</label>
+    <input type="text" id="edition" autocomplete="off">
+
+    <label for="shelfmark">Shelfmark:</label>
+    <input type="text" id="shelfmark" autocomplete="off">
+
+    <label for="pages">Number of Pages:</label>
+    <input type="text" id="pages" autocomplete="off">
+
+    <label for="year">Publish Year:</label>
+    <input type="text" id="year" autocomplete="off">
+
+    <label for="language">Language:</label>
+    <select id="language">
+    </select>
+
+    <label for="publisher">Publisher:</label>
+    <input type="text" id="publisher" autocomplete="off" list="publisherList">
+      <datalist id="publisherList">
+      </datalist>
+
+    </div>
+
+    <div>
+    <label for="category">Category:</label>
+    <div class="chosen-list">
+      <div class="chosen-list-item">
+        <input type="text" id="categoryInput" placeholder="Type or choose a category" list="categoryOptions" autocomplete="off">
+        <datalist id="categoryOptions">
+        </datalist>
+        <button id="addCategoryButton" type="button" onclick="addToList('categoryInput', 'categoryChosenList')">Add</button>
+        <button id="removeCategoryButton" type="button" onclick="removeFromList('categoryChosenList')">Remove</button>
+      </div>
+      <select id="categoryChosenList" multiple></select>
+    </div>
+
+    <label for="author">Author:</label>
+    <div class="chosen-list">
+      <div class="chosen-list-item">
+        <input type="text" id="authorInput" placeholder="Type or choose an author" list="authorOptions" autocomplete="off">
+        <datalist id="authorOptions">
+        </datalist>
+        <button id="addAuthorButton" type="button" onclick="addToList('authorInput', 'authorChosenList')">Add</button>
+        <button id="removeAuthorButton" type="button" onclick="removeFromList('authorChosenList')">Remove</button>
+      </div>
+      <select id="authorChosenList" multiple></select>
+    </div>
+
+    <label for="audience">Audience:</label>
+    <div class="chosen-list">
+      <div class="chosen-list-item">
+        <input type="text" id="audienceInput" placeholder="Type or choose an audience" list="audienceOptions" autocomplete="off">
+        <datalist id="audienceOptions">
+        </datalist>
+        <button id="addAudienceButton" type="button" onclick="addToList('audienceInput', 'audienceChosenList')">Add</button>
+        <button id="removeAudienceButton" type="button" onclick="removeFromList('audienceChosenList')">Remove</button>
+      </div>
+      <select id="audienceChosenList" multiple></select>
+    </div>
+
+
+    <label for="note">Note:</label>
+    <textarea id="note" placeholder="Enter a note"></textarea>
+
+
+      <label for="image">Image:</label>
+      <input type="file" id="imageInput" accept="image/*">
+
+
+
+    </div>
+    <div class="series-section">
+      <label for="series">Series:</label>
+      <div class="chosen-list">
+        <div class="chosen-list-item">
+          <input type="checkbox" id="seriesCheckbox" class="seriesCheckbox" onclick="toggleSeriesSelection()">
+          <label for="seriesCheckbox">Enable Series</label>
+        </div>
+        <div class="chosen-list-item">
+          <input type="text" id="seriesChosenList" list="seriesList" autocomplete="off" disabled >
+          <datalist id="seriesList">
+          </datalist>
+        </div>
+        <div class="chosen-list-item">
+          <input type="number" id="seriesNumberInput" placeholder="Number in the series" disabled>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="button-panel">
+      <button type="submit" id="save-button">Save</button>
+      <button type="reset">Reset</button>
+    </div>
+  </form>
+
+  <div id="confirmation-dialog">
+    <div id="confirmation-content">
+      <img id="barcode-image" src="" alt="Barcode Image">
+      <p id="success-message"></p>
+      <button id="print-button">Print</button>
+      <button id="confirm-button">OK</button>
+    </div>
+  </div>
+
+
+
+</div>
+<script>
+  fetch('https://localhost:8080/language')
+          .then(response => response.json())
+          .then(data => {
+            const languageSelect = document.getElementById("language");
+            data.forEach(line => {
+              const option = document.createElement("option");
+              option.value = line.language;
+              option.text = line.language;
+              languageSelect.add(option);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+  fetch('https://localhost:8080/publisher')
+          .then(response => response.json())
+          .then(data => {
+            const publisherSelect = document.getElementById("publisherList");
+            data.forEach(line => {
+              const option = document.createElement("option");
+              option.value = line.publisherName;
+              option.text = line.publisherName;
+              publisherSelect.appendChild(option);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+  fetch('https://localhost:8080/categories')
+          .then(response => response.json())
+          .then(data => {
+            const categorySelect = document.getElementById("categoryOptions");
+            data.forEach(line => {
+              const option = document.createElement("option");
+              option.value = line.categoryName;
+              option.text = line.categoryName;
+              categorySelect.appendChild(option);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+  async function fetchAuthorData() {
+    try {
+      const response = await fetch('https://localhost:8080/author');
+      const authors = await response.json();
+      const authorSelect = document.getElementById("authorOptions");
+
+      for (const line of authors) {
+        let name = "";
+
+        const firstNameResponse = await fetch('https://localhost:8080/firstName/' + line.firstName);
+        const firstNameData = await firstNameResponse.json();
+        name += firstNameData.firstName + ", ";
+
+        const lastNameResponse = await fetch('https://localhost:8080/lastName/' + line.lastName);
+        const lastNameData = await lastNameResponse.json();
+        name += lastNameData.lastName;
+
+        const option = document.createElement("option");
+        option.value = name;
+        option.text = name;
+        authorSelect.appendChild(option);
+      }
+    } catch (error) {
+      console.error('Error fetching:', error);
+    }
+  }
+
+  fetchAuthorData();
+
+  fetch('https://localhost:8080/audience')
+          .then(response => response.json())
+          .then(data => {
+            const audienceSelect = document.getElementById("audienceOptions");
+            data.forEach(line => {
+              const option = document.createElement("option");
+              option.value = line.teamName;
+              option.text = line.teamName;
+              audienceSelect.appendChild(option);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+  fetch('https://localhost:8080/seriesBook')
+          .then(response => response.json())
+          .then(data => {
+            const seriesSelect = document.getElementById("seriesList");
+            data.forEach(line => {
+              const option = document.createElement("option");
+              option.value = line.seriesTitle;
+              option.text = line.seriesTitle;
+              seriesSelect.appendChild(option);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+
+
+  // Array to store selected values
+  var categorySelections = [];
+  var authorSelections = [];
+  var audienceSelections = [];
+
+
+  var confirmationDialog = document.getElementById('confirmation-dialog');
+  var confirmButton = document.getElementById('confirm-button');
+  var barcodeImage = document.getElementById('barcode-image');
+  var successMessage = document.getElementById('success-message');
+
+  function toggleSeriesSelection() {
+    var seriesCheckbox = document.getElementById("seriesCheckbox");
+    var seriesChosenList = document.getElementById("seriesChosenList");
+    var seriesNumberInput = document.getElementById("seriesNumberInput");
+
+    // Toggle the disabled state of the select and number input
+    var isSelectionEnabled = seriesCheckbox.checked;
+    seriesChosenList.disabled = !isSelectionEnabled;
+    seriesNumberInput.disabled = !isSelectionEnabled;
+  }
+
+
+  // Function to add an item to the chosen list
+  function addToList(inputId, chosenListId) {
+    var inputElement = document.getElementById(inputId);
+    var chosenList = document.getElementById(chosenListId);
+    var option = document.createElement('option');
+    option.value = inputElement.value;
+    option.text = inputElement.value;
+
+    if (option.value !== '' && !containsOption(chosenList, option.value)) {
+      chosenList.appendChild(option);
+
+      // Clear input field
+      inputElement.value = '';
+    }
+  }
+
+  function containsOption(list, value) {
+    for (var i = 0; i < list.options.length; i++) {
+      if (list.options[i].value === value) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Function to remove selected items from the chosen list
+  function removeFromList(chosenListId, selectionsArray) {
+    var chosenList = document.getElementById(chosenListId);
+    var selectedOptions = Array.from(chosenList.selectedOptions);
+
+    selectedOptions.forEach(function (option) {
+      var valueToRemove = option.value;
+
+      // Check if selectionsArray is defined and an array
+      if (Array.isArray(selectionsArray)) {
+        // Remove the value from the selections array
+        var index = selectionsArray.indexOf(valueToRemove);
+        if (index > -1) {
+          selectionsArray.splice(index, 1);
+        }
+      }
+
+      chosenList.remove(option.index);
+    });
+  }
+
+  let bookID = -1;
+
+  // Event listener for submitting the form
+  document.getElementById('myForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Get form values
+    var isbn = document.getElementById('isbn').value;
+    var title = document.getElementById('title').value;
+    var edition = document.getElementById('edition').value;
+    var shelfmark = document.getElementById('shelfmark').value;
+    var pages = document.getElementById('pages').value;
+    var year = document.getElementById('year').value;
+    var language = document.getElementById('language').value;
+    var publisher = document.getElementById('publisher').value;
+    var categoryList = Array.from(document.getElementById('categoryChosenList').options).map(function (option) {
+      return option.value;
+    });
+    var authorList = Array.from(document.getElementById('authorChosenList').options).map(function (option) {
+      return option.value;
+    });
+    var audienceList = Array.from(document.getElementById('audienceChosenList').options).map(function (option) {
+      return option.value;
+    });
+    var note = document.getElementById('note').value;
+    var seriesConfirm = !document.getElementById('seriesChosenList').disabled;
+    var series = seriesConfirm ? document.getElementById('seriesChosenList').value : '';
+    var seriesNumber = seriesConfirm ? document.getElementById('seriesNumberInput').value : '';
+
+    // Prepare data for submission
+    var formData = new FormData();
+    formData.append('ISBN', isbn);
+    formData.append('title', title);
+    formData.append('edition', edition);
+    formData.append('shelfmark', shelfmark);
+    formData.append('numberOfPages', pages);
+    formData.append('publishYear', year);
+    formData.append('language', language);
+    formData.append('publisher', publisher);
+    formData.append('note', note);
+
+    // Get the file input element and read the file data
+    var fileInput = document.getElementById('imageInput');
+    var imageFile = fileInput.files[0];
+
+    if (imageFile) {
+      formData.append('coverImage', imageFile);
+    } else {
+      // Create an empty Blob to represent the absence of an image file
+      const emptyBlob = new Blob([], { type: 'application/octet-stream' });
+      formData.append('coverImage', emptyBlob);
+    }
+
+
+
+
+    try {
+      const response = await fetch('https://localhost:8080/book/addCompleteBook', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        console.log('Form submitted successfully');
+        bookID = await response.json();
+        // Reset the form
+        document.getElementById('myForm').reset();
+
+      } else {
+        throw new Error('Form submission failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+    // Function to send requests for categories, audiences, and authors
+    async function sendRequest(endpoint, data) {
+      try {
+        await fetch(endpoint, {
+          method: 'PUT',
+          body: data
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    for (const category of categoryList) {
+      var categoriesData = new FormData();
+      categoriesData.append('Category', category);
+      categoriesData.append('ISBN', isbn);
+      await sendRequest('https://localhost:8080/bookVSCategory/setCategoryToBook', categoriesData);
+    }
+
+    for (const team of audienceList) {
+      var audienceData = new FormData();
+      audienceData.append('team', team);
+      audienceData.append('ISBN', isbn);
+      await sendRequest('https://localhost:8080/audienceVSBook/setAudienceToBook', audienceData);
+    }
+
+    for (const author of authorList) {
+      var authorData = new FormData();
+      authorData.append('AuthorFN', author.substring(0, author.indexOf(',')));
+      authorData.append('AuthorLN', author.substring(author.indexOf(',') + 2));
+      authorData.append('ISBN', isbn);
+      await sendRequest('https://localhost:8080/bookVSAuthor/setAuthorToBook', authorData);
+    }
+
+    if (seriesConfirm) {
+      var seriesData = new FormData();
+      seriesData.append('BookSeries', series);
+      seriesData.append('ISBN', isbn);
+      seriesData.append('BookIndexInSeries', seriesNumber);
+      await sendRequest('https://localhost:8080/seriesVSBook/setBookToSeries', seriesData);
+    }
+
+
+    categoryList = [];
+    authorList = [];
+    audienceList = [];
+
+    if (bookID > -1) {
+
+        // Set the success message
+        successMessage.textContent = 'The book saved successfully!';
+
+        // Load the barcode image from the URL
+        barcodeImage.src = 'https://localhost:8080/barcode/' + bookID;
+
+        // Show the confirmation dialog
+        confirmationDialog.classList.add('visible');
+
+    }
+
+  });
+
+
+
+
+
+  confirmButton.addEventListener('click', function() {
+    // Hide the confirmation dialog
+    confirmationDialog.classList.remove('visible');
+
+    // Reset the form
+    document.getElementById('myForm').reset();
+    clearList("categoryOptions");
+    clearList("authorOptions");
+    clearList("audienceOptions");
+  });
+
+  function clearList(listId) {
+    var list = document.getElementById(listId);
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }
+  }
+
+  // Get a reference to the print button
+  const printButton = document.getElementById('print-button');
+
+  // Add a click event listener to the print button
+  printButton.addEventListener('click', function() {
+    // Trigger the print dialog
+    window.print();
+  });
+
+
+</script>
+
+
+</body>
+</html>

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-
+@CrossOrigin
 @Validated
 @RestController
 @RequestMapping("/requests")
@@ -63,7 +63,6 @@ public class RequestsController {
 
         List<Object[]> request = requestsService.AddRequest(readerID, content, topic);
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
         return ResponseEntity.ok().headers(headers).body(request);
     }
 
