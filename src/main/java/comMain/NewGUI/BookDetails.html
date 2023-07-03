@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-size: cover;
+            background-position: center;
+            color: #333333;
+            padding: 20px;
+            margin: 0;
+            background-color: #ECE5C7; /* Update background color */
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            margin: 20px auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .book-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .book-image {
+            max-width: 200px;
+            max-height: 300px;
+            border: 1px solid #cccccc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+
+        .rating-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .rating-stars {
+            color: gold;
+            font-size: 24px;
+        }
+
+        .star {
+            margin-right: 2px;
+        }
+
+        .star:before {
+            content: "☆";
+            color: gold;
+        }
+
+        .full-star:before {
+            content: "★";
+            color: gold;
+        }
+
+        .book-details {
+            flex: 1;
+            display: flex;
+            background-color: #CDC2AE; /* Update background color */
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        .details-column {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        h1 {
+            color: #116A7B; /* Update heading color */
+        }
+
+        h2 {
+            margin-top: 20px;
+            color: #116A7B; /* Update heading color */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .not-available {
+            color: #999999;
+        }
+
+        .data-board-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .data-board {
+            flex: 1;
+            background-color: #C2DEDC; /* Update background color */
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        .data-board-header {
+            color: #116A7B; /* Update heading color */
+        }
+
+        .data-board-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-board-row {
+            background-color: #f9f9f9;
+        }
+
+        .data-board-cell {
+            padding: 10px;
+            border: 1px solid #cccccc;
+        }
+
+        .data-board-cell-header {
+            font-weight: bold;
+        }
+
+        .info-section {
+            flex: 1;
+            margin: 0 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="header">
+    <h1>Book Details</h1>
+    <div class="book-info">
+        <img class="book-image" src="" alt="Book Cover">
+        <div class="rating">
+            <span class="rating-number" id="rating-number">3</span>
+            <div class="rating-stars" id="rating-stars">
+                <span class="star"></span>
+                <span class="star"></span>
+                <span class="star"></span>
+                <span class="star"></span>
+                <span class="star"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+
+
+    <div class="book-details">
+        <div class="details-column">
+            <h2>ISBN:</h2>
+            <p id="isbn"></p>
+
+            <h2>Title:</h2>
+            <p id="title"></p>
+
+            <h2>Edition:</h2>
+            <p id="edition"></p>
+
+            <h2>Shelfmark:</h2>
+            <p id="shelfmark"></p>
+
+            <h2>Number of Pages:</h2>
+            <p id="pages"></p>
+
+            <h2>Publish Year:</h2>
+            <p id="publishYear"></p>
+        </div>
+
+        <div class="details-column">
+            <h2>Language:</h2>
+            <p id="language"></p>
+
+            <h2>Publisher:</h2>
+            <p id="publisher"></p>
+
+            <h2>Categories:</h2>
+            <ul id="categories"></ul>
+
+            <h2>Authors:</h2>
+            <ul id="authors"></ul>
+
+            <h2>Audiences:</h2>
+            <ul id="audiences"></ul>
+
+            <div id="series-section">
+
+            <h2>Series:</h2>
+            <p id="series"></p>
+
+            <h2>Index in Series:</h2>
+            <p id="indexInSeries"></p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="data-board">
+        <h2 class="data-board-header">Data Board 1</h2>
+        <table class="data-board-table">
+            <tr class="data-board-row">
+                <th class="data-board-cell">Column 1</th>
+                <th class="data-board-cell">Column 2</th>
+                <th class="data-board-cell">Column 3</th>
+            </tr>
+            <tr class="data-board-row">
+                <td class="data-board-cell">Data 1</td>
+                <td class="data-board-cell">Data 2</td>
+                <td class="data-board-cell">Data 3</td>
+            </tr>
+            <tr class="data-board-row">
+                <td class="data-board-cell">Data 4</td>
+                <td class="data-board-cell">Data 5</td>
+                <td class="data-board-cell">Data 6</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="data-board">
+        <h2 class="data-board-header">Data Board 2</h2>
+        <table class="data-board-table">
+            <tr class="data-board-row">
+                <th class="data-board-cell">Column 1</th>
+                <th class="data-board-cell">Column 2</th>
+                <th class="data-board-cell">Column 3</th>
+            </tr>
+            <tr class="data-board-row">
+                <td class="data-board-cell">Data 1</td>
+                <td class="data-board-cell">Data 2</td>
+                <td class="data-board-cell">Data 3</td>
+            </tr>
+            <tr class="data-board-row">
+                <td class="data-board-cell">Data 4</td>
+                <td class="data-board-cell">Data 5</td>
+                <td class="data-board-cell">Data 6</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Set book details
+    let BookID = sessionStorage.getItem('BookID');
+    BookID = 78;
+
+    let book = {
+        isbn: null,
+        title: null,
+        edition: null,
+        shelfmark: null,
+        pages: null,
+        publishYear: null,
+        language: null,
+        publisher: null,
+        categories: [],
+        authors: [],
+        series: null,
+        indexInSeries: null
+    };
+
+    fetch('https://localhost:8080/book/' + BookID)
+        .then(response => response.json())
+        .then(data => {
+            book.isbn = data.isbn;
+            book.title = data.title;
+            book.edition = data.edition;
+            book.shelfmark = data.shelfmarkId;
+            book.pages = data.numberOfPages;
+            book.publishYear = data.publishYear;
+            book.publisher = data.publisherId;
+            book.language = data.languageId;
+
+            // Call the functions to update the HTML after data is fetched
+
+            updatePublisher();
+            updateLanguage();
+            updateShelfmark();
+            updateAuthors();
+            updateCategories()
+            updateBookDetails();
+            updateAudiences()
+            updateSeries()
+        });
+
+    function updateBookDetails() {
+        document.getElementById("isbn").textContent = book.isbn;
+        document.getElementById("title").textContent = book.title;
+        document.getElementById("edition").textContent = book.edition;
+        document.getElementById("pages").textContent = book.pages;
+        document.getElementById("publishYear").textContent = book.publishYear;
+
+    }
+
+    function updatePublisher() {
+        fetch('https://localhost:8080/publisher/' + book.publisher)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("publisher").textContent = data.publisherName;
+            });
+    }
+
+    function updateLanguage() {
+        fetch('https://localhost:8080/language/' + book.language)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("language").textContent = data.language;
+            });
+    }
+
+    function updateShelfmark() {
+        fetch('https://localhost:8080/shelfmark/' + book.shelfmark)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("shelfmark").textContent = data.mark;
+            });
+    }
+
+    function updateAuthors() {
+        fetch('https://localhost:8080/bookVSAuthor/getAllAuthorsByBook?bookID=' + BookID)
+            .then(response => response.json())
+            .then(async data => {
+                var authorsList = document.getElementById("authors");
+                for (const author of data) {
+                    var li = document.createElement("li");
+                    const Name = await getAuthor(author.authorId);
+                    li.textContent = Name;
+                    authorsList.appendChild(li);
+
+                }
+            });
+    }
+
+    function getAuthor(authorID) {
+        let fullName = "";
+
+        return fetch('https://localhost:8080/author/' + authorID)
+            .then(response => response.json())
+            .then(data => {
+                return getName(data.firstName, data.lastName)
+                    .then(name => {
+                        fullName = name;
+                        return fullName;
+                    });
+            })
+            .catch(error => {
+                console.error('An error occurred:', error);
+                throw error;
+            });
+    }
+
+    async function getName(fnID, lnID) {
+        let name = '';
+
+        await fetch(`https://localhost:8080/firstName/${fnID}`)
+            .then(response => response.json())
+            .then(data => {
+                name = data.firstName + " ";
+            });
+
+        await fetch(`https://localhost:8080/lastName/${lnID}`)
+            .then(response => response.json())
+            .then(data => {
+                name += data.lastName;
+            });
+
+        return name;
+    }
+
+
+    function updateCategories() {
+        fetch('https://localhost:8080/bookVSCategory/getAllCategoriesByBook?bookID=' + BookID)
+            .then(response => response.json())
+            .then(async data => {
+                var categoryList = document.getElementById("categories");
+                for (const category of data) {
+                    var li = document.createElement("li");
+                    const Name = await getCategory(category.categoryId);
+                    li.textContent = Name;
+                    categoryList.appendChild(li);
+
+                }
+            });
+    }
+
+    function getCategory(categoryID) {
+        return fetch('https://localhost:8080/categories/' + categoryID)
+            .then(response => response.json())
+            .then(data => {
+                return data.categoryName;
+            })
+            .catch(error => {
+                console.error('An error occurred:', error);
+                throw error;
+            });
+    }
+
+
+    function updateAudiences() {
+        fetch('https://localhost:8080/audienceVSBook/getAllAudiencesByBook?bookID=' + BookID)
+            .then(response => response.json())
+            .then(async data => {
+                var categoryList = document.getElementById("audiences");
+                for (const audience of data) {
+                    var li = document.createElement("li");
+                    const Name = await getAudience(audience.groupId);
+                    li.textContent = Name;
+                    categoryList.appendChild(li);
+
+                }
+            });
+    }
+
+    function getAudience(audienceID) {
+        return fetch('https://localhost:8080/audience/' + audienceID)
+            .then(response => response.json())
+            .then(data => {
+                return data.teamName;
+            })
+            .catch(error => {
+                console.error('An error occurred:', error);
+                throw error;
+            });
+    }
+
+
+    function updateSeries() {
+        fetch('https://localhost:8080/seriesVSBook/getSeriesByBook?bookID=' + BookID)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length !== 0) {
+                    document.getElementById("series").textContent = data[0][0];
+                    document.getElementById("indexInSeries").textContent = data[0][1];
+                } else {
+                    const seriesSection = document.getElementById("series-section");
+                    if (seriesSection) {
+                        seriesSection.remove();
+                    }
+                }
+            });
+    }
+
+
+
+
+
+
+    // var authorsList = document.getElementById("authors");
+    // book.authors.forEach(function (author) {
+    //     var li = document.createElement("li");
+    //     li.textContent = author;
+    //     authorsList.appendChild(li);
+    // });
+    //
+    // var audiencesList = document.getElementById("audiences");
+    // book.audiences.forEach(function (author) {
+    //     var li = document.createElement("li");
+    //     li.textContent = author;
+    //     audiencesList.appendChild(li);
+    // });
+    //
+    // var seriesElement = document.getElementById("series");
+    // if (book.series) {
+    //     seriesElement.textContent = book.series;
+    // } else {
+    //     seriesElement.textContent = "N/A";
+    //     seriesElement.classList.add("not-available");
+    // }
+    //
+    // var indexInSeriesElement = document.getElementById("indexInSeries");
+    // if (book.indexInSeries) {
+    //     indexInSeriesElement.textContent = book.indexInSeries;
+    // } else {
+    //     indexInSeriesElement.textContent = "N/A";
+    //     indexInSeriesElement.classList.add("not-available");
+    // }
+
+
+
+
+
+
+
+    // Rest of the JavaScript code
+
+    var ratingElement = document.getElementById("rating-stars");
+    var rating = 3;
+
+    // Clear previous rating stars
+    ratingElement.innerHTML = '';
+
+    // Create filled stars based on rating
+    for (var i = 0; i < rating; i++) {
+        var star = document.createElement("span");
+        star.className = "star full-star";
+        ratingElement.appendChild(star);
+    }
+
+    // Create empty stars for remaining
+    for (var j = rating; j < 5; j++) {
+        var emptyStar = document.createElement("span");
+        emptyStar.className = "star empty-star";
+        ratingElement.appendChild(emptyStar);
+    }
+
+
+
+
+</script>
+</body>
+
+</html>
