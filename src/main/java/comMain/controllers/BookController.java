@@ -130,4 +130,20 @@ public class BookController {
     }
 
 
+    @GetMapping("/getCopyHistory")
+    public List<Object[]> getCopyHistory(@RequestParam int copyId){
+        return bookService.getCopyHistory(copyId);
+    }
+
+    @GetMapping("/getAllCopiesByBook")
+    public List<Object[]> getAllCopiesByBook(@RequestParam int BookId){
+        return bookService.getAllCopiesByBook(BookId);
+    }
+
+    @GetMapping("/getBookRating")
+    public List<Object[]> getBookRating(@RequestParam int BookId){
+        return bookService.getBookRating(BookId);
+    }
+
+
 }

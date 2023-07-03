@@ -37,8 +37,8 @@
         }
 
         .book-image {
-            max-width: 200px;
-            max-height: 300px;
+            max-width: 100px;
+            max-height: 150px;
             border: 1px solid #cccccc;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
@@ -151,6 +151,8 @@
             flex: 1;
             margin: 0 10px;
         }
+        
+
     </style>
 
 </head>
@@ -159,9 +161,9 @@
 <div class="header">
     <h1>Book Details</h1>
     <div class="book-info">
-        <img class="book-image" src="" alt="Book Cover">
+        <img class="book-image" src="" alt="Book Cover" id="coverImage">
         <div class="rating">
-            <span class="rating-number" id="rating-number">3</span>
+            <span class="rating-number" id="rating-number"></span>
             <div class="rating-stars" id="rating-stars">
                 <span class="star"></span>
                 <span class="star"></span>
@@ -227,43 +229,23 @@
     </div>
 
     <div class="data-board">
-        <h2 class="data-board-header">Data Board 1</h2>
-        <table class="data-board-table">
+        <h2 class="data-board-header">Copies of the Book</h2>
+        <table class="data-board-table" id="copiesOfBook">
             <tr class="data-board-row">
-                <th class="data-board-cell">Column 1</th>
-                <th class="data-board-cell">Column 2</th>
-                <th class="data-board-cell">Column 3</th>
-            </tr>
-            <tr class="data-board-row">
-                <td class="data-board-cell">Data 1</td>
-                <td class="data-board-cell">Data 2</td>
-                <td class="data-board-cell">Data 3</td>
-            </tr>
-            <tr class="data-board-row">
-                <td class="data-board-cell">Data 4</td>
-                <td class="data-board-cell">Data 5</td>
-                <td class="data-board-cell">Data 6</td>
+                <th class="data-board-cell">Copy Number</th>
+                <th class="data-board-cell">Insert Date</th>
+                <th class="data-board-cell">Availability</th>
             </tr>
         </table>
     </div>
 
     <div class="data-board">
-        <h2 class="data-board-header">Data Board 2</h2>
-        <table class="data-board-table">
+        <h2 class="data-board-header" >Copy History</h2>
+        <table class="data-board-table" id="copyHistory">
             <tr class="data-board-row">
-                <th class="data-board-cell">Column 1</th>
-                <th class="data-board-cell">Column 2</th>
-                <th class="data-board-cell">Column 3</th>
-            </tr>
-            <tr class="data-board-row">
-                <td class="data-board-cell">Data 1</td>
-                <td class="data-board-cell">Data 2</td>
-                <td class="data-board-cell">Data 3</td>
-            </tr>
-            <tr class="data-board-row">
-                <td class="data-board-cell">Data 4</td>
-                <td class="data-board-cell">Data 5</td>
-                <td class="data-board-cell">Data 6</td>
+                <th class="data-board-cell">Reader ID</th>
+                <th class="data-board-cell">Reserve Date</th>
+                <th class="data-board-cell">Return Date</th>
             </tr>
         </table>
     </div>
@@ -271,8 +253,7 @@
 
 <script>
     // Set book details
-    let BookID = sessionStorage.getItem('BookID');
-    BookID = 78;
+    let BookID = sessionStorage.getItem('BookId');
 
     let book = {
         isbn: null,
@@ -286,7 +267,8 @@
         categories: [],
         authors: [],
         series: null,
-        indexInSeries: null
+        indexInSeries: null,
+        coverImage: null
     };
 
     fetch('https://localhost:8080/book/' + BookID)
@@ -300,6 +282,7 @@
             book.publishYear = data.publishYear;
             book.publisher = data.publisherId;
             book.language = data.languageId;
+            book.coverImage = data.coverImage
 
             // Call the functions to update the HTML after data is fetched
 
@@ -311,6 +294,8 @@
             updateBookDetails();
             updateAudiences()
             updateSeries()
+            fetchAndInsertData()
+            updateRating()
         });
 
     function updateBookDetails() {
@@ -319,8 +304,14 @@
         document.getElementById("edition").textContent = book.edition;
         document.getElementById("pages").textContent = book.pages;
         document.getElementById("publishYear").textContent = book.publishYear;
+        document.getElementById("coverImage").setAttribute("src", "data:image/jpeg;base64, " + book.coverImage);
+
+
 
     }
+
+
+
 
     function updatePublisher() {
         fetch('https://localhost:8080/publisher/' + book.publisher)
@@ -329,6 +320,9 @@
                 document.getElementById("publisher").textContent = data.publisherName;
             });
     }
+
+
+
 
     function updateLanguage() {
         fetch('https://localhost:8080/language/' + book.language)
@@ -472,39 +466,74 @@
 
 
 
+    function fetchAndInsertData() {
+        fetch('https://localhost:8080/book/getAllCopiesByBook?BookId=' + BookID)
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('copiesOfBook');
+                // Insert new data into the table
+                data.forEach(item => {
+                    const newRow = document.createElement('tr');
+                    newRow.className = 'data-board-row';
+                    newRow.onclick = function() {
+                        getHistory(item[0]);
+                    };
+                    newRow.innerHTML = `
+          <td class="data-board-cell">${item[0]}</td>
+          <td class="data-board-cell">${item[1]}</td>
+          <td class="data-board-cell">${item[2]}</td>
+        `;
+                    table.appendChild(newRow);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
 
 
 
-    // var authorsList = document.getElementById("authors");
-    // book.authors.forEach(function (author) {
-    //     var li = document.createElement("li");
-    //     li.textContent = author;
-    //     authorsList.appendChild(li);
-    // });
-    //
-    // var audiencesList = document.getElementById("audiences");
-    // book.audiences.forEach(function (author) {
-    //     var li = document.createElement("li");
-    //     li.textContent = author;
-    //     audiencesList.appendChild(li);
-    // });
-    //
-    // var seriesElement = document.getElementById("series");
-    // if (book.series) {
-    //     seriesElement.textContent = book.series;
-    // } else {
-    //     seriesElement.textContent = "N/A";
-    //     seriesElement.classList.add("not-available");
-    // }
-    //
-    // var indexInSeriesElement = document.getElementById("indexInSeries");
-    // if (book.indexInSeries) {
-    //     indexInSeriesElement.textContent = book.indexInSeries;
-    // } else {
-    //     indexInSeriesElement.textContent = "N/A";
-    //     indexInSeriesElement.classList.add("not-available");
-    // }
+    function getHistory(copyNumber) {
+        fetch('https://localhost:8080/book/getCopyHistory?copyId=' + copyNumber)
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('copyHistory');
+                // Remove existing table rows (except headers)
+                const rows = table.querySelectorAll('tr');
+                for (let i = 1; i < rows.length; i++) {
+                    rows[i].remove();
+                }
 
+                // Insert new data into the table
+                data.forEach(item => {
+                    const time = item[1];
+                    const formattedDate = formatDate(time);
+
+                    const newRow = document.createElement('tr');
+                    newRow.className = 'data-board-row';
+                    newRow.innerHTML = `
+          <td class="data-board-cell">${item[0]}</td>
+          <td class="data-board-cell">${formattedDate}</td>
+          <td class="data-board-cell">${item[2]}</td>
+        `;
+                    table.appendChild(newRow);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+
+
+    function formatDate(date) {
+        date = new Date(date);
+
+
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        const formatter = new Intl.DateTimeFormat('en-GB', options);
+        return formatter.format(date);
+    }
 
 
 
@@ -513,25 +542,43 @@
 
     // Rest of the JavaScript code
 
-    var ratingElement = document.getElementById("rating-stars");
-    var rating = 3;
+
+
+    function updateRating() {
+        fetch('https://localhost:8080/book/getBookRating?BookId=' + BookID)
+            .then(response => response.json())
+            .then(data => {
+
+                var ratingElement = document.getElementById("rating-stars");
+                var rating = 0;
+
+                document.getElementById("rating-number").textContent = data[0];
+                rating = data[0]
+
+                if(data[0] == null){
+                    rating = "לא נמצאו דירוגים";
+                }
+
+                ratingElement.innerHTML = '';
+
+                // Create filled stars based on rating
+                for (var i = 0; i < rating; i++) {
+                    var star = document.createElement("span");
+                    star.className = "star full-star";
+                    ratingElement.appendChild(star);
+                }
+
+                // Create empty stars for remaining
+                for (var j = rating; j < 5; j++) {
+                    var emptyStar = document.createElement("span");
+                    emptyStar.className = "star empty-star";
+                    ratingElement.appendChild(emptyStar);
+                }
+            });
+    }
 
     // Clear previous rating stars
-    ratingElement.innerHTML = '';
 
-    // Create filled stars based on rating
-    for (var i = 0; i < rating; i++) {
-        var star = document.createElement("span");
-        star.className = "star full-star";
-        ratingElement.appendChild(star);
-    }
-
-    // Create empty stars for remaining
-    for (var j = rating; j < 5; j++) {
-        var emptyStar = document.createElement("span");
-        emptyStar.className = "star empty-star";
-        ratingElement.appendChild(emptyStar);
-    }
 
 
 

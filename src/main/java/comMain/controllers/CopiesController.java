@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+
 @CrossOrigin
 @Validated
 @RestController
@@ -37,6 +39,7 @@ public class CopiesController {
     public CopiesEntity getById(@Valid @NotNull @PathVariable("id") Integer id) {
         return copiesService.getById(id);
     }
+
 
 
 }

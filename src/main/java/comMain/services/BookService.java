@@ -141,6 +141,20 @@ public class BookService {
          bookRepository.DeleteBook(copyID);
     }
 
+    @Transactional(readOnly = true)
+    public List<Object[]> getAllCopiesByBook(int BookId){
+        return bookRepository.getAllCopiesByBook(BookId);
+    }
 
+    @Transactional(readOnly = true)
+    public List<Object[]> getCopyHistory(int copyId){
+        return bookRepository.getCopyHistory(copyId);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Object[]> getBookRating(int BookId){
+        return bookRepository.getBookRating(BookId);
+    }
 
 }

@@ -185,7 +185,7 @@
     // Add book rows to the table
     let rows = "";
     data.forEach((book, index) => {
-      const [title, image, author, availability] = book;
+      const [title, image, author, availability, id] = book;
       if (title || author || availability) {
         let imgElement = document.createElement('img');
         if (image) {
@@ -193,20 +193,20 @@
         } else {
           imgElement.src = getBookImageUrl(title);
         }
-        rows += `<tr>
-          <td><img class="book-image" src="${imgElement.src}" alt="${title}"></td>
-          <td>${title}</td>
-          <td>${author}</td>
-          <td>${availability}</td>
-        </tr>`;
+        rows += `<tr data-id="${id}">
+        <td><img class="book-image" src="${imgElement.src}" alt="${title}"></td>
+        <td>${title}</td>
+        <td>${author}</td>
+        <td>${availability}</td>
+      </tr>`;
       }
     });
     tableBody.innerHTML = rows; // Set the table's content to the generated rows
 
     const tableRows = document.querySelectorAll("#book-table tbody tr");
     tableRows.forEach((row) => {
-      row.addEventListener("click", function () {
-        // Toggle selection on row click
+      row.addEventListener("dblclick", function () {
+        // Toggle selection on row double-click
         row.classList.toggle("selected");
 
         // Enable/disable action buttons based on the selected row
@@ -220,6 +220,10 @@
           editButton.removeAttribute("disabled");
           deleteButton.removeAttribute("disabled");
           createCopyButton.removeAttribute("disabled");
+
+          const selectedRowId = row.dataset.id;
+          sessionStorage.setItem('BookId', selectedRowId);
+          window.location.href = "BookDetails.html";
         } else {
           // Disable action buttons when zero or multiple rows are selected
           editButton.setAttribute("disabled", true);
@@ -231,6 +235,8 @@
       tableBody.appendChild(row);
     });
   }
+
+
 
   // Initial population of the book table
   fetch("https://localhost:8080/book/getBooksForWeb")

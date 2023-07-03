@@ -58,4 +58,14 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     @Procedure(name = "DeleteBook")
     void DeleteBook(@Param("copyID") int copyID);
 
+    @Procedure(name = "getAllCopiesByBook")
+    List<Object[]> getAllCopiesByBook(@Param("BookId") int BookId);
+
+    @Procedure(name = "getCopyHistory")
+    List<Object[]> getCopyHistory(@Param("copyId") int copyId);
+
+    @Procedure(name = "getBookRating")
+    List<Object[]> getBookRating(@Param("BookId") int BookId);
+
+
 }
