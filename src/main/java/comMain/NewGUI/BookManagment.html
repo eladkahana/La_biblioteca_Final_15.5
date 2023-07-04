@@ -149,9 +149,6 @@
     </div>
 
     <div id="book-actions" class="sticky sticky-actions">
-      <button id="edit-book-button" disabled>Edit</button>
-      <button id="delete-book-button" disabled>Delete</button>
-      <button id="create-copy-button" disabled>Create Copy</button>
       <button id="add-book-button">Add</button>
     </div>
   </div>
@@ -211,24 +208,12 @@
 
         // Enable/disable action buttons based on the selected row
         const selectedRows = document.querySelectorAll(".selected");
-        const editButton = document.querySelector("#edit-book-button");
-        const deleteButton = document.querySelector("#delete-book-button");
-        const createCopyButton = document.querySelector("#create-copy-button");
 
         if (selectedRows.length === 1) {
-          // Enable action buttons when a single row is selected
-          editButton.removeAttribute("disabled");
-          deleteButton.removeAttribute("disabled");
-          createCopyButton.removeAttribute("disabled");
 
           const selectedRowId = row.dataset.id;
           sessionStorage.setItem('BookId', selectedRowId);
           window.location.href = "BookDetails.html";
-        } else {
-          // Disable action buttons when zero or multiple rows are selected
-          editButton.setAttribute("disabled", true);
-          deleteButton.setAttribute("disabled", true);
-          createCopyButton.setAttribute("disabled", true);
         }
       });
 
@@ -265,45 +250,7 @@
     populateBookTable(filteredBooks);
   }
 
-  document.getElementById("edit-book-button").addEventListener("click", function () {
-    const selectedRow = document.querySelector(".selected");
-    if (selectedRow) {
-      // Get the book data from the selected row and perform the edit action
-      const title = selectedRow.cells[1].textContent;
-      const author = selectedRow.cells[2].textContent;
-      const availability = selectedRow.cells[3].textContent;
-      console.log("Edit book:", title, author, availability);
-    }
-  });
 
-  document.getElementById("delete-book-button").addEventListener("click", function () {
-    const selectedRows = document.querySelectorAll(".selected");
-    if (selectedRows.length > 0) {
-      // Iterate over selected rows and perform the delete action
-      selectedRows.forEach((row) => {
-        const title = row.cells[1].textContent;
-        const author = row.cells[2].textContent;
-        const availability = row.cells[3].textContent;
-        console.log("Delete book:", title, author, availability);
-      });
-
-      // Clear selection after performing the action
-      selectedRows.forEach((row) => {
-        row.classList.remove("selected");
-      });
-    }
-  });
-
-  document.getElementById("create-copy-button").addEventListener("click", function () {
-    const selectedRow = document.querySelector(".selected");
-    if (selectedRow) {
-      // Get the book data from the selected row and perform the create copy action
-      const title = selectedRow.cells[1].textContent;
-      const author = selectedRow.cells[2].textContent;
-      const availability = selectedRow.cells[3].textContent;
-      console.log("Create copy of book:", title, author, availability);
-    }
-  });
 
   document.getElementById("add-book-button").addEventListener("click", function () {
     window.location.href = "AddEditBook.html";

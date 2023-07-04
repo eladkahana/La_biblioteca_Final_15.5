@@ -138,6 +138,10 @@
             background-color: #f9f9f9;
         }
 
+        .data-board-row:hover {
+            background-color: #f3d39b;
+        }
+
         .data-board-cell {
             padding: 10px;
             border: 1px solid #cccccc;
@@ -151,15 +155,37 @@
             flex: 1;
             margin: 0 10px;
         }
-        
 
+        .sticky {
+            position: sticky;
+            top: 0;
+            background-color: var(--color-primary);
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sticky-actions {
+            top: 80px;
+            text-align: center;
+        }
+
+        #book-details-actions button {
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #116A7B;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 
 </head>
 
 <body>
 <div class="header">
-    <h1>Book Details</h1>
+    <h1 id="header"></h1>
     <div class="book-info">
         <img class="book-image" src="" alt="Book Cover" id="coverImage">
         <div class="rating">
@@ -173,6 +199,12 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="book-details-actions" class="sticky sticky-actions">
+    <button id="edit-book-button">Edit</button>
+    <button id="delete-book-button">Delete</button>
+    <button id="create-copy-button">Create Copy</button>
 </div>
 
 
@@ -198,6 +230,9 @@
 
             <h2>Publish Year:</h2>
             <p id="publishYear"></p>
+
+            <h2>Note:</h2>
+            <p id="note"></p>
         </div>
 
         <div class="details-column">
@@ -266,9 +301,11 @@
         publisher: null,
         categories: [],
         authors: [],
+        audiences: [],
         series: null,
         indexInSeries: null,
-        coverImage: null
+        coverImage: null,
+        note: null
     };
 
     fetch('https://localhost:8080/book/' + BookID)
@@ -283,6 +320,7 @@
             book.publisher = data.publisherId;
             book.language = data.languageId;
             book.coverImage = data.coverImage
+            book.note = data.note
 
             // Call the functions to update the HTML after data is fetched
 
@@ -301,9 +339,14 @@
     function updateBookDetails() {
         document.getElementById("isbn").textContent = book.isbn;
         document.getElementById("title").textContent = book.title;
+        document.getElementById("header").textContent = book.title;
         document.getElementById("edition").textContent = book.edition;
         document.getElementById("pages").textContent = book.pages;
         document.getElementById("publishYear").textContent = book.publishYear;
+
+        if(book.note) {
+            document.getElementById("note").textContent = book.note;
+        }
         document.getElementById("coverImage").setAttribute("src", "data:image/jpeg;base64, " + book.coverImage);
 
 
@@ -317,6 +360,7 @@
         fetch('https://localhost:8080/publisher/' + book.publisher)
             .then(response => response.json())
             .then(data => {
+                book.publisher = data.publisherName;
                 document.getElementById("publisher").textContent = data.publisherName;
             });
     }
@@ -328,6 +372,7 @@
         fetch('https://localhost:8080/language/' + book.language)
             .then(response => response.json())
             .then(data => {
+                book.language = data.language;
                 document.getElementById("language").textContent = data.language;
             });
     }
@@ -336,6 +381,7 @@
         fetch('https://localhost:8080/shelfmark/' + book.shelfmark)
             .then(response => response.json())
             .then(data => {
+                book.shelfmark = data.mark;
                 document.getElementById("shelfmark").textContent = data.mark;
             });
     }
@@ -348,6 +394,7 @@
                 for (const author of data) {
                     var li = document.createElement("li");
                     const Name = await getAuthor(author.authorId);
+                    book.authors.push(Name);
                     li.textContent = Name;
                     authorsList.appendChild(li);
 
@@ -400,6 +447,7 @@
                 for (const category of data) {
                     var li = document.createElement("li");
                     const Name = await getCategory(category.categoryId);
+                    book.categories.push(Name);
                     li.textContent = Name;
                     categoryList.appendChild(li);
 
@@ -428,6 +476,7 @@
                 for (const audience of data) {
                     var li = document.createElement("li");
                     const Name = await getAudience(audience.groupId);
+                    book.audiences.push(Name);
                     li.textContent = Name;
                     categoryList.appendChild(li);
 
@@ -453,6 +502,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.length !== 0) {
+                    book.series =  data[0][0];
+                    book.indexInSeries =  data[0][1];
                     document.getElementById("series").textContent = data[0][0];
                     document.getElementById("indexInSeries").textContent = data[0][1];
                 } else {
@@ -578,6 +629,44 @@
     }
 
     // Clear previous rating stars
+
+
+
+    document.getElementById("edit-book-button").addEventListener("click", function () {
+        window.location.href = "AddEditBook.html";
+        sessionStorage.setItem("book properties", JSON.stringify(book));
+    });
+
+
+
+    document.getElementById("delete-book-button").addEventListener("click", function () {
+        const selectedRows = document.querySelectorAll(".selected");
+        if (selectedRows.length > 0) {
+            // Iterate over selected rows and perform the delete action
+            selectedRows.forEach((row) => {
+                const title = row.cells[1].textContent;
+                const author = row.cells[2].textContent;
+                const availability = row.cells[3].textContent;
+                console.log("Delete book:", title, author, availability);
+            });
+
+            // Clear selection after performing the action
+            selectedRows.forEach((row) => {
+                row.classList.remove("selected");
+            });
+        }
+    });
+
+    document.getElementById("create-copy-button").addEventListener("click", function () {
+        const selectedRow = document.querySelector(".selected");
+        if (selectedRow) {
+            // Get the book data from the selected row and perform the create copy action
+            const title = selectedRow.cells[1].textContent;
+            const author = selectedRow.cells[2].textContent;
+            const availability = selectedRow.cells[3].textContent;
+            console.log("Create copy of book:", title, author, availability);
+        }
+    });
 
 
 
