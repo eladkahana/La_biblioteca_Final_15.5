@@ -169,6 +169,93 @@
       margin-right: 20%;
     }
 
+
+    .dialog {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      animation: fade-in 0.5s ease-out;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .dialog-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+      animation: zoom-in 0.5s ease-out;
+    }
+
+    @keyframes zoom-in {
+      from {
+        transform: translate(-50%, -50%) scale(0);
+      }
+      to {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    .dialog-image {
+      width: 310px;
+      height: 230px;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fade-in 1s ease-out 0.5s forwards;
+    }
+
+    .dialog-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+      opacity: 0;
+      animation: fade-in 1s ease-out 1s forwards;
+    }
+
+    .dialog-text {
+      font-size: 16px;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fade-in 1s ease-out 1.5s forwards;
+    }
+
+    .dialog-button {
+      background-color: #ff5e5e;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      opacity: 0;
+      animation: fade-in 1s ease-out 2s forwards;
+    }
+
+    .open-dialog-button {
+      background-color: #ff5e5e;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
@@ -280,12 +367,13 @@
     </div>
   </form>
 
-  <div id="confirmation-dialog">
-    <div id="confirmation-content">
-      <img id="barcode-image" src="" alt="Barcode Image">
-      <p id="success-message"></p>
-      <button id="print-button">Print</button>
-      <button id="confirm-button">OK</button>
+  <div id="dialog" class="dialog">
+    <div class="dialog-content">
+      <img id="barcode" src="" alt="Dialog Image" class="dialog-image">
+      <h2 class="dialog-title">Book created successfully</h2>
+      <p class="dialog-text">This is the copy's number.</p>
+      <button class="dialog-button" onclick="printImage()">Print Image</button>
+      <button class="dialog-button" onclick="closeDialog()">Close</button>
     </div>
   </div>
 
@@ -469,6 +557,7 @@
   }
 
   let bookID = -1;
+  let copyID = -1;
   bookID = sessionStorage.getItem("BookId")
 
 
@@ -544,7 +633,7 @@
 
       if (response.ok) {
         console.log('Form submitted successfully');
-        bookID = await response.json();
+        copyID = await response.json();
         // Reset the form
         document.getElementById('myForm').reset();
 
@@ -602,17 +691,9 @@
     authorList = [];
     audienceList = [];
 
-    if (bookID > -1) {
 
-        // Set the success message
-        successMessage.textContent = 'The book saved successfully!';
-
-        // Load the barcode image from the URL
-        barcodeImage.src = 'https://localhost:8080/barcode/' + bookID;
-
-        // Show the confirmation dialog
-        confirmationDialog.classList.add('visible');
-
+    if(BookID > -1){
+      openDialog()
     }
 
   });
@@ -874,6 +955,33 @@
     }
   }
 
+
+  function openDialog() {
+    var image = document.getElementById('barcode')
+    image.src = 'https://localhost:8080/barcode/' + copyID;
+    var dialog = document.getElementById("dialog");
+    dialog.style.display = "block";
+  }
+
+  function closeDialog() {
+    var dialog = document.getElementById("dialog");
+    dialog.style.display = "none";
+  }
+
+  function printImage() {
+    var image = document.querySelector(".dialog-image");
+    image.style.width = "310px";
+    image.style.height = "230px";
+
+    var printWindow = window.open("", "_blank");
+    printWindow.document.write('<html><head><title>Print Image</title></head><body><img src="' + image.src + '"></body></html>');
+    printWindow.document.close();
+    image.style.width = "310px";
+    image.style.height = "230px";
+    printWindow.onload = function() {
+      printWindow.print();
+    };
+  }
 
 
 </script>

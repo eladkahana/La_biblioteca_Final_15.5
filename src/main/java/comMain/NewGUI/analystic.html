@@ -34,20 +34,19 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       padding: 20px;
       margin-bottom: 40px;
-
+      transition: height 0.3s;
     }
 
     .card:last-child {
       margin-bottom: 0;
     }
 
-    h1, h2 {
-      text-align: center;
-      color: #116A7B;
-      margin-bottom: 20px;
-    }
 
     .label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
       margin-bottom: 10px;
       color: #5D5C61;
       font-size: 24px;
@@ -56,10 +55,55 @@
 
     .label span {
       font-weight: bold;
-      margin-right: 5px;
+      margin-top: 10px;
     }
+
+    .label i {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+
+    h1, h2 {
+      text-align: center;
+      color: #116A7B;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.04);
+    }
+
+    .icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: #116A7B;
+      text-align: center;
+      margin-bottom: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .icon {
+      transform: rotate(360deg);
+      transform-origin: center;
+    }
+
+
+
+    .info {
+      text-align: center;
+    }
+
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
 </head>
 <body>
 <div class="analytics-container">
@@ -70,15 +114,21 @@
 
 <div class="info-container">
   <div class="card">
-    <div class="label" id="Most Borrowed"><span>Most Borrowed Book:</span></div>
+    <div class="label" id="Most-Borrowed">
+      <span>Most Borrowed Book:</span>
+    </div>
   </div>
 
   <div class="card">
-    <div class="label" id="Monthly Loans"><span>Monthly Loans:</span></div>
+    <div class="label" id="Monthly-Loans">
+      <span>Monthly Loans:</span>
+    </div>
   </div>
 
   <div class="card">
-    <div class="label" id="Daily Loans"><span>Daily Loans:</span></div>
+    <div class="label" id="Daily-Loans">
+      <span>Daily Loans:</span>
+    </div>
   </div>
 </div>
 
@@ -168,33 +218,41 @@
   fetch('https://localhost:8080/book/MostReservedBook')
           .then(response => response.json())
           .then(data => {
-            document.getElementById("Most Borrowed").innerHTML = "<strong>Most Borrowed book:</strong> " + data;
+            document.getElementById("Most-Borrowed").innerHTML = `
+                <div class="icon">
+              <i class="fas fa-book"></i></div>
+              <span><strong>Most Borrowed Book:</strong> ${data}</span>
+            `;
           })
           .catch(error => {
             console.error('Error fetching:', error);
           });
-
 
   fetch('https://localhost:8080/reserve/MonthlyResrvesAmount')
           .then(response => response.json())
           .then(data => {
-            document.getElementById("Monthly Loans").innerHTML = "<strong>Monthly Loans:</strong> " + data;
+            document.getElementById("Monthly-Loans").innerHTML = `
+              <div class="icon">
+              <i class="fas fa-calendar-alt"></i> </div>
+              <span><strong>Monthly Loans:</strong> ${data}</span>
+            `;
           })
           .catch(error => {
             console.error('Error fetching:', error);
           });
-
 
   fetch('https://localhost:8080/reserve/todayResrvesAmount')
           .then(response => response.json())
           .then(data => {
-            document.getElementById("Daily Loans").innerHTML = "<strong>Daily Loans:</strong> " + data;
+            document.getElementById("Daily-Loans").innerHTML = `
+              <div class="icon">
+              <i class="fas fa-clock"></i></div>
+              <span><strong>Daily Loans:</strong> ${data}</span>
+            `;
           })
           .catch(error => {
             console.error('Error fetching:', error);
           });
-
-
 
   function displaydays(data) {
     data.forEach(line => {

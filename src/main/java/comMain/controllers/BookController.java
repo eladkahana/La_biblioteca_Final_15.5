@@ -107,13 +107,11 @@ public class BookController {
 
         List<Object[]> book = bookService.SuggestBooks(readerID);
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccessControlAllowOrigin("*"); // Allow requests from any domain
         return ResponseEntity.ok().headers(headers).body(book);
     }
 
     @GetMapping("/SuggestBooks")
     public List<Object[]> SuggestBooks(int readerID){
-
         return bookService.SuggestBooks(readerID);
     }
 

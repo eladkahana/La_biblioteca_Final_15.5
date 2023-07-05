@@ -109,7 +109,7 @@ public class MailTypes {
             if(bookSuggest != null) {
 
                 content.append("<br><br><br>בנוסף אנו ממליצים לך להשאיל את הספר: <br>");
-                content.append("'" + bookSuggest.get(0)[4] + "'");
+                content.append("'" + bookSuggest.get(0)[0] + "'");
                 content.append("<br>חושבים שתהנה לקרוא אותו :) <br>");
                 content.append("<br> תודה רבה ויום טוב!<br>");
                 content.append("<br> ספריית - La Biblioteca<br>");

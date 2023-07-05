@@ -57,7 +57,7 @@
 
         .rating-stars {
             color: gold;
-            font-size: 24px;
+            font-size: 35px;
         }
 
         .star {
@@ -161,7 +161,6 @@
             top: 0;
             background-color: var(--color-primary);
             padding: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .sticky-actions {
@@ -179,12 +178,191 @@
             border-radius: 4px;
             cursor: pointer;
         }
-    </style>
 
+
+
+
+        .data-board.getInformation.animate {
+            animation: scaleAnimation 2s;
+        }
+
+        @keyframes scaleAnimation {
+            0% { transform: scale(1.05); }
+            90% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Fade-in animation */
+        .animated {
+            animation: fade-in 1s ease;
+        }
+
+        @keyframes fade-in {
+            0% { opacity: 0; scale: 1.0}
+            50% { opacity: 0.5; scale: 1.05}
+            100% { opacity: 1; scale: 1.0 }
+        }
+
+        /* Hover animation */
+        .book-image:hover {
+            transform: scale(1.1);
+            transition: transform 0.2s ease-in-out;
+            /* Add any other styles for the hover effect */
+        }
+
+
+
+        /* Button animation */
+        .action-button {
+            transition: transform 0.2s ease-in-out;
+        }
+        .action-button:hover {
+            transform: scale(1.05);
+            /* Add any other styles for the hover effect */
+        }
+        .top{
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .delete-book-button {
+            display: none;
+        }
+
+        .selected-row {
+            background-color: #f3d39b !important;
+        }
+
+
+        .dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            animation: fade-in 0.5s ease-out;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .dialog-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            animation: zoom-in 0.5s ease-out;
+        }
+
+        @keyframes zoom-in {
+            from {
+                transform: translate(-50%, -50%) scale(0);
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .dialog-image {
+            width: 310px;
+            height: 230px;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fade-in 1s ease-out 0.5s forwards;
+        }
+
+        .dialog-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fade-in 1s ease-out 1s forwards;
+        }
+
+        .dialog-text {
+            font-size: 16px;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fade-in 1s ease-out 1.5s forwards;
+        }
+
+        .dialog-button {
+            background-color: #ff5e5e;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            opacity: 0;
+            animation: fade-in 1s ease-out 2s forwards;
+        }
+
+        .open-dialog-button {
+            background-color: #ff5e5e;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+        $(document).ready(function() {
+            // Add event listener to table rows
+            $("#copiesOfBook").on("click", "tr.data-board-row", function () {
+                // Remove "selected-row" class from all rows
+                $("tr.data-board-row").removeClass("selected-row");
+                // Add "selected-row" class to the clicked row
+                $(this).addClass("selected-row");
+
+                // Animate the other table
+                $("#copyHistory").addClass("animated");
+                setTimeout(function () {
+                    $("#copyHistory").removeClass("animated");
+                }, 1000); // Adjust the duration of animation (in milliseconds) as needed
+            });
+        });
+        $(document).ready(function() {
+            // Add event listener to table rows
+            $("#copiesOfBook").on("click", "tr.data-board-row", function () {
+                // Remove "selected-row" class from all rows
+                $("tr.data-board-row").removeClass("selected-row");
+                // Add "selected-row" class to the clicked row
+                $(this).addClass("selected-row");
+            });
+        });
+        $(document).ready(function() {
+            // Get the copies table row and show the delete button
+            $('#copiesOfBook').on('click', '.data-board-row', function() {
+                $('.delete-book-button').show();
+            });
+
+            // Change the order of buttons
+            $('#book-details-actions').append($('.delete-book-button'));
+        });
+    </script>
 </head>
 
 <body>
-<div class="header">
+<div class="top">
+<div class="header" style="">
     <h1 id="header"></h1>
     <div class="book-info">
         <img class="book-image" src="" alt="Book Cover" id="coverImage">
@@ -201,12 +379,13 @@
     </div>
 </div>
 
-<div id="book-details-actions" class="sticky sticky-actions">
-    <button id="edit-book-button">Edit</button>
-    <button id="delete-book-button">Delete</button>
-    <button id="create-copy-button">Create Copy</button>
-</div>
 
+    <div id="book-details-actions" class="sticky sticky-actions">
+        <button id="edit-book-button" class="edit-book-button action-button">Edit</button>
+        <button id="create-copy-button" class="create-copy-button action-button">Create Copy</button>
+        <button id="delete-book-button" class="delete-book-button action-button">Delete</button>
+    </div>
+</div>
 
 <div class="container">
 
@@ -263,8 +442,9 @@
         </div>
     </div>
 
-    <div class="data-board">
-        <h2 class="data-board-header">Copies of the Book</h2>
+    <div class="data-board setInformation">
+        <h2 style="text-align: center" class="data-board-header">Copies of the Book</h2>
+        <div class="data-board-content">
         <table class="data-board-table" id="copiesOfBook">
             <tr class="data-board-row">
                 <th class="data-board-cell">Copy Number</th>
@@ -272,10 +452,12 @@
                 <th class="data-board-cell">Availability</th>
             </tr>
         </table>
+        </div>
     </div>
 
-    <div class="data-board">
-        <h2 class="data-board-header" >Copy History</h2>
+    <div class="data-board getInformation">
+        <h2 style="text-align: center" class="data-board-header">Copy History</h2>
+        <div class="data-board-content">
         <table class="data-board-table" id="copyHistory">
             <tr class="data-board-row">
                 <th class="data-board-cell">Reader ID</th>
@@ -283,10 +465,24 @@
                 <th class="data-board-cell">Return Date</th>
             </tr>
         </table>
+        </div>
+    </div>
+</div>
+<div id="dialog" class="dialog">
+    <div class="dialog-content">
+        <img id="barcode" src="" alt="Dialog Image" class="dialog-image">
+        <h2 class="dialog-title">Copy created successfully</h2>
+        <p class="dialog-text">This is the copy's number.</p>
+        <button class="dialog-button" onclick="printImage()">Print Image</button>
+        <button class="dialog-button" onclick="closeDialog()">Close</button>
     </div>
 </div>
 
+
 <script>
+
+
+
     // Set book details
     let BookID = sessionStorage.getItem('BookId');
 
@@ -528,6 +724,7 @@
                     newRow.className = 'data-board-row';
                     newRow.onclick = function() {
                         getHistory(item[0]);
+
                     };
                     newRow.innerHTML = `
           <td class="data-board-cell">${item[0]}</td>
@@ -640,35 +837,64 @@
 
 
     document.getElementById("delete-book-button").addEventListener("click", function () {
-        const selectedRows = document.querySelectorAll(".selected");
-        if (selectedRows.length > 0) {
-            // Iterate over selected rows and perform the delete action
-            selectedRows.forEach((row) => {
-                const title = row.cells[1].textContent;
-                const author = row.cells[2].textContent;
-                const availability = row.cells[3].textContent;
-                console.log("Delete book:", title, author, availability);
-            });
+        // Iterate over selected rows and perform the delete action
+        selectedRows.forEach((row) => {
+            const title = row.cells[1].textContent;
+            const author = row.cells[2].textContent;
+            const availability = row.cells[3].textContent;
+            console.log("Delete book:", title, author, availability);
+        });
 
-            // Clear selection after performing the action
-            selectedRows.forEach((row) => {
-                row.classList.remove("selected");
-            });
-        }
+        // Clear selection after performing the action
+        selectedRows.forEach((row) => {
+            row.classList.remove("selected");
+        });
+
     });
+
+    let copy = -1;
 
     document.getElementById("create-copy-button").addEventListener("click", function () {
-        const selectedRow = document.querySelector(".selected");
-        if (selectedRow) {
             // Get the book data from the selected row and perform the create copy action
-            const title = selectedRow.cells[1].textContent;
-            const author = selectedRow.cells[2].textContent;
-            const availability = selectedRow.cells[3].textContent;
-            console.log("Create copy of book:", title, author, availability);
-        }
+        fetch('https://localhost:8080/book/createCopy?bookID=' + BookID, {
+            method: 'POST'
+        })
+            .then(response => response.json())
+            .then(data => {
+                copy = data;
+                openDialog();
+            });
+
     });
 
 
+    function openDialog() {
+        var image = document.getElementById('barcode');
+        image.src = 'https://localhost:8080/barcode/' + copy;
+        var dialog = document.getElementById("dialog");
+        dialog.style.display = "block";
+    }
+
+    function closeDialog() {
+        var dialog = document.getElementById("dialog");
+        dialog.style.display = "none";
+        location.reload();
+    }
+
+    function printImage() {
+        var image = document.querySelector(".dialog-image");
+        image.style.width = "310px";
+        image.style.height = "230px";
+
+        var printWindow = window.open("", "_blank");
+        printWindow.document.write('<html><head><title>Print Image</title></head><body><img src="' + image.src + '"></body></html>');
+        printWindow.document.close();
+        image.style.width = "310px";
+        image.style.height = "230px";
+        printWindow.onload = function() {
+            printWindow.print();
+        };
+    }
 
 
 
