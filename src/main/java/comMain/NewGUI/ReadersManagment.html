@@ -231,7 +231,7 @@
 
 
     document.getElementById("add-reader-button").addEventListener("click", function () {
-        window.open("AddEditReader.html", "popupWindow", "width=600,height=400");
+        window.location.href = "AddEditReader.html";
 
         // Repopulate the table with the updated reader data
         populateReaderTable(readerData);

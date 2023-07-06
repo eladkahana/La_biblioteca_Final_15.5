@@ -434,7 +434,7 @@
     let readerData = sessionStorage.getItem("reader properties");
     let reader = JSON.parse(readerData);
 
-    document.getElementById("ID").value = reader.ID;
+    document.getElementById("ID").value = reader.IDno;
     document.getElementById("firstname").value = reader.firstName;
     document.getElementById("lastname").value = reader.lastName;
     document.getElementById("birthdate").value = reader.birthDate;
@@ -449,6 +449,8 @@
   }
 
   async function Edit() {
+    let readerData = sessionStorage.getItem("reader properties");
+    let reader = JSON.parse(readerData);
     // Get the book data from session storage
 
     // Get form values
@@ -463,7 +465,7 @@
 
     // Prepare data for submission
     const formData = new FormData();
-    formData.append('ID', ID);
+    formData.append('IDno', ID);
     formData.append('firstName', firstName);
     formData.append('lastName', lastName);
     formData.append('birthDate', birthDate);
@@ -471,6 +473,7 @@
     formData.append('address', address);
     formData.append('phoneNo', phoneNumber);
     formData.append('Email', Email);
+    formData.append('ID', reader.ID);
 
     try {
       const response = await fetch('https://localhost:8080/readers/EditReader', {
@@ -480,7 +483,6 @@
 
       if (response.ok) {
         console.log('Form submitted successfully');
-        bookID = await response.json();
         // Reset the form
         document.getElementById('myForm').reset();
       } else {
