@@ -133,6 +133,136 @@
       background-color: #e0e0e0;
     }
 
+    /* Book model styles */
+
+    .book-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1300px;
+    }
+
+    @keyframes initAnimation {
+      0% {
+        transform: rotateY(0deg);
+      }
+      100% {
+        transform: rotateY(-19deg);
+      }
+    }
+
+    .book-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 650px; /* 50% of the original perspective value */
+      margin: 20px; /* Add some space around the container */
+    }
+
+    @keyframes initAnimation {
+      0% {
+        transform: rotateY(0deg);
+      }
+      100% {
+        transform: rotateY(-30deg); /* Adjust the rotation angle as needed */
+      }
+    }
+
+    .book {
+      width: 100px; /* 50% of the original width */
+      height: 150px; /* 50% of the original height */
+      position: relative;
+      transform-style: preserve-3d;
+      transform: rotateY(-30deg); /* Adjust the rotation angle as needed */
+      transition: 1s ease;
+      animation: 1s ease 0s 1 initAnimation;
+    }
+
+    .book-container:hover .book,
+    .book-container:focus .book {
+      transform: rotateY(0deg);
+    }
+
+    .book > :first-child {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: red;
+      width: 100px; /* 50% of the original width */
+      height: 150px; /* 50% of the original height */
+      transform: translateZ(12.5px); /* 50% of the original translation value */
+      background-color: #01060f;
+      border-radius: 0 1px 1px 0; /* Adjust the border radius as needed */
+      box-shadow: 2.5px 2.5px 10px #666; /* Adjust the box shadow as needed */
+    }
+
+    .book::before {
+      position: absolute;
+      content: ' ';
+      background-color: blue;
+      left: 0;
+      top: 1.5px; /* 50% of the original top value */
+      width: 24px; /* 50% of the original width */
+      height: 147px; /* 50% of the original height */
+      transform: translateX(86px) rotateY(90deg); /* Adjust the translation values as needed */
+      background: linear-gradient(
+              90deg,
+              #fff 0%,
+              #f9f9f9 2.5%,
+              #fff 5%,
+              #f9f9f9 7.5%,
+              #fff 10%,
+              #f9f9f9 12.5%,
+              #fff 15%,
+              #f9f9f9 17.5%,
+              #fff 20%,
+              #f9f9f9 22.5%,
+              #fff 25%,
+              #f9f9f9 27.5%,
+              #fff 30%,
+              #f9f9f9 32.5%,
+              #fff 35%,
+              #f9f9f9 37.5%,
+              #fff 40%,
+              #f9f9f9 42.5%,
+              #fff 45%,
+              #f9f9f9 47.5%,
+              #fff 50%,
+              #f9f9f9 52.5%,
+              #fff 55%,
+              #f9f9f9 57.5%,
+              #fff 60%,
+              #f9f9f9 62.5%,
+              #fff 65%,
+              #f9f9f9 67.5%,
+              #fff 70%,
+              #f9f9f9 72.5%,
+              #fff 75%,
+              #f9f9f9 77.5%,
+              #fff 80%,
+              #f9f9f9 82.5%,
+              #fff 85%,
+              #f9f9f9 87.5%,
+              #fff 90%,
+              #f9f9f9 92.5%,
+              #fff 95%,
+              #f9f9f9 97.5%,
+              #fff 100%
+      );
+    }
+
+    .book::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: ' ';
+      width: 100px; /* 50% of the original width */
+      height: 150px; /* 50% of the original height */
+      transform: translateZ(-12.5px); /* 50% of the original translation value */
+      background-color: #01060f;
+      border-radius: 0 1px 1px 0; /* Adjust the border radius as needed */
+      box-shadow: -5px 0 25px 5px #666; /* Adjust the box shadow as needed */
+    }
 
   </style>
 </head>
@@ -178,6 +308,11 @@
         <h2 dir="rtl" align="center">ההמלצה שלנו :)</h2>
         <p class="suggest" id="suggest" style="font-size: 19px" align="center"></p>
       </div>
+      <div class="book-container">
+        <a class="book" href="" target="_blank" rel="noreferrer noopener">
+          <img alt="" src="" />
+        </a>
+      </div>
     </div>
   </div>
 </main>
@@ -202,12 +337,10 @@
 
   const url = `https://localhost:8080/book/SuggestBooksWeb?${params.toString()}`;
 
-  fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  }).then(response => response.json())
+  let imageURL = null;
+
+  fetch(url)
+          .then(response => response.json())
           .then(data => {
             const suggestElement = document.getElementById("suggest");
             suggestElement.innerHTML = "חושבים שתיהנו לקרוא את הספר:<br>";
@@ -217,18 +350,28 @@
               suggestElement.innerHTML +=
                       `<p style="font-size: 50px; color: crimson; font-weight: bold" align="center">${title}<br></p>`;
 
+              fetch('https://localhost:8080/book/' + item[1])
+                      .then(response => response.json())
+                      .then(data => {
+                        imageURL = "data:image/jpeg;base64, " + data.coverImage;
+
+                        const bookContainer = document.querySelector('.book-container');
+                        const bookImage = bookContainer.querySelector('img');
+
+                        if (imageURL !== null) {
+                          bookImage.src = imageURL;
+                        }
+                      })
+                      .catch(error => {
+                        console.error('Error:', error);
+                      });
             });
           })
           .catch(error => {
             console.error('Error:', error);
           });
-
-
-
-
-
-
 </script>
+
 
 </body>
 </html>

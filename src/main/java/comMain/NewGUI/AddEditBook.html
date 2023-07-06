@@ -404,6 +404,14 @@
   </div>
 
 
+  <div id="EditDialog" class="dialog">
+    <div class="dialog-content">
+      <h2 class="dialog-title">Book edited successfully</h2>
+      <button class="dialog-button"  onclick="closeEditDialog()">Close</button>
+    </div>
+  </div>
+
+
 
 </div>
 <script>
@@ -744,7 +752,6 @@
     let bookData = sessionStorage.getItem("book properties");
     let book = JSON.parse(bookData);
 
-    console.log(book);
 
 
 
@@ -865,14 +872,15 @@
 
     if (imageFile) {
       formData.append('coverImage', imageFile);
-    } else if (book.coverImage[0] == null){
+    } else if (book.coverImage == null) {
       const emptyBlob = new Blob([], { type: 'application/octet-stream' });
       formData.append('coverImage', emptyBlob);
+    } else {
+      const varbinaryData = base64ToVarbinary(book.coverImage);
+      const varbinaryBlob = new Blob([varbinaryData], { type: 'application/octet-stream' });
+      formData.append('coverImage', varbinaryBlob);
     }
-    else{
-      // Create an empty Blob to represent the absence of an image file
-      formData.append('coverImage', book.coverImage[0]);
-    }
+
 
     try {
       const response = await fetch('https://localhost:8080/book/EditBook', {
@@ -882,7 +890,6 @@
 
       if (response.ok) {
         console.log('Form submitted successfully');
-        bookID = await response.json();
         // Reset the form
         document.getElementById('myForm').reset();
       } else {
@@ -958,6 +965,9 @@
       categoryList = [];
       authorList = [];
       audienceList = [];
+
+
+      openEditDialog()
     } catch (error) {
       console.error('Error:', error);
     }
@@ -977,6 +987,18 @@
     dialog.style.display = "none";
   }
 
+
+  function openEditDialog() {
+    var dialog = document.getElementById("EditDialog");
+    dialog.style.display = "block";
+  }
+
+  function closeEditDialog() {
+    document.getElementById('myForm').reset();
+    var dialog = document.getElementById("EditDialog");
+    dialog.style.display = "none";
+  }
+
   function printImage() {
     var image = document.querySelector(".dialog-image");
     image.style.width = "310px";
@@ -991,6 +1013,18 @@
       printWindow.print();
     };
   }
+
+  // Convert base64-encoded string to varbinary (Uint8Array)
+  function base64ToVarbinary(base64String) {
+    const binaryString = atob(base64String);
+    const varbinary = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      varbinary[i] = binaryString.charCodeAt(i);
+    }
+    return varbinary;
+  }
+
+
 
 
 </script>

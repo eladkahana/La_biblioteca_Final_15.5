@@ -649,7 +649,7 @@
         await fetch(`https://localhost:8080/firstName/${fnID}`)
             .then(response => response.json())
             .then(data => {
-                name = data.firstName + " ";
+                name = data.firstName + ", ";
             });
 
         await fetch(`https://localhost:8080/lastName/${lnID}`)
