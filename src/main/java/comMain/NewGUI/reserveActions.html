@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Library Book Return</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      background-color: #C2DEDC;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 30%;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ECE5C7;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-top: 0;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input[type="text"],
+    select {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #CDC2AE;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      border-color: #116A7B;
+    }
+
+    .rating-stars input {
+      display: none;
+    }
+
+    .rating-stars label {
+      display: inline-block;
+      font-size: 30px;
+      margin-right: 5px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .rating-stars label:before {
+      content: "\2605";
+      font-family: FontAwesome;
+      color: #ccc;
+    }
+
+    .rating-stars input:checked ~ label:before,
+    .rating-stars label:hover:before {
+      color: gold;
+    }
+
+    .submit-button {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+      background-color: #428bca;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      animation: pulse 1.5s infinite;
+    }
+
+    .submit-button:hover {
+      background-color: #3276b1;
+    }
+
+    .submit-button:active {
+      transform: scale(0.95);
+    }
+
+    .submit-button i {
+      margin-right: 5px;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(66, 139, 202, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(66, 139, 202, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(66, 139, 202, 0);
+      }
+    }
+  </style>
+  <script>
+    // Function to handle form submission
+    function returnBook() {
+      // Get the form values
+      var readerId = document.getElementById("readerId").value;
+      var copyId = document.getElementById("copyId").value;
+      var ratingElement = document.querySelector('input[name="rating"]:checked');
+      var rating = ratingElement ? parseInt(ratingElement.value) : null;
+
+
+      // Perform validation
+      if (readerId === "" || copyId === "") {
+        alert("Please fill in all the fields and provide a rating.");
+        return false;
+      }
+
+      var formData = new FormData();
+      formData.append('readerIDno', readerId);
+      formData.append('copyID', copyId);
+
+      fetch('https://localhost:8080/reserve/AddReturnBook', {
+        method: 'PUT',
+        body: formData
+      });
+
+      if (rating !== null) {
+        formData.delete('readerIDno');
+        formData.append('IDno', readerId);
+
+        formData.append('rank', rating);
+
+        fetch('https://localhost:8080/reserve/AddRank', {
+          method: 'PUT',
+          body: formData
+        });
+      }
+
+      // Display success message
+      var confirmationMessage = document.createElement("p");
+      confirmationMessage.textContent = "Book returned successfully!";
+      confirmationMessage.style.color = "#ff0000";
+      var form = document.querySelector("form");
+      form.appendChild(confirmationMessage);
+
+      // Clear form fields
+      document.getElementById("readerId").value = "";
+      document.getElementById("copyId").value = "";
+      var ratingInputs = document.querySelectorAll('input[name="rating"]');
+      ratingInputs.forEach(function(input) {
+        input.checked = false;
+      });
+
+      // Remove the message after 5 seconds
+      setTimeout(function() {
+        confirmationMessage.remove();
+      }, 5000);
+
+      return false;
+    }
+  </script>
+
+
+
+</head>
+<body>
+<div class="container">
+  <h1>Return Book</h1>
+  <form onsubmit="return returnBook()">
+    <div class="form-group">
+      <label for="readerId">Reader ID:</label>
+      <input type="text" id="readerId" required>
+    </div>
+
+    <div class="form-group">
+      <label for="copyId">Copy ID:</label>
+      <input type="text" id="copyId" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating:</label>
+      <div class="rating-stars">
+        <input type="radio" id="star5" name="rating" value="5" required>
+        <label for="star5"></label>
+
+        <input type="radio" id="star4" name="rating" value="4">
+        <label for="star4"></label>
+
+        <input type="radio" id="star3" name="rating" value="3">
+        <label for="star3"></label>
+
+        <input type="radio" id="star2" name="rating" value="2">
+        <label for="star2"></label>
+
+        <input type="radio" id="star1" name="rating" value="1">
+        <label for="star1"></label>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-button rotate">
+      <i class="fas fa-check-circle"></i> Return Book
+    </button>
+  </form>
+</div>
+</body>
+</html>
