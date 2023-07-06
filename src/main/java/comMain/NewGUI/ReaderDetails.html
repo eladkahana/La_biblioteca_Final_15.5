@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Book Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-size: cover;
+      background-position: center;
+      color: #333333;
+      padding: 20px;
+      margin: 0;
+      background-color: #ECE5C7; /* Update background color */
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      margin: 20px auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .book-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .book-image {
+      max-width: 100px;
+      max-height: 150px;
+      border: 1px solid #cccccc;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      margin-left: 20px;
+    }
+
+    .rating-number {
+      font-size: 24px;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    .rating-stars {
+      color: gold;
+      font-size: 35px;
+    }
+
+    .star {
+      margin-right: 2px;
+    }
+
+    .star:before {
+      content: "☆";
+      color: gold;
+    }
+
+    .full-star:before {
+      content: "★";
+      color: gold;
+    }
+
+    .book-details {
+      flex: 1;
+      display: flex;
+      background-color: #CDC2AE; /* Update background color */
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin: 20px;
+    }
+
+    .details-column {
+      flex: 1;
+      margin-left: 20px;
+    }
+
+    h1 {
+      color: #116A7B; /* Update heading color */
+    }
+
+    h2 {
+      margin-top: 20px;
+      color: #116A7B; /* Update heading color */
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    .not-available {
+      color: #999999;
+    }
+
+    .data-board-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .data-board {
+      flex: 1;
+      background-color: #C2DEDC; /* Update background color */
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin: 20px;
+    }
+
+    .data-board-header {
+      color: #116A7B; /* Update heading color */
+    }
+
+    .data-board-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-board-row {
+      background-color: #f9f9f9;
+    }
+
+    .data-board-row:hover {
+      background-color: #f3d39b;
+    }
+
+    .data-board-cell {
+      padding: 10px;
+      border: 1px solid #cccccc;
+    }
+
+    .data-board-cell-header {
+      font-weight: bold;
+    }
+
+    .info-section {
+      flex: 1;
+      margin: 0 10px;
+    }
+
+    .sticky {
+      position: sticky;
+      top: 0;
+      background-color: var(--color-primary);
+      padding: 10px;
+    }
+
+    .sticky-actions {
+      top: 80px;
+      text-align: center;
+    }
+
+    #book-details-actions button {
+      margin-bottom: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #116A7B;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+
+
+
+    .data-board.getInformation.animate {
+      animation: scaleAnimation 2s;
+    }
+
+    @keyframes scaleAnimation {
+      0% { transform: scale(1.05); }
+      90% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* Fade-in animation */
+    .animated {
+      animation: fade-in 1s ease;
+    }
+
+    @keyframes fade-in {
+      0% { opacity: 0; scale: 1.0}
+      50% { opacity: 0.5; scale: 1.05}
+      100% { opacity: 1; scale: 1.0 }
+    }
+
+    /* Hover animation */
+    .book-image:hover {
+      transform: scale(1.1);
+      transition: transform 0.2s ease-in-out;
+      /* Add any other styles for the hover effect */
+    }
+
+
+
+    /* Button animation */
+    .action-button {
+      transition: transform 0.2s ease-in-out;
+    }
+    .action-button:hover {
+      transform: scale(1.05);
+      /* Add any other styles for the hover effect */
+    }
+    .top{
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .delete-book-button {
+      display: none;
+    }
+
+    .selected-row {
+      background-color: #f3d39b !important;
+    }
+
+
+    .dialog {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      animation: fade-in 0.5s ease-out;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .dialog-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+      animation: zoom-in 0.5s ease-out;
+    }
+
+    @keyframes zoom-in {
+      from {
+        transform: translate(-50%, -50%) scale(0);
+      }
+      to {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    .dialog-image {
+      width: 310px;
+      height: 230px;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fade-in 1s ease-out 0.5s forwards;
+    }
+
+    .dialog-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+      opacity: 0;
+      animation: fade-in 1s ease-out 1s forwards;
+    }
+
+    .dialog-text {
+      font-size: 16px;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fade-in 1s ease-out 1.5s forwards;
+    }
+
+    .dialog-button {
+      background-color: #ff5e5e;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      opacity: 0;
+      animation: fade-in 1s ease-out 2s forwards;
+    }
+
+    .open-dialog-button {
+      background-color: #ff5e5e;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .back-button {
+      display: inline-block;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: rgba(100, 135, 152, 0.95);
+    }
+
+
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+
+    $(document).ready(function() {
+      // Add event listener to table rows
+      $("#copiesOfBook").on("click", "tr.data-board-row", function () {
+        // Remove "selected-row" class from all rows
+        $("tr.data-board-row").removeClass("selected-row");
+        // Add "selected-row" class to the clicked row
+        $(this).addClass("selected-row");
+
+        // Animate the other table
+        $("#copyHistory").addClass("animated");
+        setTimeout(function () {
+          $("#copyHistory").removeClass("animated");
+        }, 1000); // Adjust the duration of animation (in milliseconds) as needed
+      });
+    });
+    $(document).ready(function() {
+      // Add event listener to table rows
+      $("#copiesOfBook").on("click", "tr.data-board-row", function () {
+        // Remove "selected-row" class from all rows
+        $("tr.data-board-row").removeClass("selected-row");
+        // Add "selected-row" class to the clicked row
+        $(this).addClass("selected-row");
+      });
+    });
+    $(document).ready(function() {
+      // Get the copies table row and show the delete button
+      $('#copiesOfBook').on('click', '.data-board-row', function() {
+        $('.delete-book-button').show();
+      });
+
+      // Change the order of buttons
+      $('#book-details-actions').append($('.delete-book-button'));
+    });
+  </script>
+</head>
+
+<body>
+
+<a class="back-button" href="javascript:history.back(); sessionStorage.setItem('ReaderID', -1);sessionStorage.setItem('reader properties', null)">Go Back</a>
+
+
+<div class="top">
+  <div class="header" style="">
+    <h1 id="header"></h1>
+    </div>
+  </div>
+
+
+  <div id="book-details-actions" class="sticky sticky-actions">
+    <button id="edit-book-button" class="edit-book-button action-button">Edit</button>
+    <button id="create-copy-button" class="create-copy-button action-button">Create Copy</button>
+    <button id="delete-book-button" class="delete-book-button action-button">Delete</button>
+  </div>
+</div>
+
+<div class="container">
+
+
+  <div class="book-details">
+    <div class="details-column">
+      <h2>ID:</h2>
+      <p id="ID"></p>
+
+      <h2>First Name:</h2>
+      <p id="firstName"></p>
+
+      <h2>Last Name:</h2>
+      <p id="lastName"></p>
+
+      <h2>BirthDate:</h2>
+      <p id="birthDate"></p>
+
+      <h2>Gender:</h2>
+      <p id="gender"></p>
+
+      <h2>Address:</h2>
+      <p id="address"></p>
+
+      <h2>Phone Number:</h2>
+      <p id="phoneNumber"></p>
+
+      <h2>Email:</h2>
+      <p id="email"></p>
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="data-board setInformation">
+    <h2 style="text-align: center" class="data-board-header">Reading History</h2>
+    <div class="data-board-content">
+      <table class="data-board-table" id="copiesOfBook">
+        <tr class="data-board-row">
+          <th class="data-board-cell">Book title</th>
+          <th class="data-board-cell">Copy number</th>
+          <th class="data-board-cell">Reserve Date</th>
+          <th class="data-board-cell">Return Date</th>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+
+</div>
+<div id="dialog" class="dialog">
+  <div class="dialog-content">
+    <h2 class="dialog-title">Copy created successfully</h2>
+    <p class="dialog-text">This is the copy's number.</p>
+    <button class="dialog-button" onclick="closeDialog()">Close</button>
+  </div>
+</div>
+
+<div id="dialogDelete" class="dialog">
+  <div class="dialog-content">
+    <h2 class="dialog-title">Delete Copy</h2>
+    <p class="dialog-title" id="delete-explain"></p>
+    <button class="dialog-button" onclick="closeDialog()">Close</button>
+  </div>
+</div>
+
+
+<script>
+
+
+
+  // Set book details
+  let ReaderID = sessionStorage.getItem('ReaderID');
+
+  let Reader = {
+    ID: null,
+    firstName: null,
+    lastName: null,
+    birthDate: null,
+    gender: null,
+    address: null,
+    phoneNo: null,
+    Email: null,
+    registrationDate: null
+  };
+
+  fetch('https://localhost:8080/readers/' + ReaderID)
+          .then(response => response.json())
+          .then(data => {
+            Reader.ID = data.idno;
+            Reader.firstName = data.firstName;
+            Reader.lastName = data.lastName;
+            Reader.birthDate = data.birthDate;
+            Reader.gender = data.genderId;
+            Reader.address = data.adress;
+            Reader.phoneNo = data.phoneNo;
+            Reader.Email = data.email;
+            Reader.registrationDate = data.registrationDate;
+
+
+
+            // Call the functions to update the HTML after data is fetched
+
+            updateGender();
+            updateReaderDetails();
+            updateFN();
+            updateLN();
+            fetchAndInsertData();
+
+          });
+
+  function updateReaderDetails() {
+    document.getElementById("ID").textContent = Reader.ID;
+    document.getElementById("birthDate").textContent = Reader.birthDate;
+    document.getElementById("address").textContent = Reader.address;
+    document.getElementById("phoneNumber").textContent = Reader.phoneNo;
+    document.getElementById("email").textContent = Reader.Email;
+
+
+  }
+
+
+
+
+  function updateGender() {
+    fetch('https://localhost:8080/gender/' + Reader.gender)
+            .then(response => response.json())
+            .then(data => {
+              Reader.gender = data.gender;
+              document.getElementById("gender").textContent = data.gender;
+            });
+  }
+
+  function updateFN() {
+    fetch('https://localhost:8080/firstName/' + Reader.firstName)
+            .then(response => response.json())
+            .then(data => {
+              Reader.firstName = data.firstName;
+              document.getElementById("firstName").textContent = data.firstName;
+            });
+  }
+
+  function updateLN() {
+    fetch('https://localhost:8080/lastName/' + Reader.lastName)
+            .then(response => response.json())
+            .then(data => {
+              Reader.lastName = data.lastName;
+              document.getElementById("lastName").textContent = data.lastName;
+            });
+  }
+
+
+
+  function fetchAndInsertData() {
+    fetch('https://localhost:8080/reserve/getHistoryOfReader?readerID=' + ReaderID)
+            .then(response => response.json())
+            .then(data => {
+              const table = document.getElementById('copiesOfBook');
+              // Insert new data into the table
+              data.forEach(item => {
+                const newRow = document.createElement('tr');
+                newRow.className = 'data-board-row';
+                newRow.onclick = function() {
+                  getHistory(item[0]);
+
+                };
+
+                if(item[2] == null){
+                  item[2] = 'לא הוחזר';
+                }
+
+                newRow.innerHTML = `
+          <td class="data-board-cell">${item[1]}</td>
+          <td class="data-board-cell">${item[4]}</td>
+          <td class="data-board-cell">${item[0]}</td>
+          <td class="data-board-cell">${item[2]}</td>
+        `;
+                table.appendChild(newRow);
+              });
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+  }
+
+
+
+
+
+
+  // Clear previous rating stars
+
+
+
+  document.getElementById("edit-book-button").addEventListener("click", function () {
+    window.location.href = "AddEditReader.html";
+    sessionStorage.setItem("reader properties", JSON.stringify(Reader));
+  });
+
+
+
+
+
+  document.getElementById("create-copy-button").addEventListener("click", function () {
+    // Get the book data from the selected row and perform the create copy action
+    fetch('https://localhost:8080/book/createCopy?bookID=' + BookID, {
+      method: 'POST'
+    })
+            .then(response => response.json())
+            .then(data => {
+              copy = data;
+              openDialog();
+            });
+
+  });
+
+
+  function openDialog() {
+    var dialog = document.getElementById("dialog");
+    dialog.style.display = "block";
+  }
+
+  function closeDialog() {
+    var dialog = document.getElementById("dialog");
+    dialog.style.display = "none";
+    location.reload();
+  }
+
+
+
+
+
+</script>
+</body>
+
+</html>

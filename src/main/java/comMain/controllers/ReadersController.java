@@ -54,7 +54,7 @@ public class ReadersController {
 
     @PutMapping("/addReader")
     public List<Object[]> addReader(@RequestParam String ID,
-                                    @RequestParam String adress,
+                                    @RequestParam String address,
                                     @RequestParam String phoneNo,
                                     @RequestParam String firstName,
                                     @RequestParam String lastName,
@@ -65,7 +65,7 @@ public class ReadersController {
 
         List<Object[]> result = readersService.addReader(
                 ID,
-                adress,
+                address,
                 phoneNo,
                 firstName,
                 lastName,
@@ -92,7 +92,7 @@ public class ReadersController {
 
     @PutMapping("/EditReader")
     public void EditReader(@RequestParam String IDno,
-                                    @RequestParam String adress,
+                                    @RequestParam String address,
                                     @RequestParam String phoneNo,
                                     @RequestParam String firstName,
                                     @RequestParam String lastName,
@@ -104,7 +104,7 @@ public class ReadersController {
 
         readersService.EditReader(
                 IDno,
-                adress,
+                address,
                 phoneNo,
                 firstName,
                 lastName,
@@ -129,6 +129,13 @@ public class ReadersController {
         readersService.AddPassword(uID, Password);
         HttpHeaders headers = new HttpHeaders();
         return ResponseEntity.ok().headers(headers).build();
+    }
+
+
+    @GetMapping("/getReadersForWeb")
+    public List<Object[]> getReadersForWeb(){
+        return readersService.getReadersForWeb();
+
     }
 
 }

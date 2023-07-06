@@ -1,15 +1,16 @@
 package comMain.controllers;
 
+import comMain.entities.RequestsEntity;
 import comMain.entities.ResponesEntity;
 import comMain.services.ResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+
 @CrossOrigin
 @Validated
 @RestController
@@ -47,7 +48,10 @@ public class ResponseController {
     }
 
 
-
+    @GetMapping("/getResponse")
+    public List<Object[]> getResponse() {
+        return responesService.getResponse();
+    }
 
 
 }

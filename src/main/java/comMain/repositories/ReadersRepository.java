@@ -49,6 +49,9 @@ public interface ReadersRepository extends JpaRepository<ReadersEntity, Integer>
                                @Param("Password") String Password);
 
 
+    @Procedure(procedureName = "getReadersForWeb")
+    List<Object[]> getReadersForWeb();
+
 
 }
 

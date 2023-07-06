@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
   <title>Add/Edit Book Screen</title>
   <style>
     body {
@@ -256,9 +261,30 @@
       cursor: pointer;
     }
 
+    .back-button {
+      display: inline-block;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: rgba(100, 135, 152, 0.95);
+    }
+
+
+
   </style>
 </head>
 <body>
+
+<a class="back-button" href="javascript:history.back()">Go Back</a>
+
+
+
 <div class="container">
   <form class="form" id="myForm">
     <div class="first-half">
@@ -373,7 +399,7 @@
       <h2 class="dialog-title">Book created successfully</h2>
       <p class="dialog-text">This is the copy's number.</p>
       <button class="dialog-button" onclick="printImage()">Print Image</button>
-      <button class="dialog-button" onclick="closeDialog()">Close</button>
+      <button class="dialog-button"  onclick="closeDialog()">Close</button>
     </div>
   </div>
 
@@ -493,10 +519,6 @@
   var audienceSelections = [];
 
 
-  var confirmationDialog = document.getElementById('confirmation-dialog');
-  var confirmButton = document.getElementById('confirm-button');
-  var barcodeImage = document.getElementById('barcode-image');
-  var successMessage = document.getElementById('success-message');
 
   function toggleSeriesSelection() {
     var seriesCheckbox = document.getElementById("seriesCheckbox");
@@ -561,7 +583,7 @@
   bookID = sessionStorage.getItem("BookId")
 
 
-  if (bookID !== -1) {
+  if (bookID > -1) {
     loadEditMode(); // Call the function to switch to edit mode
   }
 
@@ -698,20 +720,6 @@
 
   });
 
-
-
-
-
-  confirmButton.addEventListener('click', function() {
-    // Hide the confirmation dialog
-    confirmationDialog.classList.remove('visible');
-
-    // Reset the form
-    document.getElementById('myForm').reset();
-    clearList("categoryOptions");
-    clearList("authorOptions");
-    clearList("audienceOptions");
-  });
 
   function clearList(listId) {
     var list = document.getElementById(listId);
@@ -964,6 +972,7 @@
   }
 
   function closeDialog() {
+    document.getElementById('myForm').reset();
     var dialog = document.getElementById("dialog");
     dialog.style.display = "none";
   }

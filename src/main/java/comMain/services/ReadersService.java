@@ -145,4 +145,10 @@ public class ReadersService {
         return readersRepository.AddPassword(uID,Password);
     }
 
+
+    @Transactional(readOnly = true)
+    public List<Object[]> getReadersForWeb(){
+        return readersRepository.getReadersForWeb();
+    }
+
 }

@@ -320,6 +320,21 @@
             cursor: pointer;
         }
 
+        .back-button {
+            display: inline-block;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: rgba(100, 135, 152, 0.95);
+        }
+
+
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -361,6 +376,10 @@
 </head>
 
 <body>
+
+<a class="back-button" href="javascript:history.back(); sessionStorage.setItem('BookId', -1);sessionStorage.setItem('book properties', null)">Go Back</a>
+
+
 <div class="top">
 <div class="header" style="">
     <h1 id="header"></h1>
@@ -474,6 +493,14 @@
         <h2 class="dialog-title">Copy created successfully</h2>
         <p class="dialog-text">This is the copy's number.</p>
         <button class="dialog-button" onclick="printImage()">Print Image</button>
+        <button class="dialog-button" onclick="closeDialog()">Close</button>
+    </div>
+</div>
+
+<div id="dialogDelete" class="dialog">
+    <div class="dialog-content">
+        <h2 class="dialog-title">Delete Copy</h2>
+        <p class="dialog-title" id="delete-explain"></p>
         <button class="dialog-button" onclick="closeDialog()">Close</button>
     </div>
 </div>
@@ -742,6 +769,7 @@
 
 
     function getHistory(copyNumber) {
+        copyID = copyNumber;
         fetch('https://localhost:8080/book/getCopyHistory?copyId=' + copyNumber)
             .then(response => response.json())
             .then(data => {
@@ -838,17 +866,16 @@
 
     document.getElementById("delete-book-button").addEventListener("click", function () {
         // Iterate over selected rows and perform the delete action
-        selectedRows.forEach((row) => {
-            const title = row.cells[1].textContent;
-            const author = row.cells[2].textContent;
-            const availability = row.cells[3].textContent;
-            console.log("Delete book:", title, author, availability);
-        });
 
-        // Clear selection after performing the action
-        selectedRows.forEach((row) => {
-            row.classList.remove("selected");
-        });
+        fetch('https://localhost:8080/book/DeleteBook?copyID=' + copyID, {
+            method: 'PUT'
+        })
+        document.getElementById('delete-explain').textContent = "Copy number " + copyID + " successfully deleted!";
+        var dialog = document.getElementById("dialogDelete");
+        dialog.style.display = "block";
+
+
+
 
     });
 
