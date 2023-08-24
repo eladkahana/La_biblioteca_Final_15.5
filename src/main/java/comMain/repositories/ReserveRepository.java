@@ -52,4 +52,26 @@ public interface ReserveRepository extends JpaRepository<ReserveEntity, Integer>
                       @Param("newDate") Date newDate);
 
 
+    @Procedure(name = "BooksToReturn")
+    List<Object[]> BooksToReturn();
+
+    @Procedure(name = "YearsAndMonths")
+    List<Object[]> YearsAndMonths();
+
+    @Procedure(name = "displayBorrowedByDate")
+    List<Object[]> displayBorrowedByDate(@Param("year") Integer year,
+                                         @Param("month") Integer month);
+
+    @Procedure(name = "getLatesById")
+    List<Object[]> getLatesById(@Param("readerID") Integer readerID);
+
+
+    @Procedure(name = "getExtensionsByID")
+    List<Object[]> getExtensionsByID(@Param("readerID") Integer readerID);
+
+    @Procedure(name = "getReservesByID")
+    List<Object[]> getReservesByID(@Param("readerID") Integer readerID);
+
+
+
 }

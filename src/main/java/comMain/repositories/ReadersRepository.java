@@ -52,7 +52,22 @@ public interface ReadersRepository extends JpaRepository<ReadersEntity, Integer>
     @Procedure(procedureName = "getReadersForWeb")
     List<Object[]> getReadersForWeb();
 
+    @Procedure(procedureName = "WebActivityByDate")
+    List<Object[]> WebActivityByDate(@Param("year") int year, @Param("month") int month);
 
+
+    @Procedure(procedureName = "newReadersByMonth")
+    List<Object[]> newReadersByMonth();
+
+
+    @Procedure(procedureName = "activityYearsAndMonths")
+    List<Object[]> activityYearsAndMonths();
+
+    @Procedure(procedureName = "genderData")
+    List<Object[]> genderData();
+
+    @Procedure(procedureName = "ageData")
+    List<Object[]> ageData();
 }
 
 

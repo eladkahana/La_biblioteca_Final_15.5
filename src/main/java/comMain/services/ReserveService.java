@@ -121,5 +121,37 @@ public class ReserveService {
         reserveRepository.AddExtension(oldReserveID, sqlDate);
     }
 
+    @Transactional(readOnly = true)
+    public List<Object[]> BooksToReturn() {
+        return reserveRepository.BooksToReturn();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Object[]> YearsAndMonths() {
+        return reserveRepository.YearsAndMonths();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Object[]> displayBorrowedByDate(int year, int month) {
+        return reserveRepository.displayBorrowedByDate(year,month);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Object[]> getLatesById(Integer readerID) {
+        return reserveRepository.getLatesById(readerID);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Object[]> getReservesByID(Integer readerID) {
+        return reserveRepository.getReservesByID(readerID);
+    }
+    @Transactional(readOnly = true)
+    public List<Object[]> getExtensionsByID(Integer readerID) {
+        return reserveRepository.getExtensionsByID(readerID);
+    }
+
+
 }
 

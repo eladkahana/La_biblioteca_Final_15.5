@@ -121,7 +121,6 @@
       var ratingElement = document.querySelector('input[name="rating"]:checked');
       var rating = ratingElement ? parseInt(ratingElement.value) : null;
 
-
       // Perform validation
       if (readerId === "" || copyId === "") {
         alert("Please fill in all the fields and provide a rating.");
@@ -137,10 +136,9 @@
         body: formData
       });
 
-      if (rating !== null) {
+      if (rating !== 0) {
         formData.delete('readerIDno');
         formData.append('IDno', readerId);
-
         formData.append('rank', rating);
 
         fetch('https://localhost:8080/reserve/AddRank', {
@@ -193,6 +191,8 @@
     <div class="form-group">
       <label for="rating">Rating:</label>
       <div class="rating-stars">
+
+
         <input type="radio" id="star5" name="rating" value="5" required>
         <label for="star5"></label>
 
@@ -207,6 +207,8 @@
 
         <input type="radio" id="star1" name="rating" value="1">
         <label for="star1"></label>
+
+        <input type="radio" id="star0" name="rating" value="0" required checked style="display:none;">
       </div>
     </div>
 

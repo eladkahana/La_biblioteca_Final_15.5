@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title>Book Details</title>
     <style>
@@ -14,7 +15,7 @@
             color: #333333;
             padding: 20px;
             margin: 0;
-            background-color: #ECE5C7; /* Update background color */
+            background-color: #ECE5C7;
         }
 
         .container {
@@ -131,24 +132,55 @@
 
         .data-board-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+
+        .data-board-header {
+            font-weight: bold;
+            background-color: #116A7B;
+            color: #FFFFFF;
+            padding: 10px;
+            text-align: left;
         }
 
         .data-board-row {
-            background-color: #f9f9f9;
+            background-color: #f4f4f4;
+            transition: background-color 0.3s ease-in-out;
         }
 
         .data-board-row:hover {
-            background-color: #f3d39b;
+            background-color: #c7b6a0;
         }
 
         .data-board-cell {
-            padding: 10px;
-            border: 1px solid #cccccc;
+            padding: 20px;
+            border: 1px solid #dcdcdc;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+            font-size: 18px;
+            text-align: center;
         }
+
+        .animated-row {
+            animation: fade-in 1s ease;
+        }
+
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
 
         .data-board-cell-header {
             font-weight: bold;
+        }
+
+        .selected-row {
+            background-color: #CDC2AE !important;
         }
 
         .info-section {
@@ -207,19 +239,29 @@
         .book-image:hover {
             transform: scale(1.1);
             transition: transform 0.2s ease-in-out;
-            /* Add any other styles for the hover effect */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
 
 
         /* Button animation */
         .action-button {
-            transition: transform 0.2s ease-in-out;
+            background-color: #116A7B;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
         }
+
         .action-button:hover {
-            transform: scale(1.05);
-            /* Add any other styles for the hover effect */
+            background-color: #0D4552;
         }
+
+
         .top{
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -229,9 +271,7 @@
             display: none;
         }
 
-        .selected-row {
-            background-color: #f3d39b !important;
-        }
+
 
 
         .dialog {
@@ -324,14 +364,20 @@
             display: inline-block;
             padding: 10px;
             background-color: #333;
-            color: #fff;
+            color: #FFFFFF;
             border-radius: 5px;
             text-decoration: none;
             transition: background-color 0.3s ease;
+            margin-bottom: 20px;
         }
 
         .back-button:hover {
-            background-color: rgba(100, 135, 152, 0.95);
+            background-color: #2B2B2B;
+        }
+
+        .dialog-canvas{
+            width: 400px; /* Set the canvas width to 100% of its container */
+            height: 300px; /* Set the canvas height to the desired value */
         }
 
 
@@ -400,6 +446,7 @@
 
 
     <div id="book-details-actions" class="sticky sticky-actions">
+        <button id="display-stats-button" class="edit-book-button action-button">Reading trend</button>
         <button id="edit-book-button" class="edit-book-button action-button">Edit</button>
         <button id="create-copy-button" class="create-copy-button action-button">Create Copy</button>
         <button id="delete-book-button" class="delete-book-button action-button">Delete</button>
@@ -502,6 +549,14 @@
         <h2 class="dialog-title">Delete Copy</h2>
         <p class="dialog-title" id="delete-explain"></p>
         <button class="dialog-button" onclick="closeDialog()">Close</button>
+    </div>
+</div>
+
+<div id="chart-dialog" class="dialog">
+    <div class="dialog-content dialog-canvas">
+        <h2 class="dialog-title">Reading trend</h2>
+        <canvas id="line-chart"></canvas>
+        <button class="dialog-button" id="close-dialog-btn">Close</button>
     </div>
 </div>
 
@@ -923,6 +978,74 @@
         };
     }
 
+
+    document.getElementById("display-stats-button").addEventListener("click", function() {
+        // Get the dialog and overlay elements
+        var dialog = document.getElementById("chart-dialog");
+
+
+        // Show the dialog and overlay
+        dialog.style.display = "block";
+
+
+        const trendData = {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Borrowed Books',
+                    data: [],
+                    backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1,
+                },
+            ],
+        };
+
+        // Create a sample line chart using Chart.js
+        var trendCtx = document.getElementById("line-chart").getContext("2d");
+        const trendChart = new Chart(trendCtx, {
+            type: 'line',
+            data: trendData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+
+        fetch('https://localhost:8080/book/readingTrend?BookId=' + BookID)
+            .then(response => response.json())
+            .then(data => {
+                displayTrend(data);
+            })
+            .catch(error => {
+                console.error('Error fetching:', error);
+            });
+
+        function displayTrend(data) {
+            data.forEach(line => {
+                trendData.labels.push(line[0] + "," + line[1]);
+                trendData.datasets[0].data.push(line[2]);
+            });
+
+            // Update borrowed books by day chart data
+            trendChart.data.labels = trendData.labels;
+            trendChart.data.datasets[0].data = trendData.datasets[0].data;
+            trendChart.update();
+        }
+
+
+
+        // Close dialog button functionality
+        document.getElementById("close-dialog-btn").addEventListener("click", function() {
+            // Hide the dialog and overlay
+            dialog.style.display = "none";
+        });
+    });
 
 
 </script>

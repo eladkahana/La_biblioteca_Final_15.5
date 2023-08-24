@@ -48,34 +48,20 @@
       color: #fff;
     }
     </style>
-    <script>
-     function openTab(evt, tabName) {
-      var i, tabContent, tabLinks;
-      tabContent = document.getElementsByClassName("tab-content");
-      for (i = 0; i < tabContent.length; i++) {
-      tabContent[i].style.display = "none";
-    }
-    tabLinks = document.getElementsByClassName("tab-link");
-    for (i = 0; i < tabLinks.length; i++) {
-      tabLinks[i].className = tabLinks[i].className.replace(" active", "");
-    }
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
-    }
-    </script>
     </head>
     <body>
 
     <div class="tab-container">
-    <div class="tab">
-    <button class="tab-link active" onclick="openTab(event, 'analytics-tab')">Analytics</button>
-    <button class="tab-link" onclick="openTab(event, 'books-management-tab')">Books Management</button>
-    <button class="tab-link" onclick="openTab(event, 'readers-management-tab')">Readers Management</button>
-    <button class="tab-link" onclick="openTab(event, 'settings-tab')">Settings</button>
-    <button class="tab-link" onclick="openTab(event, 'reservation-management-tab')">Reservation Management</button>
-    <button class="tab-link" onclick="openTab(event, 'reservation-actions-tab')">Reservation Actions</button>
-    <button class="tab-link" onclick="openTab(event, 'mailbox-tab')">Mail Box</button>
-    </div>
+      <div class="tab">
+        <button class="tab-link active" onclick="openTab(event, 'analytics-tab')">Analytics</button>
+        <button class="tab-link" onclick="openTab(event, 'books-management-tab')">Books Management</button>
+        <button class="tab-link" onclick="openTab(event, 'readers-management-tab')">Readers Management</button>
+<!--        <button class="tab-link" onclick="openTab(event, 'settings-tab')">Settings</button>-->
+        <button class="tab-link" onclick="openTab(event, 'reservation-management-tab')">Reservation Management</button>
+        <button class="tab-link" onclick="openTab(event, 'reservation-actions-tab')">Reservation Actions</button>
+        <button class="tab-link" onclick="openTab(event, 'mailbox-tab')">Mail Box</button>
+      </div>
+
 
     <div id="analytics-tab" class="tab-content" style="display:block;">
     <iframe src="analystic.html" frameborder="0" width="100%" height="100%"></iframe>
@@ -90,6 +76,7 @@
     </div>
 
     <div id="reservation-management-tab" class="tab-content">
+      <iframe src="ReservationManagment.html" frameborder="0" width="100%" height="100%"></iframe>
     </div>
 
     <div id="reservation-actions-tab" class="tab-content">
@@ -101,13 +88,40 @@
     <iframe src="MailBox.html" frameborder="0" width="100%" height="100%"></iframe>
     </div>
 
-    <div id="settings-tab" class="tab-content">
-    </div>
+<!--    <div id="settings-tab" class="tab-content">-->
+<!--    </div>-->
     </div>
 
     <script>
-    // Set the first tab as active by default
-       document.getElementsByClassName("tab-link")[0].click();
+
+      sessionStorage.setItem('BookId', -1);
+      sessionStorage.setItem('ReaderId', -1);
+
+      function openTab(evt, tabName) {
+        // Get all elements with class="tab-content" and hide them
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+          tabContents[i].style.display = "none";
+        }
+
+        // Get all elements with class="tab-link" and remove the "active" class
+        const tabLinks = document.getElementsByClassName("tab-link");
+        for (let i = 0; i < tabLinks.length; i++) {
+          tabLinks[i].classList.remove("active");
+        }
+
+        // Show the current tab and add an "active" class to the button that opened the tab
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active");
+
+        // Refresh the iframe content on tab change
+        const iframe = document.getElementById(tabName).querySelector("iframe");
+        iframe.contentWindow.location.reload();
+      }
+
+
+      document.getElementsByClassName("tab-link")[0].click();
+
     </script>
 
     </body>

@@ -138,4 +138,35 @@ public class ReadersController {
 
     }
 
+    @GetMapping("/newReadersByMonth")
+    public List<Object[]> newReadersByMonth(){
+        return readersService.newReadersByMonth();
+
+    }
+
+    @GetMapping("/WebActivityByDate")
+    public List<Object[]> WebActivityByDate(@RequestParam int year, @RequestParam int month){
+        return readersService.WebActivityByDate(year,month);
+
+    }
+    @GetMapping("/activityYearsAndMonths")
+    public List<Object[]> activityYearsAndMonths(){
+        return readersService.activityYearsAndMonths();
+
+    }
+
+
+    @GetMapping("/genderData")
+    public List<Object[]> genderData(){
+        return readersService.genderData();
+
+    }
+
+    @GetMapping("/ageData")
+    public List<Object[]> ageData(){
+        return readersService.ageData();
+
+    }
+
+
 }

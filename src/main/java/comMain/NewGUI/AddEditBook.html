@@ -722,7 +722,7 @@
     audienceList = [];
 
 
-    if(BookID > -1){
+    if(copyID > -1){
       openDialog()
     }
 
@@ -985,6 +985,9 @@
     document.getElementById('myForm').reset();
     var dialog = document.getElementById("dialog");
     dialog.style.display = "none";
+    clearList("audienceChosenList");
+    clearList("authorChosenList");
+    clearList("categoryChosenList");
   }
 
 
@@ -997,6 +1000,9 @@
     document.getElementById('myForm').reset();
     var dialog = document.getElementById("EditDialog");
     dialog.style.display = "none";
+    clearList("audienceChosenList");
+    clearList("authorChosenList");
+    clearList("categoryChosenList");
   }
 
   function printImage() {

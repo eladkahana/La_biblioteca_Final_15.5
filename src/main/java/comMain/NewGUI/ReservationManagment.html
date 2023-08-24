@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <title>Library Readers</title>
     <style>
@@ -22,7 +24,7 @@
             --color-quaternary: #116A7B;
         }
 
-        #readers-management-tab {
+        #reserves-management-tab {
             margin: 0 auto;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -62,14 +64,14 @@
             cursor: pointer;
         }
 
-        #reader-actions {
+        #reserve-actions {
             background-color: var(--color-primary);
             padding: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
-        #reader-actions button {
+        #reserve-actions button {
             margin-bottom: 10px;
             padding: 10px 20px;
             font-size: 16px;
@@ -80,18 +82,18 @@
             cursor: pointer;
         }
 
-        #reader-actions button:disabled {
+        #reserve-actions button:disabled {
             background-color: var(--color-tertiary);
             cursor: not-allowed;
         }
 
-        #reader-table {
-            margin-top: 120px;
+        #reserve-table {
+            margin-top: 20px;
             width: 100%;
             border-collapse: collapse;
             font-size: 18px;
             text-align: center;
-      }
+        }
 
         th,
         td {
@@ -136,11 +138,66 @@
         }
 
 
+
+        #confirmationDialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .dialogContent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .icon-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .icon {
+            font-size: 60px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        #closeButton {
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+
+
+
+
+
     </style>
 </head>
 
 <body>
-<div id="readers-management-tab">
+<div id="reserves-management-tab">
     <h3>Readers Management</h3>
 
     <div class="sticky-container">
@@ -149,19 +206,20 @@
             <button id="search-button" onclick="searchReaders()">Search</button>
         </div>
 
-        <div id="reader-actions" class="sticky sticky-actions">
-            <button id="add-reader-button">Add</button>
+        <div id="reserve-actions" class="sticky sticky-actions">
+            <button id="reminder-button">Reminder</button>
         </div>
     </div>
 
-    <table id="reader-table">
+    <table id="reserve-table">
         <thead>
-        <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>ID</th>
-            <th>Email</th>
 
+        <tr>
+            <th>title</th>
+            <th>Reader</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Return</th>
         </tr>
         </thead>
         <tbody>
@@ -170,51 +228,66 @@
     </table>
 </div>
 
+
+<div id="confirmationDialog" class="hidden">
+    <div class="dialogContent">
+        <div class="icon-container">
+            <div class="icon animate__animated animate__heartBeat">
+                <i class="fas fa-envelope"></i>
+            </div>
+        </div>
+        <p>Emails successfully sent!</p>
+        <button id="closeButton">Close</button>
+    </div>
+</div>
+
+
+
+
 <script>
     // Sample reader data
-    let readerData = [];
+    let reserveData = [];
+
+
 
     // Function to populate the reader table
-    function populateReaderTable(data) {
-        const tableBody = document.querySelector("#reader-table tbody");
+    function populateReserveTable(data) {
+        const tableBody = document.querySelector("#reserve-table tbody");
 
         // Clear existing table rows
         tableBody.innerHTML = "";
 
         // Add reader rows to the table
-        data.forEach(reader => {
+        data.forEach(reserve => {
+
+
+            if (reserve[5] == null) {
+                reserve[5] = 'לא הוחזר';
+            }
+
+
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${reader[0]}</td>
-                <td>${reader[1]}</td>
-                <td>${reader[2]}</td>
-                <td>${reader[3]}</td>
-            `;
-                // Toggle selection on row click
-                row.addEventListener("dblclick", function () {
-                    // Toggle selection on row double-click
-                    row.classList.toggle("selected");
-
-                    // Enable/disable action buttons based on the selected row
-                    const selectedRows = document.querySelectorAll(".selected");
-
-                    if (selectedRows.length === 1) {
-
-                        sessionStorage.setItem('ReaderId', reader[4]);
-                        window.location.href = "ReaderDetails.html";
-                    }
-            });
+                    <td>${reserve[0]}</td>
+                    <td>${reserve[1]}</td>
+                    <td>${reserve[2]}</td>
+                    <td>${reserve[3]}</td>
+                    <td>${reserve[5]}</td>
+                `;
+            // Toggle selection on row click
 
             tableBody.appendChild(row);
         });
+
+        // Update the "Extension" button status for initial rows
     }
 
     // Fetch reader data from the server
-    fetch("https://localhost:8080/readers/getReadersForWeb")
+    fetch("https://localhost:8080/reserve/getAllReservations")
         .then((response) => response.json())
         .then((data) => {
-            readerData = data; // Assign the fetched data to the 'readerData' variable
-            populateReaderTable(readerData);
+            reserveData = data; // Assign the fetched data to the 'readerData' variable
+            populateReserveTable(reserveData);
         })
         .catch((error) => {
             console.error("Error fetching reader data:", error);
@@ -223,20 +296,47 @@
     // Search button click event
     function searchReaders() {
         const searchValue = document.getElementById("search-input").value.toLowerCase();
-        const filteredReaders = readerData.filter(reader =>
-            reader.Name.toLowerCase().includes(searchValue) ||
-            reader.idno.toLowerCase().includes(searchValue)
+        const filteredReserves = readerData.filter(reserve =>
+            reserve[0].toLowerCase().includes(searchValue) ||
+            reserve[1].toLowerCase().includes(searchValue)
         );
-        populateReaderTable(filteredReaders);
+        populateReserveTable(filteredReserves);
     }
 
+    // Function to show the extension dialog
 
-    document.getElementById("add-reader-button").addEventListener("click", function () {
-        window.location.href = "AddEditReader.html";
 
-        // Repopulate the table with the updated reader data
-        populateReaderTable(readerData);
+    document.getElementById("reminder-button").addEventListener("click", () => {
+
+        fetch("https://localhost:8080/emails/reminder", {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+        })
+
+
+
+
+
+        // Show the confirmation dialog
+        const dialog = document.getElementById("confirmationDialog");
+        dialog.classList.remove("hidden");
+
+        // Add an animation class to the icon
+        const icon = document.querySelector(".icon");
+        icon.classList.add("animate__heartBeat");
+
+        // Close the dialog when the Close button is clicked
+        document.getElementById("closeButton").addEventListener("click", () => {
+            dialog.classList.add("hidden");
+            // Remove the animation class to reset the animation for the next time
+            icon.classList.remove("animate__heartBeat");
+        });
     });
+
+
+
 </script>
 
 </body>

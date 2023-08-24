@@ -157,4 +157,21 @@ public class BookService {
         return bookRepository.getBookRating(BookId);
     }
 
+    @Transactional(readOnly = true)
+    public List<Object[]> newBooks(){
+        return bookRepository.newBooks();
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Object[]> newBooksByMonth(){
+        return bookRepository.newBooksByMonth();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Object[]> readingTrend(int BookId){
+        return bookRepository.readingTrend(BookId);
+    }
+
+
 }

@@ -7,33 +7,61 @@
   <title>Contact Us</title>
 
   <style>
-    /* Contact page styles */
+    /* Global styles */
+    :root {
+      /* Color variables */
+      --primary-color: #37474f;
+      --secondary-color: #28383d;
+      --background-light: #f2f2f2;
+      --background-dark: #e0e0e0;
+      --text-color: #333;
+      --text-color-light: #fff;
+    }
 
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-light);
+      color: var(--text-color);
+    }
+
+    /* Header styles */
     header {
-      background-color: #37474f;
-      color: #fff;
+      background-color: var(--primary-color);
+      color: var(--text-color-light);
       padding: 20px;
       text-align: center;
     }
 
     h1 {
-      font-size: 2em;
+      font-size: 2.5em;
+      margin-bottom: 10px;
     }
 
+    /* Main content styles */
     main {
-      margin: 20px;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: var(--background-dark);
+      border-radius: 10px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
     }
 
     label {
-      display: block;
-      margin-bottom: 10px;
       font-size: 1.2em;
+      margin-bottom: 10px;
     }
 
     input[type="text"],
     input[type="email"],
     textarea {
-      width: 100%;
+      width: 95%;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
@@ -41,36 +69,34 @@
       font-size: 1.2em;
     }
 
-    input[type="text"],
-    input[type="email"] {
-      background-color: #f2f2f2;
-    }
-
     textarea {
       height: 150px;
     }
 
     button[type="submit"] {
-      background-color: #37474f;
-      color: #fff;
+      background-color: var(--primary-color);
+      color: var(--text-color-light);
       border: none;
       padding: 10px 20px;
       border-radius: 5px;
       font-size: 1.2em;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     button[type="submit"]:hover {
-      background-color: #28383d;
+      background-color: var(--secondary-color);
     }
 
+    /* Footer styles */
     footer {
-      background-color: #37474f;
-      color: #fff;
+      background-color: var(--primary-color);
+      color: var(--text-color-light);
       padding: 20px;
       text-align: center;
     }
 
+    /* Home link styles */
     .home-link {
       position: absolute;
       top: 1rem;
@@ -87,7 +113,6 @@
     .home-link:hover {
       background-color: #0d8bf5;
     }
-
   </style>
 </head>
 
@@ -109,15 +134,14 @@
   </form>
 </main>
 
+
+
 <script>
   const userID = sessionStorage.getItem('userID');
-
 
   if (userID === null) {
     window.location.href = 'LoginPage.html';
   }
-
-
 
   const contactForm = document.getElementById('contact-form');
 
@@ -144,7 +168,7 @@
     })
             .then(response => {
               if (response.ok) {
-                alert("הודעה נשלחה בהצלחה")
+                alert("הודעה נשלחה בהצלחה");
                 console.log("POST request successful");
               } else {
                 console.log("POST request failed");
@@ -153,7 +177,7 @@
             .catch(error => {
               console.error("Error:", error);
             });
-  })
+  });
 </script>
 </body>
 </html>

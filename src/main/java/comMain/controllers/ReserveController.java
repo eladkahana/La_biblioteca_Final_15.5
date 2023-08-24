@@ -72,7 +72,6 @@ public class ReserveController {
         return reserveService.displayReservesByDays();
     }
 
-    @CrossOrigin
     @GetMapping("/displayReservesByHours")
     public List<Object[]> displayReservesByHours(){
         return reserveService.displayReservesByHours();
@@ -111,4 +110,41 @@ public class ReserveController {
     public void AddExtension(@RequestParam int oldReserveID,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String newDate){
         reserveService.AddExtension(oldReserveID,newDate);
     }
+
+
+    @GetMapping("/BooksToReturn")
+    public List<Object[]> BooksToReturn(){
+        return reserveService.BooksToReturn();
+    }
+
+
+    @GetMapping("/YearsAndMonths")
+    public List<Object[]> YearsAndMonths(){
+        return reserveService.YearsAndMonths();
+    }
+
+
+    @GetMapping("/displayBorrowedByDate")
+    public List<Object[]> displayBorrowedByDate(@RequestParam int year, @RequestParam int month){
+        return reserveService.displayBorrowedByDate(year,month);
+    }
+
+    @GetMapping("/getLatesById")
+    public List<Object[]> getLatesById(@RequestParam int readerID){
+        return reserveService.getLatesById(readerID);
+    }
+
+
+    @GetMapping("/getReservesByID")
+    public List<Object[]> getReservesByID(@RequestParam int readerID){
+        return reserveService.getReservesByID(readerID);
+    }
+
+    @GetMapping("/getExtensionsByID")
+    public List<Object[]> getExtensionsByID(@RequestParam int readerID){
+        return reserveService.getExtensionsByID(readerID);
+    }
+
+
+
 }

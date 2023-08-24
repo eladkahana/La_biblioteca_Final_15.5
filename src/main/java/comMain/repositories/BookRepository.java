@@ -68,4 +68,15 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     List<Object[]> getBookRating(@Param("BookId") int BookId);
 
 
+    @Procedure(name = "newBooks")
+    List<Object[]> newBooks();
+
+    @Procedure(name = "newBooksByMonth")
+    List<Object[]> newBooksByMonth();
+
+    @Procedure(name = "readingTrend")
+    List<Object[]> readingTrend(@Param("BookID") int BookID);
+
+
+
 }

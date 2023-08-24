@@ -7,6 +7,8 @@
 
   <title>Book Details</title>
   <style>
+
+
     body {
       font-family: Arial, sans-serif;
       background-size: cover;
@@ -64,34 +66,50 @@
     }
 
 
-    .data-board {
-      flex: 1;
-      background-color: #C2DEDC; /* Update background color */
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      margin: 20px;
-    }
+
 
     .data-board-header {
       color: #116A7B; /* Update heading color */
     }
 
-    .data-board-table {
-      width: 100%;
-      border-collapse: collapse;
+
+    .data-board {
+      flex: 1;
+      background-color: #C2DEDC;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin: 20px;
+      max-height: 800px;
+      overflow: auto; /* Enable container scrolling when table overflows */
     }
 
+    .data-board-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 10px;
+      max-height: 800px; /* Set the maximum height for the table itself */
+      overflow: auto; /* Enable table's own scrolling */
+    }
+
+
+
     .data-board-row {
-      background-color: #f9f9f9;
+      background-color: #f4f4f4;
+      transition: background-color 0.3s ease-in-out;
     }
 
     .data-board-row:hover {
-      background-color: #f3d39b;
+      background-color: #c7b6a0;
     }
 
     .data-board-cell {
-      padding: 10px;
-      border: 1px solid #cccccc;
+      padding: 20px;
+      border: 1px solid #dcdcdc;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+      font-size: 18px;
+      text-align: center;
     }
 
     .data-board-cell-header {
@@ -125,6 +143,12 @@
       border-radius: 4px;
       cursor: pointer;
     }
+
+    #reader-details-actions button:disabled {
+      background-color: #999999; /* Change the background color for disabled state */
+      cursor: not-allowed; /* Change the cursor style for disabled state */
+    }
+
 
     /* Button animation */
     .action-button {
@@ -212,8 +236,84 @@
       background-color: rgba(100, 135, 152, 0.95);
     }
 
+    .selected {
+      background-color: #ECE5C7;
+    }
+
+
+
+    .title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--header-background);
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
+
+
+    .data-cards-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center; /* Horizontally center the content */
+      align-items: flex-start; /* Align items at the top */
+      margin: 20px;
+    }
+
+    .data-card {
+      background-color: rgba(199, 253, 233, 0.79);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      border-radius: 8px;
+      flex: 0 0 calc(50% - 20px); /* Adjust the width based on the number of data cards per row */
+      max-width: 400px;
+      text-align: center;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+    }
+
+    .data-card span {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Add a subtle background animation */
+    @keyframes stripeBackground {
+      from {
+        background-position: 0 0;
+      }
+      to {
+        background-position: 100% 0;
+      }
+    }
+
+
+    .icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: #116A7B;
+      text-align: center;
+      margin-bottom: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .data-card:hover .icon {
+      transform: rotate(360deg);
+      transform-origin: center;
+    }
+
+    /* Make it more attractive on hover */
+    .data-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    }
 
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
@@ -232,7 +332,13 @@
     <button id="edit-book-button" class="action-button">Edit</button>
     <button id="borrow-book-button" class="action-button">Borrow a book</button>
     <button id="change-password-button" class="action-button">change password</button>
+    <button id="extension-button" class="action-button" >Extension</button>
+
+
+
+
   </div>
+
 </div>
 
 <div class="container">
@@ -281,9 +387,22 @@
       </table>
     </div>
   </div>
-
-
 </div>
+
+<div  class="title">Reader's Statistics:</div>
+<div class="data-cards-strip">
+
+  <div class="data-card">
+    <span id="Reserves">Loading...</span>
+  </div>
+  <div class="data-card">
+    <span id="Extensions">Loading...</span>
+  </div>
+  <div class="data-card">
+    <span id="Lates">Loading...</span>
+  </div>
+</div>
+
 <div id="password dialog" class="dialog">
   <div class="dialog-content">
     <h2 class="dialog-title">change the password</h2>
@@ -312,12 +431,24 @@
 </div>
 
 
+<div id="extension dialog" class="dialog">
+  <div class="dialog-content">
+
+    <h2 class="dialog-title">extension a reservation</h2>
+    <h3>write the new date to return</h3>
+    <input type="date" id="DateFieldExtension">
+    <p style="color: red" class="message" id="ExtensionMessage"></p>
+    <button class="dialog-button" onclick="extend()">Confirm</button>
+    <button class="dialog-button" onclick="closeExtendDialog()">Close</button>
+  </div>
+</div>
+
+
 <script>
 
-
-
-  // Set book details
-  let ReaderID = sessionStorage.getItem('ReaderID');
+  let ReaderID = sessionStorage.getItem('ReaderId');
+  let name = null;
+  let ReserveSelected = -1;
 
   let Reader = {
     IDno: null,
@@ -346,19 +477,12 @@
             Reader.Email = data.email;
             Reader.registrationDate = data.registrationDate;
 
-
-
             // Call the functions to update the HTML after data is fetched
-
             updateGender();
             updateFN();
             updateLN();
-
-
             updateReaderDetails();
-
             fetchAndInsertData();
-
           });
 
   function updateFN() {
@@ -367,7 +491,7 @@
             .then(data => {
               Reader.firstName = data.firstName;
               document.getElementById("firstName").textContent = data.firstName;
-              document.getElementById("header").textContent = data.firstName + ' ' ;
+              updateHeader(); // Call this here to update the header with the full name
             });
   }
 
@@ -377,24 +501,22 @@
             .then(data => {
               Reader.lastName = data.lastName;
               document.getElementById("lastName").textContent = data.lastName;
-              document.getElementById("header").textContent +=  data.lastName;
+              updateHeader(); // Call this here to update the header with the full name
             });
   }
+
+  function updateHeader() {
+    name = Reader.firstName + ' ' + Reader.lastName;
+    document.getElementById("header").textContent = name;
+  }
+
   function updateReaderDetails() {
-
-
     document.getElementById("ID").textContent = Reader.IDno;
     document.getElementById("birthDate").textContent = Reader.birthDate;
     document.getElementById("address").textContent = Reader.address;
     document.getElementById("phoneNumber").textContent = Reader.phoneNo;
     document.getElementById("email").textContent = Reader.Email;
-
-
-
   }
-
-
-
 
   function updateGender() {
     fetch('https://localhost:8080/gender/' + Reader.gender)
@@ -404,10 +526,6 @@
               document.getElementById("gender").textContent = data.gender;
             });
   }
-
-
-
-
 
   function fetchAndInsertData() {
     fetch('https://localhost:8080/reserve/getHistoryOfReader?readerID=' + ReaderID)
@@ -419,24 +537,33 @@
                 const newRow = document.createElement('tr');
                 newRow.className = 'data-board-row';
 
-                if(item[2] == null){
+                if (item[2] == null) {
                   item[2] = 'לא הוחזר';
                 }
 
                 newRow.innerHTML = `
-          <td class="data-board-cell">${item[1]}</td>
-          <td class="data-board-cell">${item[4]}</td>
-          <td class="data-board-cell">${item[0]}</td>
-          <td class="data-board-cell">${item[2]}</td>
-        `;
+                  <td class="data-board-cell">${item[1]}</td>
+                  <td class="data-board-cell">${item[4]}</td>
+                  <td class="data-board-cell">${item[0]}</td>
+                  <td class="data-board-cell">${item[2]}</td>
+                `;
+
+                newRow.addEventListener("click", function () {
+                  // Toggle selection on row click
+                  newRow.classList.toggle("selected");
+                  ReserveSelected = item[5]
+                  updateExtensionButton(); // Update the "Extension" button status
+                });
+
                 table.appendChild(newRow);
               });
             })
             .catch(error => {
               console.error('Error:', error);
             });
-  }
 
+    updateExtensionButton();
+  }
 
 
 
@@ -575,13 +702,111 @@
               console.error("Error:", error);
             });
 
+  }
 
-    // Password change successful
-    // Here, you would typically make an API call to update the password
-    // For the sake of simplicity, let's assume the password change was successful
+  function updateExtensionButton() {
+    const selectedRows = document.querySelectorAll(".selected");
+    const extensionButton = document.getElementById("extension-button");
+
+    if (selectedRows.length === 1) {
+      extensionButton.disabled = false;
+    } else {
+      extensionButton.disabled = true;
+    }
+  }
+
+
+  document.getElementById("extension-button").addEventListener("click", function () {
+    openExtendDialog()
+  });
+
+
+  function openExtendDialog() {
+    var dialog = document.getElementById("extension dialog");
+    dialog.style.display = "block";
+  }
+
+  function closeExtendDialog() {
+    var dialog = document.getElementById("extension dialog");
+    dialog.style.display = "none";
+    location.reload();
+  }
+
+  function extend(){
+
+    var messageElement = document.getElementById("ExtensionMessage");
+
+
+    var dueTo = document.getElementById('DateFieldExtension').value;
+
+
+    const params = new URLSearchParams();
+    params.append('oldReserveID', ReserveSelected);
+    params.append('newDate', dueTo.toString());
+
+
+    fetch('https://localhost:8080/reserve/AddExtension', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    })
+            .then(response => {
+              if (response.ok) {
+                console.log("POST request successful");
+                messageElement.textContent = "הארכה בוצעה בהצלחה!";
+              } else {
+                console.log("POST request failed");
+              }
+            })
+            .catch(error => {
+              console.error("Error:", error);
+            });
 
 
   }
+
+
+  fetch('https://localhost:8080/reserve/getLatesById?readerID=' + ReaderID)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("Lates").innerHTML = `
+          <i class="icon fas fa-exclamation-circle"></i>
+          <span><strong>Late return of books:</strong><br> ${data}</span>
+        `;
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+  fetch('https://localhost:8080/reserve/getReservesByID?readerID=' + ReaderID)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("Reserves").innerHTML = `
+          <i class="icon fas fa-book"></i>
+          <span><strong>Reserves:</strong><br> ${data}</span>
+        `;
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+
+
+  fetch('https://localhost:8080/reserve/getExtensionsByID?readerID=' + ReaderID)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("Extensions").innerHTML = `
+          <i class="icon fas fa-clock"></i>
+          <span><strong>Extensions:</strong><br> ${data}</span>
+        `;
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+
 
 
 </script>

@@ -105,7 +105,7 @@
     }
 
     .mail-editor textarea {
-      width: 100%;
+      width: 99%;
       height: 200px;
       resize: vertical;
       margin-bottom: 10px;
@@ -145,20 +145,7 @@
 
     /* Animation and Effects */
 
-    .mail-container {
-      animation: slide-in 0.5s ease-out;
-    }
 
-    @keyframes slide-in {
-      0% {
-        opacity: 0;
-        transform: translateX(-50px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
 
     .mail-list-item {
       transition: background-color 0.3s ease, transform 0.3s ease;
@@ -191,40 +178,39 @@
     <div class="mail-list" id="mail-list"></div>
   </div>
   <div class="mail-content" id="mail-content">
-    <h2>Selected Email</h2>
-    <p>Email details will be displayed here.</p>
+    <h2>Email box</h2>
+    <p id="counter"></p>
   </div>
 </div>
 <script>
 
-  fetch('https://localhost:8080/requests/getCheckedRequests')
-          .then(response => response.json())
-          .then(data => {
-            readData = data
-          });
+  let inboxData = [];
+  let sentData = [];
+  let readData = [];
 
-  fetch('https://localhost:8080/requests/getUnCheckedRequests')
-          .then(response => response.json())
-          .then(data => {
-            inboxData = data
-          });
+  async function fetchData() {
+    try {
+      const [checkedResponse, uncheckedResponse, responseResponse] = await Promise.all([
+        fetch('https://localhost:8080/requests/getCheckedRequests'),
+        fetch('https://localhost:8080/requests/getUnCheckedRequests'),
+        fetch('https://localhost:8080/respones/getResponse'),
+      ]);
 
-  fetch('https://localhost:8080/respones/getResponse')
-          .then(response => response.json())
-          .then(data => {
-            sentData = data
-          });
-
-
-  function updateMailList(data) {
-    mailList.innerHTML = '';
-    data.forEach(mail => {
-      const listItem = document.createElement('div');
-      listItem.classList.add('mail-list-item');
-      listItem.textContent = mail.topic;
-      mailList.appendChild(listItem);
-    });
+      readData = await checkedResponse.json();
+      inboxData = await uncheckedResponse.json();
+      sentData = await responseResponse.json();
+      // Update the mail list after fetching data
+      updateMailList(inboxData); // Set the default folder to Inbox
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
+
+  // Call the function to fetch all the data
+  fetchData();
+
+
+
 
 
   const inboxTab = document.getElementById('inbox-tab');
@@ -234,6 +220,32 @@
   const mailList = document.getElementById('mail-list');
   const mailContent = document.getElementById('mail-content');
 
+  // Function to update the mail list
+  function updateMailList(data) {
+    mailList.innerHTML = '';
+    data.forEach(mail => {
+      const listItem = document.createElement('div');
+      listItem.classList.add('mail-list-item');
+      listItem.textContent = mail.topic;
+      listItem.setAttribute('data-mail-id', mail.id); // Add data attribute for the mail ID
+      mailList.appendChild(listItem);
+    });
+  }
+
+  function updateSentList(data){
+    mailList.innerHTML = '';
+    data.forEach(mail => {
+      const listItem = document.createElement('div');
+      listItem.classList.add('mail-list-item');
+      listItem.textContent = mail[9];
+      listItem.setAttribute('data-mail-id', mail[0]); // Add data attribute for the mail ID
+      mailList.appendChild(listItem);
+    });
+  }
+
+
+
+
   inboxTab.addEventListener('click', () => {
     setActiveTab(inboxTab);
     updateMailList(inboxData);
@@ -241,7 +253,7 @@
 
   sentTab.addEventListener('click', () => {
     setActiveTab(sentTab);
-    updateMailList(sentData);
+    updateSentList(sentData);
   });
 
   readTab.addEventListener('click', () => {
@@ -260,14 +272,7 @@
   // Set default folder and update mail list
 
 
-  let inboxData = [
-  ];
 
-  let sentData = [
-  ];
-
-  let readData = [
-  ];
 
 
 
@@ -280,67 +285,97 @@
       <p><strong>From:</strong> ${name}</p>
       <p><strong>Date:</strong> ${mail.sendDate}</p>
       <p>${mail.contactContent}</p>
-      <button class="respond-button" id="respond-button">Respond</button>
+      <button class="respond-button" id="respond-button" data-mail-id="${mail.id}">Respond</button>
     `;
       const respondButton = document.getElementById('respond-button');
-      respondButton.addEventListener('click', openMailEditor);
+      respondButton.addEventListener('click', () => openMailEditor(mail.id)); // Pass the mail ID to openMailEditor
     } catch (error) {
       console.error('An error occurred:', error);
       throw error;
     }
   }
 
-  function openMailEditor() {
-    mailContent.innerHTML = `
-        <h2>Compose Response</h2>
-        <form id="mail-form" class="mail-editor">
-          <textarea id="message" name="message" placeholder="Compose your response..." required></textarea>
-          <button type="submit" id="send-button">Send</button>
-        </form>
-      `;
-    const mailForm = document.getElementById('mail-form');
-    mailForm.addEventListener('submit', sendResponse);
+
+  function updateSentContent(mail){
+    try {
+      mailContent.innerHTML = `
+      <h2>${mail[9]}</h2>
+      <p><strong>Date:</strong> ${mail[2]}</p>
+      <p>${mail[1]}</p>
+    `;
+
+    } catch (error) {
+      console.error('An error occurred:', error);
+      throw error;
+    }
   }
 
-  function sendResponse(e) {
+  function openMailEditor(mailId) {
+    mailContent.innerHTML = `
+      <h2>Compose Response</h2>
+      <form id="mail-form" class="mail-editor">
+        <textarea id="message" name="message" placeholder="Compose your response..." required></textarea>
+        <button type="submit" id="send-button">Send</button>
+        <p id="status" style="color:red"></p>
+      </form>
+    `;
+    const mailForm = document.getElementById('mail-form');
+    mailForm.addEventListener('submit', (e) => sendResponse(e, mailId)); // Pass the mail ID to sendResponse
+  }
+
+  function sendResponse(e, mailId) {
     e.preventDefault();
+
+
+    const formData = new FormData();
+
+
+
     const message = document.getElementById('message').value;
 
-    // Send the response email using the provided message
-    console.log('Sending response email...');
-    console.log('Message:', message);
+    formData.append('requestID', mailId);
+    formData.append('answer', message);
 
-    // Clear the mail editor
-    mailContent.innerHTML = '';
+    fetch('https://localhost:8080/emails/reaction', {
+      method: 'PUT',
+      body: formData
+    }).then(
+            document.getElementById("status").innerText = "your response sent successfully!"
+    );
+
+
+    setTimeout(function() {
+      document.getElementById("status").innerText.remove();
+    }, 5000);
+
   }
 
 
 
   mailList.addEventListener('click', (e) => {
     if (e.target.classList.contains('mail-list-item')) {
-      const selectedEmail = e.target.textContent;
+      const selectedMailId = parseInt(e.target.getAttribute('data-mail-id'), 10); // Parse the ID as an integer
       const currentTab = document.querySelector('.mail-tab.active').id;
       let mail;
-
       switch (currentTab) {
         case 'inbox-tab':
-          mail = inboxData.find(m => m.topic === selectedEmail);
-          break;
-        case 'sent-tab':
-          mail = sentData.find(m => m.topic === selectedEmail);
+          mail = inboxData.find(m => m.id === selectedMailId); // Find the mail by its ID
           break;
         case 'read-tab':
-          mail = readData.find(m => m.topic === selectedEmail);
+          mail = readData.find(m => m.id === selectedMailId); // Find the mail by its ID
           break;
+        case 'sent-tab':
+          mail = sentData.find(m => m[0] === selectedMailId);
       }
-
-      if (mail) {
+      if(currentTab === 'sent-tab' && mail){
+        updateSentContent(mail);
+      }
+      else if (mail) {
         updateMailContent(mail);
-        checkedMail(mail.id)
+        checkedMail(mail.id);
       }
     }
   });
-
 
   function getReader(readerID) {
     let fullName = "";
@@ -385,8 +420,7 @@
   }
 
 
-  updateMailList(inboxData);
-  setActiveTab(inboxTab);
+
 
 </script>
 </body>

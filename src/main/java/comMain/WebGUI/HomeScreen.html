@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>La-biblioteca</title>
   <style>
+    /* Full Updated CSS with Color Pattern */
+
+    :root {
+      /* Color variables */
+      --primary-color: #1B5F8C;
+      --secondary-color: #01060f;
+      --background-light: #f2f2f2;
+      --background-dark: #e0e0e0;
+      --header-background: #37474f;
+      --text-color: #333;
+      --text-color-light: #fff;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -15,12 +28,12 @@
       font-family: Arial, sans-serif;
       font-size: 16px;
       line-height: 1.5;
-      color: #333;
+      color: var(--text-color);
     }
 
     header {
-      background-color: #37474f;
-      color: #fff;
+      background-color: var(--header-background);
+      color: var(--text-color-light);
       padding: 20px;
       text-align: center;
     }
@@ -46,12 +59,14 @@
     }
 
     nav a {
-      color: #1B5F8C;
-      text-effect: emboss;
+      color: var(--primary-color);
       text-decoration: none;
       font-size: 1.2em;
     }
 
+    nav a:hover {
+      text-decoration: underline;
+    }
 
     main {
       margin: 20px;
@@ -74,8 +89,8 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 4em;
-      color: #fff;
-      text-shadow: 2px 2px #333;
+      color: var(--text-color-light);
+      text-shadow: 2px 2px var(--secondary-color);
     }
 
     .updates {
@@ -104,8 +119,8 @@
     }
 
     footer {
-      background-color: #37474f;
-      color: #fff;
+      background-color: var(--header-background);
+      color: var(--text-color-light);
       padding: 20px;
       text-align: center;
     }
@@ -126,11 +141,11 @@
     }
 
     .left-half {
-      background-color: #f2f2f2;
+      background-color: var(--background-light);
     }
 
     .right-half {
-      background-color: #e0e0e0;
+      background-color: var(--background-dark);
     }
 
     /* Book model styles */
@@ -147,7 +162,7 @@
         transform: rotateY(0deg);
       }
       100% {
-        transform: rotateY(-19deg);
+        transform: rotateY(-30deg); /* Adjust the rotation angle as needed */
       }
     }
 
@@ -187,11 +202,10 @@
       position: absolute;
       top: 0;
       left: 0;
-      background-color: red;
+      background-color: var(--secondary-color);
       width: 100px; /* 50% of the original width */
       height: 150px; /* 50% of the original height */
       transform: translateZ(12.5px); /* 50% of the original translation value */
-      background-color: #01060f;
       border-radius: 0 1px 1px 0; /* Adjust the border radius as needed */
       box-shadow: 2.5px 2.5px 10px #666; /* Adjust the box shadow as needed */
     }
@@ -199,13 +213,12 @@
     .book::before {
       position: absolute;
       content: ' ';
-      background-color: blue;
       left: 0;
       top: 1.5px; /* 50% of the original top value */
       width: 24px; /* 50% of the original width */
       height: 147px; /* 50% of the original height */
       transform: translateX(86px) rotateY(90deg); /* Adjust the translation values as needed */
-      background: linear-gradient(
+      background: var(--primary-color) linear-gradient(
               90deg,
               #fff 0%,
               #f9f9f9 2.5%,
@@ -259,13 +272,139 @@
       width: 100px; /* 50% of the original width */
       height: 150px; /* 50% of the original height */
       transform: translateZ(-12.5px); /* 50% of the original translation value */
-      background-color: #01060f;
+      background-color: var(--secondary-color);
       border-radius: 0 1px 1px 0; /* Adjust the border radius as needed */
       box-shadow: -5px 0 25px 5px #666; /* Adjust the box shadow as needed */
     }
 
+
+    .container1 {
+      margin: 20px;
+      display: flex;
+      justify-content: center; /* Align items to the left */
+      background: linear-gradient(135deg, #C2DEDCFF, #ECE5C7FF,#C2DEDCFF);
+      background-size: 400% 100%;
+      animation: stripeBackground 20s linear infinite;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      flex-wrap: wrap; /* Allow items to wrap to the next row */
+    }
+
+    @keyframes stripeBackground {
+      0% {
+        background-position: 0% 50%;
+      }
+      100% {
+        background-position: 100% 50%;
+      }
+    }
+
+    .item {
+      flex: 0 0 calc(20% - 32px); /* Adjust width based on the number of items (5 items in one row) */
+      padding: 20px;
+      text-align: center;
+    }
+    .item img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+    .item h3 {
+      margin-top: 15px;
+      font-size: 18px;
+      color: #333333;
+    }
+    .item p {
+      margin-top: 5px;
+      font-size: 14px;
+      color: #666666;
+    }
+
+
+    .header {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--header-background);
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
+
+
+    .data-cards-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center; /* Horizontally center the content */
+      align-items: flex-start; /* Align items at the top */
+      margin: 20px;
+    }
+
+    .data-card {
+      background-color: rgba(229, 252, 243, 0.79);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      border-radius: 8px;
+      flex: 0 0 calc(50% - 20px); /* Adjust the width based on the number of data cards per row */
+      max-width: 400px;
+      text-align: center;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+    }
+
+    .data-card span {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Add a subtle background animation */
+    @keyframes stripeBackground {
+      from {
+        background-position: 0 0;
+      }
+      to {
+        background-position: 100% 0;
+      }
+    }
+
+    body {
+      background: linear-gradient(
+              90deg,
+              var(--color-primary),
+              var(--color-secondary),
+              var(--color-primary)
+      );
+      background-size: 200% 100%;
+      animation: stripeBackground 20s linear infinite;
+    }
+
+    .icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: #116A7B;
+      text-align: center;
+      margin-bottom: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .data-card:hover .icon {
+      transform: rotate(360deg);
+      transform-origin: center;
+    }
+
+    /* Make it more attractive on hover */
+    .data-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    }
+
   </style>
 </head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <body>
 <header>
@@ -315,7 +454,31 @@
       </div>
     </div>
   </div>
+
+  <div id="newBooksHeader" class="header"></div>
+
+  <div class="container1" dir="rtl">
+
+  </div>
+
+
+
 </main>
+
+<div  class="header">Your Statistics:</div>
+<div class="data-cards-strip">
+
+  <div class="data-card">
+    <span id="Reserves">Loading...</span>
+  </div>
+  <div class="data-card">
+    <span id="Extensions">Loading...</span>
+  </div>
+  <div class="data-card">
+    <span id="Lates">Loading...</span>
+  </div>
+</div>
+
 
 <footer>
   <p>La biblioteca &copy; 2023. All rights reserved.</p>
@@ -323,6 +486,8 @@
 
 
 <script>
+
+
   // Redirect to login page if userID is null
   const userID = sessionStorage.getItem('userID');
   if (userID === null) {
@@ -330,7 +495,6 @@
   }
 
   // Use the parameter value
-  console.log(userID); // Output: the value of the userID parameter
 
   const params = new URLSearchParams();
   params.append('readerID', userID);
@@ -370,6 +534,137 @@
           .catch(error => {
             console.error('Error:', error);
           });
+
+
+
+  function createSlides(slidesData) {
+
+    if (slidesData[0]){
+      document.getElementById("newBooksHeader").innerText = "New Books in Our Library:";
+    }
+    const sliderContainer = document.querySelector('.container1');
+    let currentIndex = 0;
+
+    function showSlide(index) {
+      sliderContainer.innerHTML = '';
+
+      for (let i = index; i < index + Math.min(5, slidesData.length); i++) {
+        const slide = slidesData[i % slidesData.length];
+        const slideElement = document.createElement('div');
+        slideElement.classList.add('item');
+
+        if (slide[9]) {
+          const imageElement = document.createElement('img');
+          imageElement.src = "data:image/jpeg;base64, " + slide[9];
+          imageElement.width = 100;
+          imageElement.height = 150;
+          imageElement.alt = slide[2];
+          slideElement.appendChild(imageElement);
+        } else {
+          const imageElement = document.createElement('img');
+          imageElement.src = getBookImageUrl(slide[2]);
+          imageElement.alt = slide[2];
+          slideElement.appendChild(imageElement);
+        }
+
+        const captionElement = document.createElement('div');
+        captionElement.classList.add('caption');
+        captionElement.textContent = slide[2];
+        captionElement.style.fontWeight = 'bold';
+
+
+        slideElement.appendChild(captionElement);
+
+        sliderContainer.appendChild(slideElement);
+      }
+    }
+
+    function getNextIndex() {
+      currentIndex = (currentIndex + 5) % slidesData.length;
+      return currentIndex;
+    }
+
+    function startCarousel() {
+      showSlide(currentIndex);
+      currentIndex = getNextIndex();
+
+      setTimeout(startCarousel, 5000); // Wait 5 seconds and then show the next set of slides
+    }
+
+    startCarousel();
+  }
+
+
+  function getBookImageUrl(title) {
+    // Replace this function with the logic to generate the actual image URL for each book
+    // For now, I'll return a placeholder URL
+    return `https://via.placeholder.com/100x150.png?text=${encodeURIComponent(title)}`;
+  }
+
+  document.addEventListener( 'DOMContentLoaded', function () {
+    new Splide( '#card-slider', {
+      perPage    : 2,
+      breakpoints: {
+        640: {
+          perPage: 1,
+        },
+      },
+    } ).mount();
+  } );
+
+  // Replace the existing fetch function to createSlides with this new fetch function
+  fetch('https://localhost:8080/book/newBooks')
+          .then(response => response.json())
+          .then(data => {
+            createSlides(data);
+          })
+          .catch(error => console.error('Error fetching slide data:', error));
+
+
+
+
+
+  fetch('https://localhost:8080/reserve/getLatesById?readerID=' + userID)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("Lates").innerHTML = `
+          <i class="icon fas fa-exclamation-circle"></i>
+          <span><strong>Late return of books:</strong><br> ${data}</span>
+        `;
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+  fetch('https://localhost:8080/reserve/getReservesByID?readerID=' + userID)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("Reserves").innerHTML = `
+          <i class="icon fas fa-book"></i>
+          <span><strong>Reserves:</strong><br> ${data}</span>
+        `;
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+
+
+  fetch('https://localhost:8080/reserve/getExtensionsByID?readerID=' + userID)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("Extensions").innerHTML = `
+          <i class="icon fas fa-clock"></i>
+          <span><strong>Extensions:</strong><br> ${data}</span>
+        `;
+          })
+          .catch(error => {
+            console.error('Error fetching:', error);
+          });
+
+
+
+
 </script>
 
 

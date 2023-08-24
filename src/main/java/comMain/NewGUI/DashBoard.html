@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Card with Area Graph</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .graphcard {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px; /* Increased padding for better spacing */
+            max-width: 300px;
+            display: flex; /* Use flexbox for layout */
+            flex-direction: column; /* Stack elements vertically */
+            justify-content: space-between; /* Space items within the card */
+            position: relative; /* For positioning the icon */
+            overflow: hidden; /* Hide overflowing content */
+            margin: 20px;
+        }
+
+
+        #graphCanvas {
+            max-width: 100%;
+            margin-top: auto; /* Push the graph to the bottom */
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .last-data {
+            font-size: 18px;
+            color: #3498db;
+            margin-top: 10px;
+            margin-bottom: 5px; /* Add margin for better spacing */
+        }
+
+        .last-data-value {
+            font-weight: bold;
+            font-size: 28px;
+            color: #3498db;
+        }
+
+
+        #graphCanvas.animated {
+            animation: graphFadeIn 1s ease-in-out forwards;
+        }
+    </style>
+</head>
+<body>
+<div class="graphcard">
+    <div class="data-row">
+        <p class="last-data">Last Data</p>
+        <span class="last-data-value">2</span>
+    </div>
+
+    <canvas id="graphCanvas" class="animated"></canvas>
+</div>
+<div class="card">
+    <div class="data-row">
+        <p class="last-data">Last Data</p>
+        <span class="last-data-value">2</span>
+    </div>
+
+    <canvas id="graphCanvas2" class="animated"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const data = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        datasets: [{
+            label: 'Sales',
+            data: [12, 19, 3, 5, 2],
+            backgroundColor: 'rgba(75, 192, 192, 0.4)',
+            borderColor: 'transparent',
+            borderWidth: 0,
+            tension: 0.3,
+            fill: true,
+            pointRadius: 0, // Remove the points
+        }]
+    };
+
+    const graphCanvas1 = document.getElementById('graphCanvas1');
+    const ctx1 = graphCanvas.getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    display: false,
+                },
+                y: {
+                    display: false,
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            }
+        }
+    });
+
+    const lastData = data.datasets[0].data[data.datasets[0].data.length - 1];
+    document.querySelector('.last-data-value').textContent = lastData;
+</script>
+</body>
+</html>

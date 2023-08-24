@@ -340,8 +340,8 @@
 
 </div>
 <script>
-  let ReaderID = -1;
-  ReaderID = sessionStorage.getItem("ReaderID");
+
+  ReaderID = sessionStorage.getItem("ReaderId");
 
   fetch('https://localhost:8080/firstName')
           .then(response => response.json())
@@ -426,7 +426,7 @@
 
 
 
-  if (ReaderID !== -1) {
+  if (ReaderID > -1) {
     loadEditMode();
   }
 

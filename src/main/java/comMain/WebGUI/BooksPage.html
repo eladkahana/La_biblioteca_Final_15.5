@@ -37,6 +37,9 @@
       max-width: 600px;
       margin-left: auto;
       margin-right: auto;
+      position: sticky;
+      top: 0; /* Stick to the top of the viewport */
+      z-index: 9999;
     }
 
     input[type="text"] {
@@ -68,12 +71,9 @@
     table {
       border-collapse: collapse;
       width: 100%;
-      margin-top: 2rem;
-      margin-bottom: 2rem;
       color: whitesmoke;
       background-color: #37474f;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 2rem auto;
     }
 
 
@@ -186,7 +186,7 @@
       const [title, image, author, availability] = book;
       if (title || author || availability) {
         if (image) {
-          var imgElement = document.createElement('img');
+          const imgElement = document.createElement('img');
           imgElement.src = "data:image/jpeg;base64, " + image;
           rows += `<tr>
                 <td><img class="book-image" src="${imgElement.src}" alt="${title}"></td>

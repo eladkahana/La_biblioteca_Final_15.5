@@ -151,4 +151,36 @@ public class ReadersService {
         return readersRepository.getReadersForWeb();
     }
 
+
+    @Transactional(readOnly = true)
+    public List<Object[]> newReadersByMonth(){
+        return readersRepository.newReadersByMonth();
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Object[]> WebActivityByDate(int year, int month){
+        return readersRepository.WebActivityByDate(year,month);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Object[]> activityYearsAndMonths(){
+        return readersRepository.activityYearsAndMonths();
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Object[]> genderData(){
+        return readersRepository.genderData();
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Object[]> ageData(){
+        return readersRepository.ageData();
+    }
+
+
+
 }

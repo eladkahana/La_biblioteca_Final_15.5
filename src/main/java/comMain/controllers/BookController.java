@@ -143,5 +143,21 @@ public class BookController {
         return bookService.getBookRating(BookId);
     }
 
+    @GetMapping("/newBooks")
+    public List<Object[]> newBooks(){
+        return bookService.newBooks();
+    }
+
+
+    @GetMapping("/newBooksByMonth")
+    public List<Object[]> newBooksByMonth(){
+        return bookService.newBooksByMonth();
+    }
+
+
+    @GetMapping("/readingTrend")
+    public List<Object[]> readingTrend(@RequestParam int BookId){
+        return bookService.readingTrend(BookId);
+    }
 
 }
